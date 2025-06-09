@@ -4,7 +4,7 @@ import { ResponsiveContainer, PieChart, Pie } from "recharts"
 
 export default function Turnout({ pieData, pieConfig }) {
     return (
-        <ChartContainer config={pieConfig} className="mx-auto aspect-square max-h-[430px] px-0" >
+        <ChartContainer config={pieConfig} className="mx-auto max-h-[430px]" >
             <ResponsiveContainer >
                 <PieChart>
                     <ChartTooltip

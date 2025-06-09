@@ -26,15 +26,17 @@ export async function POST(req) {
             })
         }
 
-        cookies().set("UserID", result.recordset[0].UserID)
-        cookies().set("UserTypeID", result.recordset[0].UserTypeID)
-        cookies().set("CollegeOfficeID", result.recordset[0].CollegeOfficeID)
-        cookies().set("Username", result.recordset[0].Username)
-        cookies().set("Password", result.recordset[0].Password)
-        cookies().set("FirstName", result.recordset[0].FirstName)
-        cookies().set("MiddleName", result.recordset[0].MiddleName)
-        cookies().set("Surname", result.recordset[0].Surname)
-        cookies().set("ExtensionName", result.recordset[0].ExtensionName)
+        const cookieStore = await cookies()
+
+        cookieStore.set("UserID", result.recordset[0].UserID)
+        cookieStore.set("UserTypeID", result.recordset[0].UserTypeID)
+        cookieStore.set("CollegeOfficeID", result.recordset[0].CollegeOfficeID)
+        cookieStore.set("Username", result.recordset[0].Username)
+        cookieStore.set("Password", result.recordset[0].Password)
+        cookieStore.set("FirstName", result.recordset[0].FirstName)
+        cookieStore.set("MiddleName", result.recordset[0].MiddleName)
+        cookieStore.set("Surname", result.recordset[0].Surname)
+        cookieStore.set("ExtensionName", result.recordset[0].ExtensionName)
 
         console.log(form.username + " login successfully")
         return Response.json(result.recordset)

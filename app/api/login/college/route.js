@@ -3,7 +3,7 @@ import { connectToDB } from '@/lib/db'
 export async function GET() {
     try {
         const pool = await connectToDB()
-        const result = await pool.request().query("SELECT TOP 6 * FROM CollegeOffic")
+        const result = await pool.request().query("SELECT TOP 6 * FROM CollegeOffice")
 
         console.log("Colleges fetched successfully")
         return Response.json(result.recordset)

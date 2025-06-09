@@ -5,9 +5,12 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieCha
 
 // Components
 import Turnout from "@/components/admin/dashboard/Turnout"
+import College from "@/components/admin/dashboard/College"
+import Party from "@/components/admin/dashboard/Party"
 
 // Lib
 import { getVotingStats, getPartyResults } from "@/lib/data"
+
 
 export default async function AdminDashboardPage() {
   const stats = await getVotingStats()
@@ -21,6 +24,17 @@ export default async function AdminDashboardPage() {
     nonVoters: college.totalStudents - college.votersCount,
   }))
 
+  const collegeConfig = {
+    voters: {
+      label: "Voters",
+      color: "var(--chart-1)",
+    },
+    nonVoters: {
+      label: "Non Voters",
+      color: "var(--chart-2)",
+    },
+  }
+
   const pieData = [
     { name: "Voted", value: stats.totalVoters, fill: "var(--color-voted)" },
     { name: "Not Voted", value: stats.totalStudents - stats.totalVoters, fill: "var(--color-not_voted)" },
@@ -32,11 +46,11 @@ export default async function AdminDashboardPage() {
     },
     voted: {
       label: "Voted",
-      color: "#0088FE",
+      color: "var(--chart-1)",
     },
     not_voted: {
       label: "Not Voted",
-      color: "#FF8042",
+      color: "var(--chart-2)",
     },
   }
 
@@ -45,6 +59,13 @@ export default async function AdminDashboardPage() {
     votes: party.votes,
     color: party.color,
   }))
+
+  const partyConfig = {
+    votes: {
+      label: "Votes",
+      color: "var(--chart-3)",
+    }
+  }
 
   return (
     <div className="space-y-8">
@@ -121,99 +142,33 @@ export default async function AdminDashboardPage() {
           </Card>
         </TabsContent>
 
-        {/* <TabsContent value="colleges" className="mt-6">
+        <TabsContent value="colleges" className="mt-6">
           <Card>
             <CardHeader>
               <CardTitle>Voting Statistics by College</CardTitle>
               <CardDescription>Comparison of voter turnout across different colleges</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] w-full">
-                <ChartContainer>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={collegeData}
-                      margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 60,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" angle={-45} textAnchor="end" height={60} tick={{ fontSize: 12 }} />
-                      <YAxis />
-                      <ChartTooltip
-                        content={({ active, payload }) => {
-                          if (active && payload && payload.length) {
-                            return (
-                              <ChartTooltipContent>
-                                <div className="font-medium">{payload[0].payload.name}</div>
-                                <div className="text-[#0088FE]">Voters: {payload[0].value}</div>
-                                <div className="text-[#FF8042]">Non-Voters: {payload[1].value}</div>
-                              </ChartTooltipContent>
-                            )
-                          }
-                          return null
-                        }}
-                      />
-                      <Bar dataKey="voters" fill="#0088FE" name="Voters" />
-                      <Bar dataKey="nonVoters" fill="#FF8042" name="Non-Voters" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
+              <div className="min-h-[300px] w-full">
+                <College collegeData={collegeData} collegeConfig={collegeConfig} />
               </div>
             </CardContent>
           </Card>
-        </TabsContent> */}
+        </TabsContent>
 
-        {/* <TabsContent value="parties" className="mt-6">
+        <TabsContent value="parties" className="mt-6">
           <Card>
             <CardHeader>
               <CardTitle>SSC Party Results</CardTitle>
               <CardDescription>Total votes received by each party across all SSC positions</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px] w-full">
-                <ChartContainer>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={partyData}
-                      margin={{
-                        top: 20,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                      }}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <ChartTooltip
-                        content={({ active, payload }) => {
-                          if (active && payload && payload.length) {
-                            return (
-                              <ChartTooltipContent>
-                                <div className="font-medium">{payload[0].payload.name}</div>
-                                <div>Votes: {payload[0].value}</div>
-                              </ChartTooltipContent>
-                            )
-                          }
-                          return null
-                        }}
-                      />
-                      <Bar dataKey="votes" name="Votes" fill="#8884d8" radius={[4, 4, 0, 0]}>
-                        {partyData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.color} />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
+              <div className="mid-h-[300px] w-full">
+                <Party partyData={partyData} partyConfig={partyConfig} />
               </div>
             </CardContent>
           </Card>
-        </TabsContent> */}
+        </TabsContent>
       </Tabs>
     </div>
   )
