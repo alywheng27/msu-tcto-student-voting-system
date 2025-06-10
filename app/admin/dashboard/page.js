@@ -1,7 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts"
 
 // Components
 import Turnout from "@/components/admin/dashboard/Turnout"
@@ -15,9 +13,7 @@ import { getVotingStats, getPartyResults } from "@/lib/data"
 export default async function AdminDashboardPage() {
   const stats = await getVotingStats()
   const sscPartyResults = await getPartyResults("ssc")
-
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8", "#82ca9d"]
-
+  
   const collegeData = stats.collegeStats.map((college) => ({
     name: college.name,
     voters: college.votersCount,
@@ -82,7 +78,9 @@ export default async function AdminDashboardPage() {
             <CardTitle className="text-sm font-medium">Total Students</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalStudents}</div>
+            <div className="text-2xl font-bold">
+              {stats.totalStudents}
+            </div>
             <p className="text-xs text-muted-foreground">Enrolled students across all colleges</p>
           </CardContent>
         </Card>

@@ -10,8 +10,6 @@ export default function Party({ partyData, partyConfig }) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                 dataKey="name"
-                // angle={-15}
-                // textAnchor="end"
                 height={60}
                 tick={{ fontSize: 12 }}
                 tickLine={false}
