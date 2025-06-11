@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { useToast } from "@/hooks/use-toast"
 import { CandidatePhotoUpload } from "@/components/admin/candidates/Candidate-Photo-Upload"
 import { Save, Trash2, User, AlertTriangle, X, Camera, FileText, Users } from "lucide-react"
 import { parties, positions, colleges } from "@/lib/data2"
@@ -20,9 +19,9 @@ export function CandidateManagementModal({
   candidate,
   onSuccess,
 }) {
-  const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
+  const [validationMessage, setValidationMessage] = useState({ type: '', message: '' })
   const [formData, setFormData] = useState({
     name: "",
     position: "",
@@ -57,6 +56,7 @@ export function CandidateManagementModal({
       })
     }
     setErrors({})
+    setValidationMessage({ type: '', message: '' })
   }, [mode, candidate, isOpen])
 
   const handleInputChange = (field, value) => {
@@ -101,10 +101,9 @@ export function CandidateManagementModal({
     }
 
     if (!validateForm()) {
-      toast({
-        title: "Validation Error",
-        description: "Please fix the errors below and try again.",
-        variant: "destructive",
+      setValidationMessage({
+        type: 'error',
+        message: 'Please fix the errors below and try again.'
       })
       return
     }
@@ -117,15 +116,15 @@ export function CandidateManagementModal({
 
       if (mode === "add") {
         console.log("Adding candidate:", formData)
-        toast({
-          title: "Success",
-          description: "Candidate has been added successfully.",
+        setValidationMessage({
+          type: 'success',
+          message: 'Candidate has been added successfully.'
         })
       } else if (mode === "edit") {
         console.log("Updating candidate:", { id: candidate.id, ...formData })
-        toast({
-          title: "Success",
-          description: "Candidate has been updated successfully.",
+        setValidationMessage({
+          type: 'success',
+          message: 'Candidate has been updated successfully.'
         })
       }
 
@@ -133,10 +132,9 @@ export function CandidateManagementModal({
       onClose()
     } catch (error) {
       console.error("Error saving candidate:", error)
-      toast({
-        title: "Error",
-        description: `Failed to ${mode} candidate. Please try again.`,
-        variant: "destructive",
+      setValidationMessage({
+        type: 'error',
+        message: `Failed to ${mode} candidate. Please try again.`
       })
     } finally {
       setIsLoading(false)
@@ -151,19 +149,18 @@ export function CandidateManagementModal({
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
       console.log("Deleting candidate:", candidate.id)
-      toast({
-        title: "Success",
-        description: "Candidate has been deleted successfully.",
+      setValidationMessage({
+        type: 'success',
+        message: 'Candidate has been deleted successfully.'
       })
 
       onSuccess()
       onClose()
     } catch (error) {
       console.error("Error deleting candidate:", error)
-      toast({
-        title: "Error",
-        description: "Failed to delete candidate. Please try again.",
-        variant: "destructive",
+      setValidationMessage({
+        type: 'error',
+        message: 'Failed to delete candidate. Please try again.'
       })
     } finally {
       setIsLoading(false)
@@ -261,16 +258,16 @@ export function CandidateManagementModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <User className="h-5 w-5" />
               {getModalTitle()}
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
+            {/* <Button variant="ghost" size="sm" onClick={onClose}>
               <X className="h-4 w-4" />
-            </Button>
+            </Button> */}
           </DialogTitle>
           <p className="text-sm text-muted-foreground">{getModalDescription()}</p>
         </DialogHeader>
@@ -429,6 +426,17 @@ export function CandidateManagementModal({
                   )}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Validation Message */}
+          {validationMessage.message && (
+            <div className={`p-3 rounded-lg ${
+              validationMessage.type === 'error' 
+                ? 'bg-red-50 border border-red-200 text-red-800' 
+                : 'bg-green-50 border border-green-200 text-green-800'
+            }`}>
+              <p className="text-sm">{validationMessage.message}</p>
             </div>
           )}
 

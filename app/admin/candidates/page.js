@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { candidates, parties, positions, colleges } from "@/lib/data2"
 import { Camera } from "lucide-react"
-// import { CandidateManagementModal } from "@/components/admin/candidates/Candidate-Management-Modal"
+import { CandidateManagementModal } from "@/components/admin/candidates/Candidate-Management-Modal"
 
 export default function CandidatesPage() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -80,7 +80,7 @@ export default function CandidatesPage() {
           <h1 className="text-3xl font-bold mb-2">Manage Candidates</h1>
           <p className="text-muted-foreground">Add, edit, or remove candidates for the election.</p>
         </div>
-        <Button onClick={openAddModal}>
+        <Button onClick={openAddModal} variant="outline">
           <Camera className="mr-2 h-4 w-4" /> Add Candidate
         </Button>
       </div>
@@ -227,13 +227,13 @@ export default function CandidatesPage() {
         </TabsContent>
       </Tabs>
 
-      {/* <CandidateManagementModal
+      <CandidateManagementModal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         mode={modalMode}
         candidate={selectedCandidate}
         onSuccess={handleModalSuccess}
-      /> */}
+      />
     </div>
   )
 }
