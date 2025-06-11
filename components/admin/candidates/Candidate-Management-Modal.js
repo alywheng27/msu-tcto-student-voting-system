@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { CandidatePhotoUpload } from "@/components/admin/candidates/Candidate-Photo-Upload"
 import { Save, Trash2, User, AlertTriangle, X, Camera, FileText, Users } from "lucide-react"
 import { parties, positions, colleges } from "@/lib/data2"
+import Image from "next/image"
 
 export function CandidateManagementModal({
   isOpen,
@@ -215,10 +216,12 @@ export function CandidateManagementModal({
             {candidate && (
               <div className="flex items-center gap-3 p-3 border rounded-lg bg-gray-50">
                 <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200">
-                  <img
+                  <Image
                     src={candidate.photo || "/placeholder.svg?height=48&width=48"}
                     alt={candidate.name}
                     className="w-full h-full object-cover"
+                    width={250}
+                    height={250}
                   />
                 </div>
                 <div>
@@ -275,7 +278,7 @@ export function CandidateManagementModal({
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Photo Upload Section */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-3">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Camera className="h-4 w-4" />
@@ -286,7 +289,7 @@ export function CandidateManagementModal({
             </div>
 
             {/* Form Fields Section */}
-            <div className="lg:col-span-2 space-y-4">
+            <div className="lg:col-span-3 space-y-4">
               {/* Basic Information */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-3">
@@ -407,10 +410,12 @@ export function CandidateManagementModal({
               <h3 className="font-medium">Preview</h3>
               <div className="flex items-start gap-4 p-4 border rounded-lg bg-gray-50">
                 <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 border-2 border-gray-300">
-                  <img
+                  <Image
                     src={formData.photo || "/placeholder.svg?height=80&width=80"}
                     alt={formData.name}
                     className="w-full h-full object-cover"
+                    width={250}
+                    height={250}
                   />
                 </div>
                 <div className="flex-1">
