@@ -1,14 +1,16 @@
 "use client"
 
-import { useState, useRef, useEffect, Suspense } from "react"
+import { useState, useRef, useEffect, createContext, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, User, Shield, GraduationCap } from "lucide-react"
+import { GraduationCap } from "lucide-react"
+
+import Role from "@/components/login/role"
+import College from "@/components/login/College"
+import Credentials from "@/components/login/Credentials"
+
+export const LoginContext = createContext(null)
 
 export default function LoginPage() {
   const [collegeOptions, setCollegeOptions] = useState([])
@@ -29,7 +31,7 @@ export default function LoginPage() {
       .finally(() => setCollegeLoading(false))
   }, [])
 
-  const handleRoleSelect = (selectedRole) => {
+  const handleRoleSelect = useCallback((selectedRole) => {
     setRole(selectedRole)
     setError("")
     if (selectedRole === "admin") {
@@ -37,15 +39,15 @@ export default function LoginPage() {
     } else {
       setStep("college")
     }
-  }
+  }, [])
 
-  const handleCollegeSelect = (selectedCollege) => {
+  const handleCollegeSelect = useCallback((selectedCollege) => {
     setCollege(selectedCollege)
     setError("")
     setStep("credentials")
-  }
+  }, [])
 
-  const handleLogin = async (e) => {
+  const handleLogin = useCallback(async (e) => {
     e.preventDefault()
     setIsLoading(true)
     setError("")
@@ -92,9 +94,9 @@ export default function LoginPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [college, role, router])
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     if (step === "credentials") {
       if (role === "admin") {
         setStep("role")
@@ -105,12 +107,27 @@ export default function LoginPage() {
       setStep("role")
     }
     setError("")
-  }
+  }, [role, step])
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if(e.code === 'Enter' || e.code === 'NumpadEnter') {
       handleLogin(e)
     }
+  }, [handleLogin])
+
+  const providerValue = {
+    handleRoleSelect,
+    collegeLoading,
+    handleCollegeSelect,
+    collegeOptions,
+    handleBack,
+    handleLogin,
+    usernameRef,
+    handleKeyDown,
+    passwordRef,
+    role,
+    college,
+    isLoading
   }
 
   return (
@@ -135,118 +152,17 @@ export default function LoginPage() {
               </Alert>
             )}
 
-            {step === "role" && (
-              <div className="space-y-4">
-                <Button
-                  variant="outline"
-                  className="w-full h-16 text-left justify-start"
-                  onClick={() => handleRoleSelect("admin")}
-                >
-                  <Shield className="w-6 h-6 mr-3 text-blue-600" />
-                  <div>
-                    <div className="font-semibold">Administrator</div>
-                    <div className="text-sm text-gray-500">Manage elections and view results</div>
-                  </div>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full h-16 text-left justify-start"
-                  onClick={() => handleRoleSelect("voter")}
-                >
-                  <User className="w-6 h-6 mr-3 text-green-600" />
-                  <div>
-                    <div className="font-semibold">Voter</div>
-                    <div className="text-sm text-gray-500">Cast your vote in the election</div>
-                  </div>
-                </Button>
-              </div>
-            )}
-
-            {step === "college" && (
-              <div className="space-y-4">
-                <Label htmlFor="college">Select Your College</Label>
-                {collegeLoading ? (
-                  <div>Fetching data...</div>
-                ) : (
-                  <Select onValueChange={handleCollegeSelect}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Choose your college" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {collegeOptions.map((collegeOption) => (
-                        <SelectItem key={collegeOption.CollegeOfficeID} value={collegeOption.CollegeOffice}>
-                          {collegeOption.CollegeOffice}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-                <Button variant="outline" onClick={handleBack} className="w-full">
-                  Back
-                </Button>
-              </div>
-            )}
-
-            {step === "credentials" && (
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
-                  <Input
-                    id="username"
-                    type="text"
-                    ref={usernameRef}
-                    required
-                    placeholder="Enter your username"
-                    onKeyDown={(e) => handleKeyDown(e)} autoFocus
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    ref={passwordRef}
-                    required
-                    placeholder="Enter your password"
-                    onKeyDown={(e) => handleKeyDown(e)}
-                  />
-                </div>
-
-                {role === "voter" && college && (
-                  <div className="p-3 bg-blue-50 rounded-lg">
-                    <div className="text-sm text-blue-800">
-                      <strong>Role:</strong> Voter
-                      <br />
-                      <strong>College:</strong> {college}
-                    </div>
-                  </div>
-                )}
-
-                {role === "admin" && (
-                  <div className="p-3 bg-green-50 rounded-lg">
-                    <div className="text-sm text-green-800">
-                      <strong>Role:</strong> Administrator
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  <Button type="submit" className="w-full bg-[#1E90FF] hover:bg-blue-600 shadow-lg" disabled={isLoading}>
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Signing in...
-                      </>
-                    ) : (
-                      "Sign In"
-                    )}
-                  </Button>
-                  <Button type="button" variant="outline" onClick={handleBack} className="w-full">
-                    Back
-                  </Button>
-                </div>
-              </form>
-            )}
+            <LoginContext.Provider value={providerValue}>
+              {step === "role" && (
+                <Role />
+              )}
+              {step === "college" && (
+                <College />
+              )}
+              {step === "credentials" && (
+                <Credentials />
+              )}
+            </LoginContext.Provider>
 
             <div className="text-center text-sm text-gray-500">
               <div className="mb-2">Demo Credentials:</div>

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { candidates, parties, positions, colleges } from "@/lib/data2"
 import { Camera } from "lucide-react"
 import { CandidateManagementModal } from "@/components/admin/candidates/Candidate-Management-Modal"
+import Image from "next/image"
 
 export default function CandidatesPage() {
   const [modalOpen, setModalOpen] = useState(false)
@@ -119,10 +120,12 @@ export default function CandidatesPage() {
                         <TableCell className="font-medium">{candidate.name}</TableCell>
                         <TableCell>
                           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
-                            <img
+                            <Image
                               src={candidate.photo || "/placeholder.svg?height=40&width=40"}
                               alt={candidate.name}
                               className="w-full h-full object-cover"
+                              width={250}
+                              height={250}
                             />
                           </div>
                         </TableCell>
@@ -185,10 +188,12 @@ export default function CandidatesPage() {
                         <TableCell className="font-medium">{candidate.name}</TableCell>
                         <TableCell>
                           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
-                            <img
+                            <Image
                               src={candidate.photo || "/placeholder.svg?height=40&width=40"}
                               alt={candidate.name}
                               className="w-full h-full object-cover"
+                              width={250}
+                              height={250}
                             />
                           </div>
                         </TableCell>
