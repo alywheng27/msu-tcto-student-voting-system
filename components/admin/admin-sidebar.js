@@ -18,15 +18,27 @@ import {
   FlaskConical,
   Palette,
   Info,
+  LogOut,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { useRouter } from "next/navigation"
 // import { ThemeToggle } from "@/components/theme-toggle"
 
 export function AdminSidebar() {
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false)
+  const router = useRouter()
 
   const isActive = (path) => {
     return pathname === path || pathname?.startsWith(`${path}/`)
@@ -47,6 +59,24 @@ export function AdminSidebar() {
     { href: "/admin/system-info", icon: Info, label: "System Info" },
     { href: "/admin/settings", icon: Settings, label: "Settings" },
   ]
+
+  const handleLogout = async () => {
+    // TODO: Implement logout functionality
+    // console.log("Logout confirmed")
+    // setShowLogoutConfirmation(false)
+
+      const res = await fetch("/api/logout", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+  
+      if(res.status == 200 || res.ok) {
+        router.replace("/")
+      }
+  }
+
 
   // Close mobile menu when route changes
   useEffect(() => {
@@ -160,7 +190,7 @@ export function AdminSidebar() {
         </nav>
 
         {/* Footer */}
-        <div className="border-t border-gray-200 p-4">
+        <div className="border-t border-gray-200 p-4 space-y-2">
           <Link
             href="/"
             className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200"
@@ -168,8 +198,41 @@ export function AdminSidebar() {
             <Home className="h-4 w-4 flex-shrink-0" />
             <span>Back to Home</span>
           </Link>
+          <button
+            onClick={() => setShowLogoutConfirmation(true)}
+            className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200"
+          >
+            <LogOut className="h-4 w-4 flex-shrink-0" />
+            <span>Logout</span>
+          </button>
         </div>
       </aside>
+
+      {/* Logout Confirmation Modal */}
+      <Dialog open={showLogoutConfirmation} onOpenChange={setShowLogoutConfirmation}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Logout</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to logout? You will need to login again to access the admin panel.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-2 sm:gap-0">
+            <Button
+              variant="outline"
+              onClick={() => setShowLogoutConfirmation(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleLogout}
+            >
+              Logout
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Mobile Sidebar - Toggle behavior */}
       <aside
@@ -231,7 +294,7 @@ export function AdminSidebar() {
         </nav>
 
         {/* Mobile Footer */}
-        <div className="border-t border-gray-200 p-4">
+        <div className="border-t border-gray-200 p-4 space-y-2">
           <Link
             href="/"
             className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 touch-manipulation"
@@ -240,6 +303,16 @@ export function AdminSidebar() {
             <Home className="h-5 w-5 flex-shrink-0" />
             <span>Back to Home</span>
           </Link>
+          <button
+            onClick={() => {
+              setShowLogoutConfirmation(true)
+              setIsMobileMenuOpen(false)
+            }}
+            className="w-full flex items-center gap-3 px-3 py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200 touch-manipulation"
+          >
+            <LogOut className="h-5 w-5 flex-shrink-0" />
+            <span>Logout</span>
+          </button>
         </div>
       </aside>
     </>

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { GraduationCap } from "lucide-react"
 
-import Role from "@/components/login/role"
+import Role from "@/components/login/Role"
 import College from "@/components/login/College"
 import Credentials from "@/components/login/Credentials"
 
@@ -80,9 +80,9 @@ export default function LoginPage() {
         // Add a small delay to ensure state is set
         setTimeout(() => {
           if (data[0]?.UserTypeID == 1) {
-            router.push("/admin/dashboard")
+            router.replace("/admin/dashboard")
           }else if(data[0]?.UserTypeID == 2) {
-            router.push("/voter/dashboard")
+            router.replace("/voter/dashboard")
           }
         }, 100)
       } else {
