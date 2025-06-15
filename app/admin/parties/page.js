@@ -12,27 +12,6 @@ export default async function PartiesPage() {
   })
   
   const parties = await data.json()
-  // Mock parties data - in a real app, this would come from an API
-  // const parties = [
-  //   {
-  //     id: "unity",
-  //     name: "Unity Party",
-  //     logo: "/parties/party-1.png?height=200&width=200",
-  //     color: "#2196F3",
-  //   },
-  //   {
-  //     id: "progress",
-  //     name: "Progress Party",
-  //     logo: "/parties/party-2.jpg?height=100&width=100",
-  //     color: "#4CAF50",
-  //   },
-  //   {
-  //     id: "reform",
-  //     name: "Reform Party",
-  //     logo: "/parties/party-3.png?height=100&width=100",
-  //     color: "#FF9800",
-  //   },
-  // ]
 
   return (
     <div className="space-y-8">

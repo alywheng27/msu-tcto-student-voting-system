@@ -23,48 +23,70 @@ export default function EditPartyPage(props) {
     logo: "",
   })
   const [notFound, setNotFound] = useState(false)
+  const [parties, setParties] = useState([])
+
+  const getData = async () => {
+    const res = await fetch('/api/admin/parties', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+    const data = await res.json()
+    setParties(data)
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  
 
   useEffect(() => {
     // Mock parties data - in a real app, this would come from an API
-    const parties = [
-      {
-        id: "unity",
-        name: "Unity Party",
-        logo: "/placeholder.svg?height=100&width=100",
-        color: "#2196F3",
-      },
-      {
-        id: "progress",
-        name: "Progress Party",
-        logo: "/placeholder.svg?height=100&width=100",
-        color: "#4CAF50",
-      },
-      {
-        id: "reform",
-        name: "Reform Party",
-        logo: "/placeholder.svg?height=100&width=100",
-        color: "#FF9800",
-      },
-    ]
-
-    // Find the party by ID
-    const party = parties.find((p) => p.id === params.id)
-
-    if (party) {
-      setFormData({
-        name: party.name,
-        id: party.id,
-        color: party.color,
-        logo: party.logo,
-      })
-    } else {
-      setNotFound(true)
-      setNotification({
-        type: "error",
-        message: "The party you're trying to edit doesn't exist."
-      })
+    // const parties = [
+    //   {
+    //     id: "unity",
+    //     name: "Unity Party",
+    //     logo: "/placeholder.svg?height=100&width=100",
+    //     color: "#2196F3",
+    //   },
+    //   {
+    //     id: "progress",
+    //     name: "Progress Party",
+    //     logo: "/placeholder.svg?height=100&width=100",
+    //     color: "#4CAF50",
+    //   },
+    //   {
+    //     id: "reform",
+    //     name: "Reform Party",
+    //     logo: "/placeholder.svg?height=100&width=100",
+    //     color: "#FF9800",
+    //   },
+    // ]
+    const findData = async () => {
+      console.log(params.id)
+      console.log(parties)
+      const party = await parties.find((p) => p.id === params.id)
+  
+      if (party) {
+        setFormData({
+          name: party.name,
+          id: party.id,
+          color: party.color,
+          logo: party.logo,
+        })
+      } else {
+        setNotFound(true)
+        setNotification({
+          type: "error",
+          message: "The party you're trying to edit doesn't exist."
+        })
+      }
     }
-  }, [params.id])
+  
+    // Find the party by ID
+    findData()
+  }, [params.id, parties])
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
