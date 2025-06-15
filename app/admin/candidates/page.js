@@ -16,6 +16,9 @@ export default function CandidatesPage() {
   const [modalMode, setModalMode] = useState("add")
   const [selectedCandidate, setSelectedCandidate] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [searchQuery, setSearchQuery] = useState("")
+  const itemsPerPage = 8
 
   useEffect(() => {
     // Simulate loading and ensure data is available
@@ -45,6 +48,34 @@ export default function CandidatesPage() {
   const handleModalSuccess = () => {
     // In a real app, this would refresh the data
     console.log("Modal operation successful - refreshing data")
+  }
+
+  // Add pagination functions
+  const getPaginatedData = (data) => {
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    return data.slice(startIndex, endIndex)
+  }
+
+  const totalPages = (data) => Math.ceil(data.length / itemsPerPage)
+
+  // Add search filter function
+  const filterCandidates = (candidates) => {
+    if (!searchQuery) return candidates;
+    
+    return candidates.filter((candidate) => {
+      const position = positions.find((p) => p.id === candidate.position)
+      const party = parties.find((p) => p.id === candidate.party)
+      const college = colleges.find((c) => c.id === candidate.college)
+      
+      const searchLower = searchQuery.toLowerCase()
+      return (
+        candidate.name.toLowerCase().includes(searchLower) ||
+        (position?.name || "").toLowerCase().includes(searchLower) ||
+        (party?.name || "").toLowerCase().includes(searchLower) ||
+        (college?.name || "").toLowerCase().includes(searchLower)
+      )
+    })
   }
 
   if (isLoading) {
@@ -94,9 +125,33 @@ export default function CandidatesPage() {
 
         <TabsContent value="ssc" className="mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle>Supreme Student Council Candidates</CardTitle>
-              <CardDescription>Manage candidates for SSC positions</CardDescription>
+            <CardHeader className="flex justify-between items-center">
+              <div>
+                <CardTitle>Supreme Student Council Candidates</CardTitle>
+                <CardDescription>Manage candidates for SSC positions</CardDescription>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search candidates..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value)
+                      setCurrentPage(1) // Reset to first page when searching
+                    }}
+                    className="w-[300px] px-4 py-2 rounded-md border border-input bg-background"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <Table>
@@ -111,7 +166,7 @@ export default function CandidatesPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {sscCandidates.map((candidate) => {
+                  {getPaginatedData(filterCandidates(sscCandidates)).map((candidate) => {
                     const position = positions.find((p) => p.id === candidate.position)
                     const party = parties.find((p) => p.id === candidate.party)
 
@@ -154,15 +209,60 @@ export default function CandidatesPage() {
                   })}
                 </TableBody>
               </Table>
+              <div className="flex items-center justify-end space-x-2 mt-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages(filterCandidates(sscCandidates))}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages(filterCandidates(sscCandidates))}
+                >
+                  Next
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="college" className="mt-6">
           <Card>
-            <CardHeader>
-              <CardTitle>College Candidates</CardTitle>
-              <CardDescription>Manage candidates for college-specific positions</CardDescription>
+            <CardHeader className="flex justify-between items-center">
+              <div>
+                <CardTitle>College Candidates</CardTitle>
+                <CardDescription>Manage candidates for college-specific positions</CardDescription>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search candidates..."
+                    value={searchQuery}
+                    onChange={(e) => {
+                      setSearchQuery(e.target.value)
+                      setCurrentPage(1) // Reset to first page when searching
+                    }}
+                    className="w-[300px] px-4 py-2 rounded-md border border-input bg-background"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
               <Table>
@@ -178,7 +278,7 @@ export default function CandidatesPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {collegeCandidates.map((candidate) => {
+                  {getPaginatedData(filterCandidates(collegeCandidates)).map((candidate) => {
                     const position = positions.find((p) => p.id === candidate.position)
                     const party = parties.find((p) => p.id === candidate.party)
                     const college = colleges.find((c) => c.id === candidate.college)
@@ -227,6 +327,27 @@ export default function CandidatesPage() {
                   })}
                 </TableBody>
               </Table>
+              <div className="flex items-center justify-end space-x-2 mt-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Previous
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages(filterCandidates(collegeCandidates))}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === totalPages(filterCandidates(collegeCandidates))}
+                >
+                  Next
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

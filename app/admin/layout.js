@@ -10,8 +10,9 @@ export default function AdminLayout({ children, turnout, colleges, parties }) {
         <div className="p-4 md:p-8">
           {/* <SimulationModeIndicator variant="alert" showDetails className="mb-6" /> */}
           {children}
-          <Footer />
+          
         </div>
+        <Footer />
       </main>
     </div>
   )
