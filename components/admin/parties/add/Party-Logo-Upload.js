@@ -71,7 +71,7 @@ export function PartyLogoUpload({ value, onChange, className = "" }) {
                 height={250}
               />
               <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 space-x-2 flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 space-x-2 flex flex-col items-center justify-center gap-2">
                   <Button
                     type="button"
                     variant="secondary"
@@ -79,11 +79,11 @@ export function PartyLogoUpload({ value, onChange, className = "" }) {
                     onClick={() => fileInputRef.current?.click()}
                     className="bg-white text-black hover:bg-gray-100"
                   >
-                    <Camera className="h-4 w-4 mr-2" />
+                    <Camera className="h-4 w-4" />
                     Change
                   </Button>
                   <Button type="button" variant="destructive" size="sm" onClick={handleRemovePhoto}>
-                    <X className="h-4 w-4 mr-2" />
+                    <X className="h-4 w-4" />
                     Remove
                   </Button>
                 </div>

@@ -27,8 +27,14 @@ export function DeletePartyDialog({ party, children }) {
       console.log("Deleting party:", party.PartyID)
 
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // await new Promise((resolve) => setTimeout(resolve, 1000))
+      const res = await fetch(`/api/admin/parties/delete`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: party.PartyID }),
+      })
 
+      if (!res.ok) throw new Error('Failed to update party')
       setNotification({
         type: "success",
         message: `${party.Party} has been deleted successfully.`
@@ -74,7 +80,7 @@ export function DeletePartyDialog({ party, children }) {
       )}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent>
+        <DialogContent className="max-h-[90vh] overflow-y-auto overflow-hidden">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-red-500" />
@@ -91,7 +97,7 @@ export function DeletePartyDialog({ party, children }) {
               style={{ backgroundColor: `${party.PartyColor}20` }}
             >
               <Image
-                src={party.Logo || "/placeholder.svg?height=48&width=48"}
+                src={party.Logo || "/parties/no-logo.png"}
                 alt={`${party.Party} logo`}
                 className="w-8 h-8 object-contain"
                 width={250}
@@ -104,7 +110,7 @@ export function DeletePartyDialog({ party, children }) {
             </div>
           </div>
 
-          <DialogFooter className="gap-2 sm:gap-0">
+          <DialogFooter className="flex gap-2">
             <Button variant="outline" onClick={() => setIsOpen(false)} disabled={isDeleting}>
               Cancel
             </Button>

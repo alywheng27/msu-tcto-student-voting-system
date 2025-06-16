@@ -1,17 +1,47 @@
-import Link from "next/link"
+"use client"
+
 import Image from "next/image"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 import { DeletePartyDialog } from "@/components/admin/parties/Delete-Party-Dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
+import AddPartyForm from "@/components/admin/parties/AddPartyForm"
+import EditPartyForm from "@/components/admin/parties/EditPartyForm"
 
-export default async function PartiesPage() {
-  const data = await fetch(`${process.env.MSSQL_PUBLIC_APP_URL}/api/admin/parties`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  })
-  
-  const parties = await data.json()
+export default function PartiesPage() {
+  const [parties, setParties] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [open, setOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [selectedParty, setSelectedParty] = useState(null)
+
+  const fetchParties = async () => {
+    setLoading(true)
+    const data = await fetch(`/api/admin/parties`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+    const parties = await data.json()
+    setParties(parties)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchParties()
+  }, [])
+
+  const handleAddSuccess = () => {
+    setOpen(false)
+    fetchParties()
+  }
+
+  const handleEditSuccess = () => {
+    setEditOpen(false)
+    setSelectedParty(null)
+    fetchParties()
+  }
 
   return (
     <div className="space-y-8">
@@ -20,15 +50,37 @@ export default async function PartiesPage() {
           <h1 className="text-3xl font-bold mb-2">Manage Parties</h1>
           <p className="text-muted-foreground">Add, edit, or remove political parties for the election.</p>
         </div>
-        <Link href="/admin/parties/add">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" /> Add Party
-          </Button>
-        </Link>
+        <Button onClick={() => setOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" /> Add Party
+        </Button>
       </div>
 
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="min-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Add New Party</DialogTitle>
+            <DialogDescription>Create a new political party for the election</DialogDescription>
+          </DialogHeader>
+          <AddPartyForm onSuccess={handleAddSuccess} onCancel={() => setOpen(false)} />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={editOpen} onOpenChange={(v) => { setEditOpen(v); if (!v) setSelectedParty(null) }}>
+        <DialogContent className="min-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Edit Party</DialogTitle>
+            <DialogDescription>Update information for the selected party</DialogDescription>
+          </DialogHeader>
+          {selectedParty && (
+            <EditPartyForm party={selectedParty} onSuccess={handleEditSuccess} onCancel={() => { setEditOpen(false); setSelectedParty(null) }} />
+          )}
+        </DialogContent>
+      </Dialog>
+
       <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
-        {parties.length > 0 ? parties.map((party) => (
+        {loading ? (
+          <h2 className="flex items-center text-2xl">Loading...</h2>
+        ) : parties.length > 0 ? parties.map((party) => (
           <Card key={party.PartyID} className="overflow-hidden">
             <div
               className="h-3"
@@ -47,7 +99,7 @@ export default async function PartiesPage() {
                   style={{ backgroundColor: `${party.PartyColor}15` }}
                 >
                   <Image
-                    src={party.Logo || "/placeholder.svg?height=64&width=64"}
+                    src={party.Logo || "/parties/no-logo.png"}
                     alt={`${party.Party} logo`}
                     className="w-12 h-12 object-contain"
                     width={250}
@@ -65,11 +117,17 @@ export default async function PartiesPage() {
               </div>
 
               <div className="flex justify-between pt-4">
-                <Link href={`/admin/parties/${party.PartyID}/edit`}>
-                  <Button variant="outline" size="sm">
-                    <Pencil className="h-4 w-4 mr-2" /> Edit
-                  </Button>
-                </Link>
+                <Button variant="outline" size="sm" onClick={() => {
+                  setSelectedParty({
+                    id: party.PartyID,
+                    name: party.Party,
+                    color: party.PartyColor,
+                    logo: party.Logo,
+                  });
+                  setEditOpen(true);
+                }}>
+                  <Pencil className="h-4 w-4 mr-2" /> Edit
+                </Button>
                 <DeletePartyDialog party={party}>
                   <Button variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-50">
                     <Trash2 className="h-4 w-4 mr-2" /> Delete
@@ -78,20 +136,18 @@ export default async function PartiesPage() {
               </div>
             </CardContent>
           </Card>
-        )) : <h2 className=" text-2xl">0 data found.</h2>}
+        )) : <h2 className="flex justify-center text-2xl">0 data found.</h2>}
       </div>
 
-      {parties.length === 0 && (
+      {!loading && parties.length === 0 && (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <div className="text-center space-y-3">
               <h3 className="text-lg font-medium">No parties added yet</h3>
               <p className="text-muted-foreground">Add your first political party to get started.</p>
-              <Link href="/admin/parties/add">
-                <Button className="mt-2">
-                  <Plus className="mr-2 h-4 w-4" /> Add Party
-                </Button>
-              </Link>
+              <Button className="mt-2" onClick={() => setOpen(true)}>
+                <Plus className="mr-2 h-4 w-4" /> Add Party
+              </Button>
             </div>
           </CardContent>
         </Card>
