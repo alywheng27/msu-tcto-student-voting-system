@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Archive, RotateCcw, Users, Crown } from "lucide-react"
+import { Plus, Pencil, Archive, RotateCcw, Users, Crown, Loader2 } from "lucide-react"
 import { ArchivePositionDialog } from "@/components/admin/positions/Archive-Position-Dialog"
 import AddPositionModal from "@/components/admin/positions/AddPositionModal"
 import { useToast } from "@/hooks/use-toast"
@@ -16,94 +16,43 @@ export default function PositionsPage() {
   const { toast, dismiss, toasts } = useToast()
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [selectedType, setSelectedType] = useState("ssc")
+  const [positions, setPositions] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  // Mock positions data - in a real app, this would come from an API
-  const positions = [
-    {
-      id: "president",
-      name: "President",
-      type: "ssc",
-      maxSelections: 1,
-      description: "Leads the Supreme Student Council and represents all students in university matters.",
-      requirements: "Must be a full-time student with good academic standing and leadership experience.",
-      isActive: true,
-      allowSkip: true,
-    },
-    {
-      id: "vice-president",
-      name: "Vice President",
-      type: "ssc",
-      maxSelections: 1,
-      description: "Assists the President and assumes presidential duties when necessary.",
-      requirements: "Must be a full-time student with good academic standing.",
-      isActive: true,
-      allowSkip: true,
-    },
-    {
-      id: "senator",
-      name: "Senator",
-      type: "ssc",
-      maxSelections: 10,
-      description: "Represents student interests and participates in legislative functions of the SSC.",
-      requirements: "Must be a full-time student with good academic standing.",
-      isActive: true,
-      allowSkip: true,
-    },
-    {
-      id: "governor",
-      name: "Governor",
-      type: "college",
-      maxSelections: 1,
-      description: "Leads the college student government and represents college interests.",
-      requirements: "Must be a student of the respective college with good academic standing.",
-      isActive: true,
-      allowSkip: true,
-    },
-    {
-      id: "vice-governor",
-      name: "Vice Governor",
-      type: "college",
-      maxSelections: 1,
-      description: "Assists the Governor and assumes gubernatorial duties when necessary.",
-      requirements: "Must be a student of the respective college with good academic standing.",
-      isActive: true,
-      allowSkip: true,
-    },
-    {
-      id: "mayor",
-      name: "Mayor",
-      type: "college",
-      maxSelections: 1,
-      description: "Manages college-level programs and student activities.",
-      requirements: "Must be a student of the respective college with good academic standing.",
-      isActive: true,
-      allowSkip: true,
-    },
-    {
-      id: "vice-mayor",
-      name: "Vice Mayor",
-      type: "college",
-      maxSelections: 1,
-      description: "Assists the Mayor in managing college programs and activities.",
-      requirements: "Must be a student of the respective college with good academic standing.",
-      isActive: true,
-      allowSkip: true,
-    },
-    {
-      id: "board-member",
-      name: "Board Member",
-      type: "college",
-      maxSelections: 6,
-      description: "Participates in college governance and represents student interests in college matters.",
-      requirements: "Must be a student of the respective college with good academic standing.",
-      isActive: true,
-      allowSkip: true,
-    },
-  ]
+  // Fetch positions from API
+  useEffect(() => {
+    const fetchPositions = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch('/api/admin/positions')
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        
+        const data = await response.json()
+        setPositions(data)
+        setError(null)
+      } catch (err) {
+        console.error('Error fetching positions:', err)
+        setError(err.message)
+        toast({
+          title: "Error",
+          description: "Failed to fetch positions. Please try again.",
+          variant: "destructive"
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPositions()
+  }, [toast])
 
   // Separate positions by type
-  const sscPositions = positions.filter((position) => position.type === "ssc")
-  const collegePositions = positions.filter((position) => position.type === "college")
+  const sscPositions = positions.filter((position) => position.PositionType === "ssc" || position.PositionType === "SSC")
+  const collegePositions = positions.filter((position) => position.PositionType === "college" || position.PositionType === "College")
 
   // Mock archived positions for demonstration
   const archivedPositions = [
@@ -125,59 +74,45 @@ export default function PositionsPage() {
   }
 
   const PositionCard = ({ position, isArchived = false }) => (
-    <Card key={position.id} className={`overflow-hidden ${isArchived ? "opacity-60 bg-gray-50" : ""}`}>
-      <div className={`h-3 ${position.type === "ssc" ? "bg-blue-500" : "bg-green-500"}`} />
+    <Card key={position.PositionID} className={`overflow-hidden ${isArchived ? "opacity-60 bg-gray-50" : ""}`}>
+      <div className={`h-3 ${(position.PositionType) === "ssc" || (position.PositionType) === "SSC" ? "bg-blue-500" : "bg-green-500"}`} />
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <CardTitle className="flex items-center gap-2">
-              {position.type === "ssc" ? (
+              {(position.PositionType) === "ssc" || (position.PositionType) === "SSC" ? (
                 <Crown className="h-5 w-5 text-blue-500" />
               ) : (
                 <Users className="h-5 w-5 text-green-500" />
               )}
-              {position.name}
+              {position.Position}
               {isArchived && <Badge variant="outline">Archived</Badge>}
             </CardTitle>
             <CardDescription className="mt-1">
-              {position.type === "ssc" ? "Supreme Student Council" : "College Position"}
+              {(position.PositionType) === "ssc" || (position.PositionType) === "SSC" ? "Supreme Student Council" : "College Position"}
             </CardDescription>
           </div>
           <Badge variant="secondary" className="ml-2">
-            Max: {position.maxSelections}
+            Max: {position.MaximumSelection}
           </Badge>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        {position.description && (
-          <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-1">Description</h4>
-            <p className="text-sm text-gray-600 line-clamp-2">{position.description}</p>
-          </div>
-        )}
-
-        {position.requirements && (
-          <div>
-            <h4 className="text-sm font-medium text-gray-700 mb-1">Requirements</h4>
-            <p className="text-sm text-gray-600 line-clamp-2">{position.requirements}</p>
-          </div>
-        )}
-
         <div className="flex items-center justify-between pt-3 border-t">
           <div className="flex items-center gap-2">
             <Badge
               variant="outline"
-              className={position.type === "ssc" ? "border-blue-200 text-blue-700" : "border-green-200 text-green-700"}
+              className={(position.PositionType) === "ssc" || (position.PositionType) === "SSC" ? "border-blue-200 text-blue-700" : "border-green-200 text-green-700"}
             >
-              {position.type.toUpperCase()}
+              {(position.PositionType || "unknown").toUpperCase()}
             </Badge>
-            <span className="text-xs text-gray-500">ID: {position.id}</span>
+            <span className="text-xs text-gray-500">ID: {position.PositionID}</span>
           </div>
 
           <div className="flex gap-2">
             {!isArchived ? (
               <>
-                <Link href={`/admin/positions/${position.id}/edit`}>
+                <Link href={`/admin/positions/${position.PositionID}/edit`}>
                   <Button variant="outline" size="sm">
                     <Pencil className="h-4 w-4 mr-2" />
                     Edit
@@ -202,6 +137,30 @@ export default function PositionsPage() {
     </Card>
   )
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
+          <p className="text-gray-600">Loading positions...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Error loading positions: {error}</p>
+          <Button onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
@@ -215,7 +174,7 @@ export default function PositionsPage() {
       </div>
 
       <Tabs defaultValue="ssc" className="w-full">
-        <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
+        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
           <TabsTrigger value="ssc" className="flex items-center gap-2">
             <Crown className="h-4 w-4" />
             SSC Positions
@@ -223,10 +182,6 @@ export default function PositionsPage() {
           <TabsTrigger value="college" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             College Positions
-          </TabsTrigger>
-          <TabsTrigger value="archived" className="flex items-center gap-2">
-            <Archive className="h-4 w-4" />
-            Archived
           </TabsTrigger>
         </TabsList>
 
@@ -245,7 +200,7 @@ export default function PositionsPage() {
               {sscPositions.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {sscPositions.map((position) => (
-                    <PositionCard key={position.id} position={position} />
+                    <PositionCard key={position.PositionID} position={position} />
                   ))}
                 </div>
               ) : (
@@ -279,7 +234,7 @@ export default function PositionsPage() {
               {collegePositions.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {collegePositions.map((position) => (
-                    <PositionCard key={position.id} position={position} />
+                    <PositionCard key={position.PositionID} position={position} />
                   ))}
                 </div>
               ) : (
@@ -291,36 +246,6 @@ export default function PositionsPage() {
                     <Plus className="mr-2 h-4 w-4" />
                     Add College Position
                   </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="archived" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Archive className="h-5 w-5 text-gray-500" />
-                Archived Positions
-              </CardTitle>
-              <CardDescription>
-                View and manage archived positions. Archived positions are not available for elections but can be
-                restored if needed.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {archivedPositions.length > 0 ? (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {archivedPositions.map((position) => (
-                    <PositionCard key={position.id} position={position} isArchived={true} />
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <Archive className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No archived positions</h3>
-                  <p className="text-gray-600">Archived positions will appear here when you archive them.</p>
                 </div>
               )}
             </CardContent>
