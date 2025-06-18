@@ -6,8 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
 import { Save, Crown, Users, AlertCircle, X, Plus } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -19,6 +17,7 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
     id: "",
     type: defaultType,
     maxSelections: 1,
+    orderNumber: 1,
     description: "",
     requirements: "",
     isActive: true,
@@ -38,38 +37,70 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
     }
   }
 
+  // Helper function para mag-reset ng form
+  const getInitialFormData = () => ({
+    name: "",
+    id: "",
+    type: defaultType,
+    maxSelections: 1,
+    orderNumber: 1,
+    description: "",
+    requirements: "",
+    isActive: true,
+    allowSkip: true,
+  })
+
+  // Helper function para sa validation
+  const validateForm = (data) => {
+    if (!data.name || !data.id || !data.type) {
+      return {
+        title: "Validation Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      }
+    }
+    if (data.maxSelections < 1 || data.maxSelections > 50) {
+      return {
+        title: "Validation Error",
+        description: "Maximum selections must be between 1 and 50.",
+        variant: "destructive",
+      }
+    }
+    return null
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
 
+    // Validation
+    const validationError = validateForm(formData)
+    if (validationError) {
+      onSuccess?.(validationError)
+      setIsLoading(false)
+      return
+    }
+
     try {
-      // Validate required fields
-      if (!formData.name || !formData.id || !formData.type) {
-        onSuccess?.({
-          title: "Validation Error",
-          description: "Please fill in all required fields.",
-          variant: "destructive",
-        })
-        setIsLoading(false)
-        return
+      // await new Promise((resolve) => setTimeout(resolve, 1000))
+      const response = await fetch('/api/admin/positions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          id: formData.id,
+          type: formData.type,
+          maxSelections: formData.maxSelections,
+          orderNumber: formData.orderNumber,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || 'Failed to add position')
       }
-
-      // Validate max selections
-      if (formData.maxSelections < 1 || formData.maxSelections > 50) {
-        onSuccess?.({
-          title: "Validation Error",
-          description: "Maximum selections must be between 1 and 50.",
-          variant: "destructive",
-        })
-        setIsLoading(false)
-        return
-      }
-
-      // In a real app, this would call an API to save the position
-      console.log("Saving position:", formData)
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
 
       onSuccess?.({
         title: "Success",
@@ -77,23 +108,13 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
         variant: "success",
       })
 
-      // Reset form and close modal
-      setFormData({
-        name: "",
-        id: "",
-        type: defaultType,
-        maxSelections: 1,
-        description: "",
-        requirements: "",
-        isActive: true,
-        allowSkip: true,
-      })
+      setFormData(getInitialFormData())
       onClose()
     } catch (error) {
       console.error("Error saving position:", error)
       onSuccess?.({
         title: "Error",
-        description: "Failed to create position. Please try again.",
+        description: error.message || "Failed to create position. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -102,32 +123,19 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
   }
 
   const handleClose = () => {
-    // Reset form when closing
-    setFormData({
-      name: "",
-      id: "",
-      type: defaultType,
-      maxSelections: 1,
-      description: "",
-      requirements: "",
-      isActive: true,
-      allowSkip: true,
-    })
+    setFormData(getInitialFormData())
     onClose()
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="min-w-6xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="min-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Plus className="h-5 w-5" />
               Add New Position
             </div>
-            <Button variant="ghost" size="sm" onClick={handleClose}>
-              <X className="h-4 w-4" />
-            </Button>
           </DialogTitle>
         </DialogHeader>
 
@@ -193,7 +201,7 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
                   <CardDescription>Enter the position&apos;s basic details</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid md:grid-cols-1 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="name">Position Name *</Label>
                       <Input
@@ -203,22 +211,6 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
                         onChange={(e) => handleInputChange("name", e.target.value)}
                         required
                       />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="id">Position ID *</Label>
-                      <Input
-                        id="id"
-                        placeholder="e.g., president, governor, board-member"
-                        value={formData.id}
-                        onChange={(e) => handleInputChange("id", e.target.value)}
-                        required
-                        pattern="[a-z0-9\-]+"
-                        title="Lowercase letters, numbers, and hyphens only"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        Used for internal references. Only lowercase letters, numbers, and hyphens.
-                      </p>
                     </div>
                   </div>
 
@@ -238,73 +230,21 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
                       Number of candidates voters can select for this position.
                     </p>
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Detailed Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Position Details</CardTitle>
-                  <CardDescription>Provide additional information about the position</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                      id="description"
-                      placeholder="Describe the role and responsibilities of this position..."
-                      value={formData.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
-                      rows={3}
+                    <Label htmlFor="orderNumber">Order of Position *</Label>
+                    <Input
+                      id="orderNumber"
+                      type="number"
+                      min="1"
+                      max="50"
+                      placeholder="e.g., 1 for President, 2 for Vice President"
+                      value={formData.orderNumber}
+                      onChange={(e) => handleInputChange("orderNumber", Number.parseInt(e.target.value) || 1)}
+                      required
                     />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="requirements">Requirements & Qualifications</Label>
-                    <Textarea
-                      id="requirements"
-                      placeholder="List any requirements, qualifications, or criteria for this position..."
-                      value={formData.requirements}
-                      onChange={(e) => handleInputChange("requirements", e.target.value)}
-                      rows={3}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Position Settings */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Position Settings</CardTitle>
-                  <CardDescription>Configure how this position behaves in elections</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="isActive">Active Position</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Whether this position is currently available for elections
-                      </p>
-                    </div>
-                    <Switch
-                      id="isActive"
-                      checked={formData.isActive}
-                      onCheckedChange={(checked) => handleInputChange("isActive", checked)}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <Label htmlFor="allowSkip">Allow Skip</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Whether voters can skip this position without making a selection
-                      </p>
-                    </div>
-                    <Switch
-                      id="allowSkip"
-                      checked={formData.allowSkip}
-                      onCheckedChange={(checked) => handleInputChange("allowSkip", checked)}
-                    />
+                    <p className="text-xs text-muted-foreground">
+                      Arrangement of position by order.
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -340,17 +280,10 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
                       <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">
                         Max: {formData.maxSelections}
                       </span>
+                      <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                        Order: {formData.orderNumber}
+                      </span>
                     </div>
-                  </div>
-                  {formData.description && <p className="text-sm text-gray-600 mb-2">{formData.description}</p>}
-                  {formData.requirements && (
-                    <p className="text-xs text-gray-500">Requirements: {formData.requirements}</p>
-                  )}
-                  <div className="flex gap-2 mt-3">
-                    <span className={`text-xs ${formData.isActive ? "text-green-600" : "text-red-600"}`}>
-                      {formData.isActive ? "● Active" : "● Inactive"}
-                    </span>
-                    <span className="text-xs text-gray-500">{formData.allowSkip ? "● Skippable" : "● Required"}</span>
                   </div>
                 </div>
               </CardContent>

@@ -4,7 +4,7 @@ export function useToast() {
   const [toasts, setToasts] = useState([])
 
   const toast = useCallback(({ title, description, variant = "default" }) => {
-    const id = Date.now()
+    const id = Date.now() + Math.random().toString(36).slice(2)
     const newToast = { id, title, description, variant }
     
     setToasts(prev => [...prev, newToast])

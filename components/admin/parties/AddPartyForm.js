@@ -8,9 +8,8 @@ import { Save, CheckCircle2, XCircle } from "lucide-react"
 import { PartyLogoUpload } from "@/components/admin/parties/add/Party-Logo-Upload"
 import { ColorPicker } from "@/components/admin/parties/add/Color-Picker"
 
-export default function AddPartyForm({ onSuccess, onCancel }) {
+export default function AddPartyForm({ onSuccess, onCancel, toast }) {
   const [isLoading, setIsLoading] = useState(false)
-  const [notification, setNotification] = useState(null)
   const [formData, setFormData] = useState({
     name: "",
     id: "",
@@ -29,33 +28,49 @@ export default function AddPartyForm({ onSuccess, onCancel }) {
     }
   }
 
+  // Helper function to validate the form
+  const validateForm = (data) => {
+    if (!data.name || !data.id || !data.color) {
+      return {
+        title: "Validation Error",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      }
+    }
+    return null
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
+
+    // Validate form
+    const validationError = validateForm(formData)
+    if (validationError) {
+      toast && toast(validationError)
+      setIsLoading(false)
+      return
+    }
+
     try {
-      if (!formData.name || !formData.id || !formData.color) {
-        setNotification({
-          type: "error",
-          message: "Please fill in all required fields."
-        })
-        setIsLoading(false)
-        return
-      }
       const res = await fetch('/api/admin/parties/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
       if (!res.ok) throw new Error('Failed to add party')
-      setNotification({
-        type: "success",
-        message: "Party has been added successfully."
-      })
-      if (onSuccess) onSuccess()
+      const msg = {
+        title: "Success",
+        description: "Party has been added successfully.",
+        variant: "success",
+      }
+      toast && toast(msg)
+      if (onSuccess) onSuccess(msg)
     } catch (error) {
-      setNotification({
-        type: "error",
-        message: "Failed to save party. Please try again."
+      toast && toast({
+        title: "Error",
+        description: error.message || "Failed to save party. Please try again.",
+        variant: "destructive",
       })
     } finally {
       setIsLoading(false)
@@ -64,25 +79,6 @@ export default function AddPartyForm({ onSuccess, onCancel }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      {notification && (
-        <div className={`p-4 rounded-lg shadow flex items-center gap-2 ${
-          notification.type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-        }`}>
-          {notification.type === "success" ? (
-            <CheckCircle2 className="h-5 w-5" />
-          ) : (
-            <XCircle className="h-5 w-5" />
-          )}
-          <p>{notification.message}</p>
-          <button
-            type="button"
-            onClick={() => setNotification(null)}
-            className="ml-2 text-gray-500 hover:text-gray-700"
-          >
-            ×
-          </button>
-        </div>
-      )}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         {/* Left: Party Logo & Preview */}
         <div className="col-span-2 flex flex-col gap-6">

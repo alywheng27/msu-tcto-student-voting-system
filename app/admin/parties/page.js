@@ -4,13 +4,16 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Pencil, Trash2 } from "lucide-react"
+import { Plus, Pencil, Trash2, Loader2 } from "lucide-react"
 import { DeletePartyDialog } from "@/components/admin/parties/Delete-Party-Dialog"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import AddPartyForm from "@/components/admin/parties/AddPartyForm"
 import EditPartyForm from "@/components/admin/parties/EditPartyForm"
+import { Toaster } from "@/components/ui/toast"
+import { useToast } from "@/hooks/use-toast"
 
 export default function PartiesPage() {
+  const { toast, dismiss, toasts } = useToast()
   const [parties, setParties] = useState([])
   const [loading, setLoading] = useState(true)
   const [open, setOpen] = useState(false)
@@ -32,15 +35,22 @@ export default function PartiesPage() {
     fetchParties()
   }, [])
 
-  const handleAddSuccess = () => {
+  const handleAddSuccess = (msg) => {
     setOpen(false)
     fetchParties()
+    if (msg) toast(msg)
   }
 
-  const handleEditSuccess = () => {
+  const handleEditSuccess = (msg) => {
     setEditOpen(false)
     setSelectedParty(null)
     fetchParties()
+    if (msg) toast(msg)
+  }
+
+  const handleDeleteSuccess = (msg) => {
+    fetchParties()
+    if (msg) toast(msg)
   }
 
   return (
@@ -56,30 +66,35 @@ export default function PartiesPage() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="min-w-3xl">
+        <DialogContent className="min-w-3xl max-h-[90vh] overflow-y-auto overflow-x-hidden">
           <DialogHeader>
             <DialogTitle>Add New Party</DialogTitle>
             <DialogDescription>Create a new political party for the election</DialogDescription>
           </DialogHeader>
-          <AddPartyForm onSuccess={handleAddSuccess} onCancel={() => setOpen(false)} />
+          <AddPartyForm onSuccess={handleAddSuccess} onCancel={() => setOpen(false)} toast={toast} />
         </DialogContent>
       </Dialog>
 
       <Dialog open={editOpen} onOpenChange={(v) => { setEditOpen(v); if (!v) setSelectedParty(null) }}>
-        <DialogContent className="min-w-3xl">
+        <DialogContent className="min-w-3xl max-h-[90vh] overflow-y-auto overflow-x-hidden">
           <DialogHeader>
             <DialogTitle>Edit Party</DialogTitle>
             <DialogDescription>Update information for the selected party</DialogDescription>
           </DialogHeader>
           {selectedParty && (
-            <EditPartyForm party={selectedParty} onSuccess={handleEditSuccess} onCancel={() => { setEditOpen(false); setSelectedParty(null) }} />
+            <EditPartyForm party={selectedParty} onSuccess={handleEditSuccess} onCancel={() => { setEditOpen(false); setSelectedParty(null) }} toast={toast} />
           )}
         </DialogContent>
       </Dialog>
 
       <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
         {loading ? (
-          <h2 className="flex items-center text-2xl">Loading...</h2>
+          <div className="flex items-center justify-center min-h-[300px] col-span-full">
+            <div className="text-center">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
+              <p className="text-gray-600">Loading parties...</p>
+            </div>
+          </div>
         ) : parties.length > 0 ? parties.map((party) => (
           <Card key={party.PartyID} className="overflow-hidden">
             <div
@@ -128,7 +143,7 @@ export default function PartiesPage() {
                 }}>
                   <Pencil className="h-4 w-4 mr-2" /> Edit
                 </Button>
-                <DeletePartyDialog party={party}>
+                <DeletePartyDialog party={party} toast={toast} onSuccess={handleDeleteSuccess}>
                   <Button variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-50">
                     <Trash2 className="h-4 w-4 mr-2" /> Delete
                   </Button>
@@ -152,6 +167,8 @@ export default function PartiesPage() {
           </CardContent>
         </Card>
       )}
+
+      <Toaster toasts={toasts} onDismiss={dismiss} />
     </div>
   )
 }

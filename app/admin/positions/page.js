@@ -1,52 +1,59 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Archive, RotateCcw, Users, Crown, Loader2 } from "lucide-react"
-import { ArchivePositionDialog } from "@/components/admin/positions/Archive-Position-Dialog"
+import { Plus, Pencil, Archive, RotateCcw, Users, Crown, Loader2, Trash2 } from "lucide-react"
+import { DeletePositionDialog } from "@/components/admin/positions/DeletePositionDialog"
 import AddPositionModal from "@/components/admin/positions/AddPositionModal"
+import EditPositionModal from "@/components/admin/positions/EditPositionModal"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toast"
 
 export default function PositionsPage() {
   const { toast, dismiss, toasts } = useToast()
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [selectedPosition, setSelectedPosition] = useState(null)
   const [selectedType, setSelectedType] = useState("ssc")
   const [positions, setPositions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  const showErrorToast = (message) => {
+    toast({
+      title: "Error",
+      description: message || "Failed to fetch positions. Please try again.",
+      variant: "destructive"
+    })
+  }
+
+  const fetchPositions = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/admin/positions')
+      if (!response.ok) {
+        const errorMsg = `HTTP error! status: ${response.status}`
+        setError(errorMsg)
+        showErrorToast(errorMsg)
+        return
+      }
+      const data = await response.json()
+      setPositions(data)
+      setError(null)
+    } catch (err) {
+      console.error('Error fetching positions:', err)
+      setError(err.message)
+      showErrorToast(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   // Fetch positions from API
   useEffect(() => {
-    const fetchPositions = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch('/api/admin/positions')
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        
-        const data = await response.json()
-        setPositions(data)
-        setError(null)
-      } catch (err) {
-        console.error('Error fetching positions:', err)
-        setError(err.message)
-        toast({
-          title: "Error",
-          description: "Failed to fetch positions. Please try again.",
-          variant: "destructive"
-        })
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchPositions()
   }, [toast])
 
@@ -54,27 +61,25 @@ export default function PositionsPage() {
   const sscPositions = positions.filter((position) => position.PositionType === "ssc" || position.PositionType === "SSC")
   const collegePositions = positions.filter((position) => position.PositionType === "college" || position.PositionType === "College")
 
-  // Mock archived positions for demonstration
-  const archivedPositions = [
-    {
-      id: "secretary",
-      name: "Secretary",
-      type: "ssc",
-      maxSelections: 1,
-      description: "Handles official correspondence and documentation",
-      requirements: "Must have excellent writing and organizational skills",
-      isActive: false,
-      archivedAt: "2024-01-15",
-    },
-  ]
-
   const handleAddPosition = (type = "ssc") => {
     setSelectedType(type)
     setIsAddModalOpen(true)
   }
 
-  const PositionCard = ({ position, isArchived = false }) => (
-    <Card key={position.PositionID} className={`overflow-hidden ${isArchived ? "opacity-60 bg-gray-50" : ""}`}>
+  const handleEditPosition = (position) => {
+    setSelectedPosition(position)
+    setIsEditModalOpen(true)
+  }
+
+  const handleCloseEditModal = () => {
+    setIsEditModalOpen(false)
+    setSelectedPosition(null)
+    // Refresh positions data after edit
+    fetchPositions()
+  }
+
+  const PositionCard = ({ position }) => (
+    <Card key={position.PositionID} className={`overflow-hidden`}>
       <div className={`h-3 ${(position.PositionType) === "ssc" || (position.PositionType) === "SSC" ? "bg-blue-500" : "bg-green-500"}`} />
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
@@ -86,15 +91,19 @@ export default function PositionsPage() {
                 <Users className="h-5 w-5 text-green-500" />
               )}
               {position.Position}
-              {isArchived && <Badge variant="outline">Archived</Badge>}
             </CardTitle>
             <CardDescription className="mt-1">
               {(position.PositionType) === "ssc" || (position.PositionType) === "SSC" ? "Supreme Student Council" : "College Position"}
             </CardDescription>
           </div>
-          <Badge variant="secondary" className="ml-2">
-            Max: {position.MaximumSelection}
-          </Badge>
+          <div className="flex flex-col gap-2">
+            <Badge variant="secondary" className="ml-2">
+              Max: {position.MaximumSelection}
+            </Badge>
+            <Badge variant="secondary" className="ml-2">
+              Order: {position.Decree}
+            </Badge>
+          </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -110,27 +119,20 @@ export default function PositionsPage() {
           </div>
 
           <div className="flex gap-2">
-            {!isArchived ? (
-              <>
-                <Link href={`/admin/positions/${position.PositionID}/edit`}>
-                  <Button variant="outline" size="sm">
-                    <Pencil className="h-4 w-4 mr-2" />
-                    Edit
-                  </Button>
-                </Link>
-                <ArchivePositionDialog position={position} onSuccess={toast}>
-                  <Button variant="outline" size="sm" className="text-orange-600 border-orange-200 hover:bg-orange-50">
-                    <Archive className="h-4 w-4 mr-2" />
-                    Archive
-                  </Button>
-                </ArchivePositionDialog>
-              </>
-            ) : (
-              <Button variant="outline" size="sm" className="text-green-600 border-green-200 hover:bg-green-50">
-                <RotateCcw className="h-4 w-4 mr-2" />
-                Restore
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => handleEditPosition(position)}
+            >
+              <Pencil className="h-4 w-4 mr-2" />
+              Edit
+            </Button>
+            <DeletePositionDialog position={position} onSuccess={() => { toast({ title: 'Deleted', description: 'Position deleted successfully.', variant: 'success' }); fetchPositions(); }}>
+              <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50">
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
               </Button>
-            )}
+            </DeletePositionDialog>
           </div>
         </div>
       </CardContent>
@@ -254,7 +256,7 @@ export default function PositionsPage() {
       </Tabs>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardContent className="p-6 text-center">
             <Crown className="h-8 w-8 mx-auto text-blue-500 mb-2" />
@@ -271,13 +273,6 @@ export default function PositionsPage() {
         </Card>
         <Card>
           <CardContent className="p-6 text-center">
-            <Archive className="h-8 w-8 mx-auto text-gray-500 mb-2" />
-            <div className="text-2xl font-bold text-gray-600">{archivedPositions.length}</div>
-            <div className="text-sm text-gray-600">Archived</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6 text-center">
             <Plus className="h-8 w-8 mx-auto text-purple-500 mb-2" />
             <div className="text-2xl font-bold text-purple-600">{sscPositions.length + collegePositions.length}</div>
             <div className="text-sm text-gray-600">Total Active</div>
@@ -290,6 +285,17 @@ export default function PositionsPage() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         defaultType={selectedType}
+        onSuccess={(msg) => {
+          toast(msg)
+          fetchPositions()
+        }}
+      />
+
+      {/* Edit Position Modal */}
+      <EditPositionModal
+        isOpen={isEditModalOpen}
+        onClose={handleCloseEditModal}
+        position={selectedPosition}
         onSuccess={toast}
       />
 
