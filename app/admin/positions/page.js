@@ -146,6 +146,7 @@ export default function PositionsPage() {
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
           <p className="text-gray-600">Loading positions...</p>
         </div>
+        <Toaster toasts={toasts} onDismiss={dismiss} />
       </div>
     )
   }
@@ -159,6 +160,7 @@ export default function PositionsPage() {
             Try Again
           </Button>
         </div>
+        <Toaster toasts={toasts} onDismiss={dismiss} />
       </div>
     )
   }

@@ -7,12 +7,12 @@ export async function POST(req) {
         const form = await req.json()
 
         // Input validation
-        if (!form.username || !form.password || !form.role || !form.college) {
-            return Response.json({ message: "Missing required fields: username, password, role, and college are required." }, { status: 400 })
+        if (!form.username || !form.password) {
+            return Response.json({ message: "Missing required fields: username and password are required." }, { status: 400 })
         }
 
         // Do not log sensitive data like passwords
-        console.log("Attempting login for username:", form.username, "Role:", form.role, "College:", form.college)
+        console.log("Attempting login for username:", form.username, "Role:", form.role || "None", "College:", form.college || "None")
 
         const result = await pool.request()
             .input('username', form.username)
