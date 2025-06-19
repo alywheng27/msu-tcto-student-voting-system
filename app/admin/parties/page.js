@@ -89,7 +89,7 @@ export default function PartiesPage() {
 
       <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
         {loading ? (
-          <div className="flex items-center justify-center min-h-[300px] col-span-full">
+          <div className="flex items-center justify-center min-h-[65vh] col-span-full">
             <div className="text-center">
               <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
               <p className="text-gray-600">Loading parties...</p>

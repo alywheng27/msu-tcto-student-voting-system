@@ -29,15 +29,6 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
   const [colleges, setColleges] = useState([])
   const [collegesLoading, setCollegesLoading] = useState(true)
 
-  /**
-   * IOES #00afef
-   * CAS #ffef00
-   * CIAS #00b100
-   * COED #5f1b1c
-   * COF #08094c
-   * IICT #1fb266
-   */
-
   // Initialize form data when modal opens or voter changes
   useEffect(() => {
     if (mode === "edit" && voter) {
@@ -50,7 +41,7 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
         password: "", // Don't pre-fill password for security
         confirmPassword: "",
         college: voter.CollegeOffice || "",
-        role: voter.UserType || "voter",
+        role: voter.UserType.toLowerCase() || "voter",
       })
     } else if (mode === "add") {
       setFormData({
@@ -219,7 +210,7 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
     }
   }
 
-  const selectedCollege = colleges.find((c) => c.CollegeOfficeID === voter?.CollegeOfficeID) || "Unknown College"
+  const selectedCollege = colleges.find((c) => c.CollegeOffice == voter?.CollegeOffice) || colleges.find((c) => c.CollegeOffice == formData.college) || "Unknown College"
 
   const getModalTitle = () => {
     switch (mode) {
@@ -267,10 +258,10 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
                   <User className="h-6 w-6 text-blue-600" />
                 </div>
                 <div>
-                  <h4 className="font-medium">{voter.name}</h4>
-                  <p className="text-sm text-gray-600">@{voter.username}</p>
+                  <h4 className="font-medium">{voter.FirstName} {voter.Surname}</h4>
+                  <p className="text-sm text-gray-600">@{voter.Username}</p>
                   <p className="text-xs text-gray-500">
-                    {selectedCollege}
+                    {selectedCollege.CollegeOfficeCode}
                   </p>
                 </div>
               </div>
@@ -306,16 +297,13 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="min-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <UserPlus className="h-5 w-5" />
               {getModalTitle()}
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button>
           </DialogTitle>
           <p className="text-sm text-muted-foreground">{getModalDescription()}</p>
         </DialogHeader>
@@ -382,7 +370,7 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
                   </SelectTrigger>
                   <SelectContent>
                     {colleges.map((college) => (
-                      <SelectItem key={college.CollegeOfficeID} value={college.CollegeOfficeID}>
+                      <SelectItem key={college.CollegeOfficeID} value={college.CollegeOffice}>
                         <div className="flex items-center">
                           <div className="h-3 w-3 rounded-full mr-2" style={{ backgroundColor: college.CollegeOfficeColor || '#ccc' }} />
                           {college.CollegeOffice} ({college.CollegeOfficeCode})
@@ -494,7 +482,7 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
                   {selectedCollege && (
                     <div className="mt-2">
                       <Badge variant="outline" style={{ borderColor: selectedCollege.CollegeOfficeColor || '#ccc' }}>
-                        {selectedCollege}
+                        {selectedCollege.CollegeOfficeCode}
                       </Badge>
                     </div>
                   )}

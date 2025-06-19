@@ -11,6 +11,7 @@ import { Plus, Search } from "lucide-react"
 import { VoterManagementModal } from "@/components/admin/voters/Voter-Management-Modal"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toast"
+import { Loader2 } from "lucide-react"
 
 export default function VotersPage() {
   const { toast, dismiss, toasts } = useToast()
@@ -22,6 +23,8 @@ export default function VotersPage() {
   const [search, setSearch] = useState("")
   const [colleges, setColleges] = useState([])
   const [collegesLoading, setCollegesLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 8
 
   const showErrorToast = (message) => {
     toast({
@@ -109,14 +112,21 @@ export default function VotersPage() {
     return nameMatch || usernameMatch || collegeMatch || sscVoteMatch || collegeVoteMatch
   })
 
+  // Pagination helpers
+  const getPaginatedData = (data) => {
+    const startIndex = (currentPage - 1) * itemsPerPage
+    const endIndex = startIndex + itemsPerPage
+    return data.slice(startIndex, endIndex)
+  }
+
+  const totalPages = (data) => Math.ceil(data.length / itemsPerPage)
+
   if (isLoading) {
     return (
-      <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Manage Voters</h1>
-            <p className="text-muted-foreground">Loading voter data...</p>
-          </div>
+      <div className="flex items-center justify-center min-h-[80vh]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
+          <p className="text-gray-600">Loading voters...</p>
         </div>
         <Toaster toasts={toasts} onDismiss={dismiss} />
       </div>
@@ -136,18 +146,22 @@ export default function VotersPage() {
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Voters</CardTitle>
-          <CardDescription>List of all registered voters in the system</CardDescription>
-          <div className="relative mt-4">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search voters..."
-              className="w-full pl-8"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
+        <CardHeader className="flex justify-between items-center">
+          <div>
+            <CardTitle>Voters</CardTitle>
+            <CardDescription>List of all registered voters in the system</CardDescription>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search voters..."
+                className="w-full pl-8"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+              />
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -164,7 +178,7 @@ export default function VotersPage() {
             </TableHeader>
             <TableBody>
               {Array.isArray(filteredVoters)
-                ? filteredVoters.map((voter) => {
+                ? getPaginatedData(filteredVoters).map((voter) => {
                     return (
                       <TableRow key={voter.VoterID}>
                         <TableCell className="font-medium">{voter.FirstName} {voter.Surname}</TableCell>
@@ -211,6 +225,28 @@ export default function VotersPage() {
                 : null}
             </TableBody>
           </Table>
+          {/* Pagination Controls */}
+          <div className="flex items-center justify-end space-x-2 mt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-sm text-muted-foreground">
+              Page {currentPage} of {totalPages(filteredVoters)}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(currentPage + 1)}
+              disabled={currentPage === totalPages(filteredVoters) || totalPages(filteredVoters) === 0}
+            >
+              Next
+            </Button>
+          </div>
         </CardContent>
       </Card>
       <VoterManagementModal
