@@ -57,24 +57,25 @@ export default function VotersPage() {
 
   useEffect(() => {
     fetchVoters()
-  }, [toast])
+  }, [])
+
+  const fetchColleges = async () => {
+    setCollegesLoading(true)
+    try {
+      const response = await fetch('/api/login/college')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const data = await response.json()
+      setColleges(data)
+    } catch (error) {
+      setColleges([])
+    } finally {
+      setCollegesLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchColleges = async () => {
-      setCollegesLoading(true)
-      try {
-        const response = await fetch('/api/login/college')
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-        const data = await response.json()
-        setColleges(data)
-      } catch (error) {
-        setColleges([])
-      } finally {
-        setCollegesLoading(false)
-      }
-    }
     fetchColleges()
   }, [])
 

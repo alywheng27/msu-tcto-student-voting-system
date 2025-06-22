@@ -55,7 +55,7 @@ export default function PositionsPage() {
   // Fetch positions from API
   useEffect(() => {
     fetchPositions()
-  }, [toast])
+  }, [])
 
   // Separate positions by type
   const sscPositions = positions.filter((position) => position.PositionType === "ssc" || position.PositionType === "SSC")
