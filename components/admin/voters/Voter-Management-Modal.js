@@ -99,6 +99,11 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
       newErrors.firstName = "First name is required"
     }
 
+    if (!formData.surname.trim()) {
+      newErrors.surname = "Surname is required"
+    }
+
+
     if (!formData.username.trim()) {
       newErrors.username = "Username is required"
     } else if (formData.username.length < 3) {
@@ -147,33 +152,75 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
     setIsLoading(true)
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
       if (mode === "add") {
+        const response = await fetch('/api/admin/voters', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName: formData.firstName,
+            middleName: formData.middleName,
+            surname: formData.surname,
+            extensionName: formData.extensionName,
+            college: formData.college,
+            role: formData.role,
+            username: formData.username,
+            password: formData.password,
+          }),
+        })
+  
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.message || 'Failed to add voter')
+        }
+        
         console.log("Adding voter:", { ...formData, password: "[HIDDEN]" })
-        toast({
+        onSuccess?.({
           title: "Success",
           description: "Voter has been added successfully.",
+          variant: "success",
         })
       } else if (mode === "edit") {
-        const updateData = { ...formData }
-        if (!updateData.password) {
-          delete updateData.password
-          delete updateData.confirmPassword
+        const updateData = {
+          firstName: formData.firstName,
+          middleName: formData.middleName,
+          surname: formData.surname,
+          extensionName: formData.extensionName,
+          college: formData.college,
+          role: formData.role,
+          username: formData.username,
         }
-        console.log("Updating voter:", { id: voter.id, ...updateData, password: "[HIDDEN]" })
-        toast({
+        
+        if (formData.password) {
+          updateData.password = formData.password
+        }
+        console.log(voter.UserID)
+        const response = await fetch(`/api/admin/voters/${voter.UserID}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updateData),
+        })
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}))
+          throw new Error(errorData.message || 'Failed to update voter')
+        }
+
+        console.log("Updating voter:", { id: voter.UserID, ...updateData, password: "[HIDDEN]" })
+        onSuccess?.({
           title: "Success",
           description: "Voter has been updated successfully.",
+          variant: "success",
         })
       }
 
-      onSuccess()
       onClose()
     } catch (error) {
       console.error("Error saving voter:", error)
-      toast({
+      onSuccess?.({
         title: "Error",
         description: `Failed to ${mode} voter. Please try again.`,
         variant: "destructive",
@@ -187,20 +234,26 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
     setIsLoading(true)
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      console.log("Deleting voter:", voter.id)
-      toast({
-        title: "Success",
-        description: "Voter has been deleted successfully.",
+      const response = await fetch(`/api/admin/voters/${voter.UserID}`, {
+        method: 'DELETE',
       })
 
-      onSuccess()
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.message || 'Failed to delete voter')
+      }
+
+      console.log("Deleting voter:", voter.UserID)
+      onSuccess?.({
+        title: "Success",
+        description: "Voter has been deleted successfully.",
+        variant: "success",
+      })
+
       onClose()
     } catch (error) {
       console.error("Error deleting voter:", error)
-      toast({
+      onSuccess?.({
         title: "Error",
         description: "Failed to delete voter. Please try again.",
         variant: "destructive",

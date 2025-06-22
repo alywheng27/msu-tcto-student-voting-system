@@ -34,28 +34,29 @@ export default function VotersPage() {
     })
   }
 
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true)
-      try {
-        const response = await fetch('/api/admin/voters')
-        if (!response.ok) {
-          const errorMsg = `HTTP error! status: ${response.status}`
-          showErrorToast(errorMsg)
-          setVoters([])
-          return
-        }
-        const data = await response.json()
-        setVoters(data)
-      } catch (error) {
-        console.error("Error loading voters:", error)
-        showErrorToast(error.message)
+  const fetchVoters = async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/admin/voters')
+      if (!response.ok) {
+        const errorMsg = `HTTP error! status: ${response.status}`
+        showErrorToast(errorMsg)
         setVoters([])
-      } finally {
-        setIsLoading(false)
+        return
       }
+      const data = await response.json()
+      setVoters(data)
+    } catch (error) {
+      console.error("Error loading voters:", error)
+      showErrorToast(error.message)
+      setVoters([])
+    } finally {
+      setIsLoading(false)
     }
-    loadData()
+  }
+
+  useEffect(() => {
+    fetchVoters()
   }, [toast])
 
   useEffect(() => {
@@ -93,12 +94,6 @@ export default function VotersPage() {
     setSelectedVoter(voter)
     setModalMode("delete")
     setModalOpen(true)
-  }
-
-  const handleModalSuccess = () => {
-    // Refresh data after successful operation
-    const votersData = voters.filter((user) => user.role.toLowerCase() === "voter")
-    setVoters(votersData)
   }
 
   // Filter voters based on search
@@ -254,7 +249,10 @@ export default function VotersPage() {
         onClose={() => setModalOpen(false)}
         mode={modalMode}
         voter={selectedVoter}
-        onSuccess={handleModalSuccess}
+        onSuccess={(msg) => {
+          toast(msg)
+          fetchVoters()
+        }}
       />
       <Toaster toasts={toasts} onDismiss={dismiss} />
     </div>

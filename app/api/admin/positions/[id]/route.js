@@ -2,7 +2,7 @@ import { connectToDB } from "@/lib/db"
 
 export async function PUT(request, { params }) {
     try {
-        const { id } = params
+        const { id } = await params
         const body = await request.json()
         const { name, type, maxSelections, orderNumber } = body
 
@@ -69,7 +69,7 @@ export async function PUT(request, { params }) {
 
 export async function DELETE(request, { params }) {
     try {
-        const { id } = params
+        const { id } = await params
         if (!id) {
             return Response.json({ message: "Missing required field: id is required." }, { status: 400 })
         }
