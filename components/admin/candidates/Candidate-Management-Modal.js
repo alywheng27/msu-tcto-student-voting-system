@@ -261,24 +261,21 @@ export function CandidateManagementModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl">
+      <DialogContent className="min-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <User className="h-5 w-5" />
               {getModalTitle()}
             </div>
-            {/* <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
-            </Button> */}
           </DialogTitle>
           <p className="text-sm text-muted-foreground">{getModalDescription()}</p>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid lg:grid-cols-3 gap-6">
-            {/* Photo Upload Section */}
-            <div className="lg:col-span-3">
+            {/* Photo Upload Section - Left */}
+            <div className="lg:col-span-1">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
                   <Camera className="h-4 w-4" />
@@ -288,8 +285,8 @@ export function CandidateManagementModal({
               </div>
             </div>
 
-            {/* Form Fields Section */}
-            <div className="lg:col-span-3 space-y-4">
+            {/* Form Fields Section - Right */}
+            <div className="lg:col-span-2 space-y-4">
               {/* Basic Information */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-3">
@@ -367,38 +364,6 @@ export function CandidateManagementModal({
                       {errors.college && <p className="text-sm text-red-500">{errors.college}</p>}
                     </div>
                   )}
-                </div>
-              </div>
-
-              {/* Additional Information */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Users className="h-4 w-4" />
-                  <h3 className="font-medium">Additional Information</h3>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="bio">Biography</Label>
-                    <Textarea
-                      id="bio"
-                      placeholder="Enter candidate's biography and background..."
-                      value={formData.bio}
-                      onChange={(e) => handleInputChange("bio", e.target.value)}
-                      rows={3}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="platform">Platform & Agenda</Label>
-                    <Textarea
-                      id="platform"
-                      placeholder="Enter candidate's platform, goals, and agenda..."
-                      value={formData.platform}
-                      onChange={(e) => handleInputChange("platform", e.target.value)}
-                      rows={3}
-                    />
-                  </div>
                 </div>
               </div>
             </div>

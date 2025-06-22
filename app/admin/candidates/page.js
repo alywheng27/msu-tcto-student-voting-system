@@ -6,26 +6,49 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { candidates, parties, positions, colleges } from "@/lib/data2"
+import { parties, positions, colleges } from "@/lib/data2"
 import { Camera } from "lucide-react"
 import { CandidateManagementModal } from "@/components/admin/candidates/Candidate-Management-Modal"
 import Image from "next/image"
+import { useToast } from "@/hooks/use-toast"
+import { Toaster } from "@/components/ui/toast"
+import { Loader2 } from "lucide-react"
 
 export default function CandidatesPage() {
+  const { toast, dismiss, toasts } = useToast()
   const [modalOpen, setModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState("add")
   const [selectedCandidate, setSelectedCandidate] = useState(null)
+  const [candidates, setCandidates] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
   const itemsPerPage = 8
 
   useEffect(() => {
-    // Simulate loading and ensure data is available
-    if (candidates && Array.isArray(candidates)) {
-      setIsLoading(false)
+    const fetchCandidates = async () => {
+      setIsLoading(true)
+      try {
+        const res = await fetch("/api/admin/candidates")
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}))
+          throw new Error(data.message || "Failed to fetch candidates")
+        }
+        const data = await res.json()
+        setCandidates(data)
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: err.message || "Failed to fetch candidates. Please try again.",
+          variant: "destructive"
+        })
+        setCandidates([])
+      } finally {
+        setIsLoading(false)
+      }
     }
-  }, [])
+    fetchCandidates()
+  }, [toast])
 
   const openAddModal = () => {
     setModalMode("add")
@@ -64,46 +87,35 @@ export default function CandidatesPage() {
     if (!searchQuery) return candidates;
     
     return candidates.filter((candidate) => {
-      const position = positions.find((p) => p.id === candidate.position)
-      const party = parties.find((p) => p.id === candidate.party)
-      const college = colleges.find((c) => c.id === candidate.college)
-      
       const searchLower = searchQuery.toLowerCase()
       return (
-        candidate.name.toLowerCase().includes(searchLower) ||
-        (position?.name || "").toLowerCase().includes(searchLower) ||
-        (party?.name || "").toLowerCase().includes(searchLower) ||
-        (college?.name || "").toLowerCase().includes(searchLower)
+        candidate.FirstName.toLowerCase().includes(searchLower) ||
+        candidate.MiddleName.toLowerCase().includes(searchLower) ||
+        candidate.Surname.toLowerCase().includes(searchLower) ||
+        candidate.ExtensionName.toLowerCase().includes(searchLower) ||
+        (candidate.Position || "").toLowerCase().includes(searchLower) ||
+        (candidate.Party || "").toLowerCase().includes(searchLower) ||
+        (candidate.CollegeOffice || "").toLowerCase().includes(searchLower)
       )
     })
   }
 
   if (isLoading) {
     return (
-      <div className="space-y-8">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Manage Candidates</h1>
-            <p className="text-muted-foreground">Loading candidates...</p>
-          </div>
+      <div className="flex items-center justify-center min-h-[80vh]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
+          <p className="text-gray-600">Loading candidates...</p>
         </div>
+        <Toaster toasts={toasts} onDismiss={dismiss} />
       </div>
     )
   }
 
-  // Ensure candidates is an array before filtering
-  const candidatesArray = Array.isArray(candidates) ? candidates : []
-
   // Group candidates by position type (SSC or College)
-  const sscCandidates = candidatesArray.filter((candidate) => {
-    const position = positions.find((p) => p.id === candidate.position)
-    return position?.type === "ssc"
-  })
+  const sscCandidates = candidates.filter((candidate) => candidate.PositionType === "SSC")
 
-  const collegeCandidates = candidatesArray.filter((candidate) => {
-    const position = positions.find((p) => p.id === candidate.position)
-    return position?.type === "college"
-  })
+  const collegeCandidates = candidates.filter((candidate) => candidate.PositionType === "College")
 
   return (
     <div className="space-y-8">
@@ -161,36 +173,31 @@ export default function CandidatesPage() {
                     <TableHead>Photo</TableHead>
                     <TableHead>Position</TableHead>
                     <TableHead>Party</TableHead>
-                    <TableHead>Votes</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {getPaginatedData(filterCandidates(sscCandidates)).map((candidate) => {
-                    const position = positions.find((p) => p.id === candidate.position)
-                    const party = parties.find((p) => p.id === candidate.party)
-
                     return (
-                      <TableRow key={candidate.id}>
-                        <TableCell className="font-medium">{candidate.name}</TableCell>
+                      <TableRow key={candidate.CandidateID}>
+                        <TableCell className="font-medium">{candidate.FirstName} {candidate.Surname}</TableCell>
                         <TableCell>
                           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
                             <Image
-                              src={candidate.photo || "/placeholder.svg?height=40&width=40"}
-                              alt={candidate.name}
+                              src={candidate.Photo || "/candidates/no-photo.png"}
+                              alt={candidate.Surname}
                               className="w-full h-full object-cover"
                               width={250}
                               height={250}
                             />
                           </div>
                         </TableCell>
-                        <TableCell>{position?.name || candidate.position}</TableCell>
+                        <TableCell>{candidate.Position}</TableCell>
                         <TableCell>
-                          <Badge style={{ backgroundColor: party?.color || "#888" }}>
-                            {party?.name || candidate.party}
+                          <Badge style={{ backgroundColor: candidate.PartyColor || "#888" }}>
+                            {candidate.Party}
                           </Badge>
                         </TableCell>
-                        <TableCell>{candidate.votes}</TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="sm" onClick={() => openEditModal(candidate)}>
                             Edit
@@ -273,7 +280,6 @@ export default function CandidatesPage() {
                     <TableHead>Position</TableHead>
                     <TableHead>College</TableHead>
                     <TableHead>Party</TableHead>
-                    <TableHead>Votes</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -284,31 +290,30 @@ export default function CandidatesPage() {
                     const college = colleges.find((c) => c.id === candidate.college)
 
                     return (
-                      <TableRow key={candidate.id}>
-                        <TableCell className="font-medium">{candidate.name}</TableCell>
+                      <TableRow key={candidate.CandidateID}>
+                        <TableCell className="font-medium">{candidate.FirstName} {candidate.Surname}</TableCell>
                         <TableCell>
                           <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
                             <Image
-                              src={candidate.photo || "/placeholder.svg?height=40&width=40"}
-                              alt={candidate.name}
+                              src={candidate.Photo || "/candidates/no-photo.png"}
+                              alt={candidate.Surname}
                               className="w-full h-full object-cover"
                               width={250}
                               height={250}
                             />
                           </div>
                         </TableCell>
-                        <TableCell>{position?.name || candidate.position}</TableCell>
+                        <TableCell>{candidate.Position}</TableCell>
                         <TableCell>
-                          <Badge variant="outline" style={{ borderColor: college?.color || "#888" }}>
-                            {college?.shortName || candidate.college}
+                          <Badge variant="outline" style={{ borderColor: candidate.CollegeOfficeColor || "#888" }}>
+                            {candidate.CollegeOfficeCode}
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge style={{ backgroundColor: party?.color || "#888" }}>
-                            {party?.name || candidate.party}
+                          <Badge style={{ backgroundColor: candidate.PartyColor || "#888" }}>
+                            {candidate.Party}
                           </Badge>
                         </TableCell>
-                        <TableCell>{candidate.votes}</TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="sm" onClick={() => openEditModal(candidate)}>
                             Edit
@@ -360,6 +365,7 @@ export default function CandidatesPage() {
         candidate={selectedCandidate}
         onSuccess={handleModalSuccess}
       />
+      <Toaster toasts={toasts} onDismiss={dismiss} />
     </div>
   )
 }

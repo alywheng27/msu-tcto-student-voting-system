@@ -64,7 +64,7 @@ export function PartyLogoUpload({ value, onChange, className = "" }) {
           <CardContent className="p-4 flex justify-center">
             <div className="relative group w-40 h-40 flex items-center justify-center bg-gray-50 rounded-lg">
               <Image
-                src={preview || "/placeholder.svg"}
+                src={preview || "/parties/no-logo.png"}
                 alt="Party logo preview"
                 className="max-w-full max-h-full object-contain"
                 width={250}
