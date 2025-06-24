@@ -3,7 +3,6 @@
 import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 import { Camera, Upload, X } from "lucide-react"
 import Image from "next/image"
 
@@ -60,13 +59,13 @@ export function CandidatePhotoUpload({ value, onChange, className = "" }) {
 
   return (
     <div className={`space-y-4 ${className}`}>
-      <Label htmlFor="photo">Candidate Photo</Label>
+      {/* <Label htmlFor="photo">Candidate Photo</Label> */}
 
       {preview ? (
         <Card className="relative overflow-hidden">
           <CardContent className="p-0">
             <div className="relative group">
-              <Image src={preview || "/placeholder.svg"} alt="Candidate preview" className="w-full h-64 object-cover" width={250} height={250} />
+              <Image src={preview || "/candidates/no-photo.png"} alt="Candidate preview" className="w-full h-64 object-cover" width={250} height={250} />
               <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 space-x-2">
                   <Button

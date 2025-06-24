@@ -7,7 +7,6 @@ export async function GET() {
         const pool = await connectToDB()
         console.log("[CANDIDATES] Connected to DB");
         console.log("[CANDIDATES] Querying candidates...");
-        // NOTE: Adjust the table/column names below based on your actual DB schema
         const result = await pool.request().query(`
             SELECT 
                 C.CandidateID,
@@ -48,7 +47,6 @@ export async function GET() {
                 Party ON Party.PartyID = C.PartyID
             JOIN 
                 CollegeOffice AS CO ON CO.CollegeOfficeID = U.CollegeOfficeID
-                
         `)
 
         if (result.rowsAffected < 1) {
@@ -58,7 +56,6 @@ export async function GET() {
                 status: 404
             })
         }
-
         console.log("[CANDIDATES] Candidates fetched successfully");
         return Response.json(result.recordset, { status: 200 })
     } catch (err) {
@@ -67,5 +64,60 @@ export async function GET() {
             headers: { "Content-Type": "application/json" },
             status: 500
         })
+    }
+}
+
+export async function POST(request) {
+    console.log("[CANDIDATES] POST request received");
+    try {
+        const body = await request.json();
+        console.log("[CANDIDATES] POST body:", body);
+        const {
+            firstName, middleName, surname, extensionName, username, password, role,
+            photo, positionID, partyID, collegeOfficeID
+        } = body;
+        if (!firstName || !surname || !positionID || !collegeOfficeID || !username || !password || !role) {
+            console.error("[CANDIDATES] Missing required fields.");
+            return Response.json({ message: "Missing required fields." }, { status: 400 });
+        }
+        const roleID = role === 'candidate' ? 3 : 1
+        const pool = await connectToDB();
+        const userResult = await pool.request()
+            .input('firstName', firstName)
+            .input('middleName', middleName)
+            .input('surname', surname)
+            .input('extensionName', extensionName)
+            .input('username', username)
+            .input('password', password)
+            .input('roleID', roleID)
+            .input('collegeOfficeID', collegeOfficeID)
+            .query(`
+                INSERT INTO Users (FirstName, MiddleName, Surname, ExtensionName, Username, Password, UserTypeID, CollegeOfficeID)
+                OUTPUT INSERTED.UserID
+                VALUES (@firstName, @middleName, @surname, @extensionName, @username, @password, @roleID, @collegeOfficeID)
+            `);
+        console.log("[CANDIDATES] User insert result:");
+        console.table(userResult.recordset);
+        const userID = userResult.recordset[0].UserID;
+        const candidateResult = await pool.request()
+            .input('userID', userID)
+            .input('photo', photo)
+            .input('positionID', positionID)
+            .input('partyID', partyID)
+            .query(`
+                INSERT INTO Candidate (UserID, Photo, PositionID, PartyID)
+                VALUES (@userID, @photo, @positionID, @partyID)
+            `);
+        console.log("[CANDIDATES] Candidate insert result:");
+        console.table(candidateResult);
+        if (candidateResult.rowsAffected < 1) {
+            console.error("[CANDIDATES] Failed to add candidate.");
+            return Response.json({ message: "Failed to add candidate." }, { status: 500 });
+        }
+        console.log("[CANDIDATES] Candidate added successfully.");
+        return Response.json({ message: "Candidate added successfully." }, { status: 200 });
+    } catch (err) {
+        console.error("[CANDIDATES] Error adding candidate:", err.message, err);
+        return Response.json({ message: err.message }, { status: 500 });
     }
 } 

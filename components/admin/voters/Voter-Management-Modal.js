@@ -469,7 +469,7 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="voter">Voter</SelectItem>
-                    <SelectItem value="admin">Administrator</SelectItem>
+                    {/* <SelectItem value="admin">Administrator</SelectItem> */}
                   </SelectContent>
                 </Select>
               </div>

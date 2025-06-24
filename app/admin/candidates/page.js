@@ -25,30 +25,31 @@ export default function CandidatesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const itemsPerPage = 8
 
-  useEffect(() => {
-    const fetchCandidates = async () => {
-      setIsLoading(true)
-      try {
-        const res = await fetch("/api/admin/candidates")
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}))
-          throw new Error(data.message || "Failed to fetch candidates")
-        }
-        const data = await res.json()
-        setCandidates(data)
-      } catch (err) {
-        toast({
-          title: "Error",
-          description: err.message || "Failed to fetch candidates. Please try again.",
-          variant: "destructive"
-        })
-        setCandidates([])
-      } finally {
-        setIsLoading(false)
+  const fetchCandidates = async () => {
+    setIsLoading(true)
+    try {
+      const res = await fetch("/api/admin/candidates")
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.message || "Failed to fetch candidates")
       }
+      const data = await res.json()
+      setCandidates(data)
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: err.message || "Failed to fetch candidates. Please try again.",
+        variant: "destructive"
+      })
+      setCandidates([])
+    } finally {
+      setIsLoading(false)
     }
+  }
+
+  useEffect(() => {
     fetchCandidates()
-  }, [toast])
+  }, [])
 
   const openAddModal = () => {
     setModalMode("add")
@@ -68,9 +69,33 @@ export default function CandidatesPage() {
     setModalOpen(true)
   }
 
-  const handleModalSuccess = () => {
-    // In a real app, this would refresh the data
-    console.log("Modal operation successful - refreshing data")
+  const handleModalSuccess = (result) => {
+    if (!result || !result.action) return;
+    if (result.action === 'add') {
+      setCandidates((prev) => [...prev, result]);
+      toast({
+        title: 'Candidate Added',
+        description: `${result.firstName || result.FirstName} ${result.surname || result.Surname} has been added.`,
+        variant: 'success',
+      });
+    } else if (result.action === 'edit') {
+      setCandidates((prev) => prev.map((c) =>
+        c.CandidateID === selectedCandidate.CandidateID ? { ...c, ...result } : c
+      ));
+      toast({
+        title: 'Candidate Updated',
+        description: `${result.firstName || result.FirstName} ${result.surname || result.Surname} has been updated.`,
+        variant: 'success',
+      });
+    } else if (result.action === 'delete') {
+      setCandidates((prev) => prev.filter((c) => c.CandidateID !== selectedCandidate.CandidateID));
+      toast({
+        title: 'Candidate Deleted',
+        description: `${result.firstName || result.FirstName} ${result.surname || result.Surname} has been deleted.`,
+        variant: 'success',
+      });
+    }
+    fetchCandidates();
   }
 
   // Add pagination functions
