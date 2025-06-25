@@ -3,30 +3,14 @@ import { AlertCircle, CheckCircle2, Vote } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { colleges } from "@/lib/data2"
+import { getCookies, getVoters } from "@/lib/voters"
 
-export default function Voting() {
-    // Create a mock user for demonstration
-    const user = {
-        name: "John Doe",
-        college: "cas",
-        studentId: "2021-12345",
-        hasVoted: {
-        ssc: false,
-        college: false,
-        },
-    }
+export default async function Voting() {
+    const voters = await getVoters()
+    const cookieValue = await getCookies()
 
-    const college = colleges.find((c) => c.id === user?.college)
-
-    const electionInfo = {
-        startDate: "March 15, 2024",
-        endDate: "March 17, 2024",
-        timeRemaining: "2 days, 14 hours",
-        totalPositions: 8,
-        completedVotes: user.hasVoted.ssc && user.hasVoted.college ? 2 : user.hasVoted.ssc || user.hasVoted.college ? 1 : 0,
-    }
-
+    const voterFound = voters.find((voter) => voter.UserID === cookieValue.userID)
+    
     return (
         <div className="grid gap-6 md:grid-cols-2">
             {/* SSC Voting */}
@@ -35,9 +19,9 @@ export default function Voting() {
                 <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                     <Vote className="h-5 w-5" />
-                    SSC Voting
+                    SSC Voting {voterFound.HasVotedSSC}
                 </CardTitle>
-                {user.hasVoted.ssc ? (
+                {voterFound.HasVotedSSC ? (
                     <Badge className="bg-green-100 text-green-800">
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     Completed
@@ -59,7 +43,7 @@ export default function Voting() {
                 <p>• SSC Treasurer</p>
                 </div>
 
-                {user.hasVoted.ssc ? (
+                {voterFound.HasVotedSSC ? (
                 <Button disabled className="w-full">
                     <CheckCircle2 className="h-4 w-4 mr-2" />
                     Vote Submitted
@@ -83,7 +67,7 @@ export default function Voting() {
                     <Vote className="h-5 w-5" />
                     College Voting
                 </CardTitle>
-                {user.hasVoted.college ? (
+                {voterFound.HasVotedCollege ? (
                     <Badge className="bg-green-100 text-green-800">
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     Completed
@@ -95,7 +79,7 @@ export default function Voting() {
                     </Badge>
                 )}
                 </div>
-                <CardDescription>Vote for {college?.name} positions</CardDescription>
+                <CardDescription>Vote for {voterFound.CollegeOffice} positions</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="text-sm text-gray-600">
@@ -105,13 +89,13 @@ export default function Voting() {
                 <p>• College Treasurer</p>
                 </div>
 
-                {user.hasVoted.college ? (
+                {voterFound.HasVotedCollege ? (
                 <Button disabled className="w-full">
                     <CheckCircle2 className="h-4 w-4 mr-2" />
                     Vote Submitted
                 </Button>
                 ) : (
-                <Button asChild className="w-full" style={{ backgroundColor: college?.color }}>
+                <Button asChild className="w-full" style={{ backgroundColor: voterFound.CollegeOfficeColor }}>
                     <Link href="/voter/vote/college">
                     <Vote className="h-4 w-4 mr-2" />
                     Start College Voting

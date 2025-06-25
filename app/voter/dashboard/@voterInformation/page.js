@@ -1,9 +1,20 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users } from "lucide-react"
+import { getColleges, getCookies } from "@/lib/voters"
 
 export default async function VoterInformation() {
-    const response = await fetch(`${process.env.MSSQL_PUBLIC_APP_URL}/api/admin/voters`)
-    const data = await response.json()
+    const colleges = await getColleges()
+    const cookieValue = await getCookies()
+
+    const collegeFound = colleges.find((college) => college.CollegeOfficeID === cookieValue.collegeOfficeID)
+    console.log(cookieValue.collegeOfficeID)
+    const voter = {
+        firstName: cookieValue.firstName,
+        surname: cookieValue.surname,
+        username: cookieValue.username,
+        college: collegeFound.CollegeOffice,
+        collegeCode: collegeFound.CollegeOfficeCode
+    }
 
     return (
         <Card>
@@ -16,15 +27,15 @@ export default async function VoterInformation() {
             <CardContent className="grid gap-4 md:grid-cols-3">
             <div>
                 <p className="text-sm text-gray-500">Student Name</p>
-                <p className="font-medium">{data[0].FirstName} {data[0].Surname}</p>
+                <p className="font-medium">{voter.firstName} {voter.surname}</p>
             </div>
             <div>
                 <p className="text-sm text-gray-500">Student ID</p>
-                <p className="font-medium">{data[0].Username}</p>
+                <p className="font-medium">{voter.username}</p>
             </div>
             <div>
                 <p className="text-sm text-gray-500">College</p>
-                <p className="font-medium">{data[0].CollegeOffice} ({data[0].CollegeOfficeCode})</p>
+                <p className="font-medium">{voter.college} ({voter.collegeCode})</p>
             </div>
             </CardContent>
         </Card>
