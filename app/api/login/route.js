@@ -19,12 +19,20 @@ export async function POST(req) {
         // Do not log sensitive data like passwords
         console.log("[LOGIN] Attempting login for username:", form.username, "Role:", form.role || "None", "College:", form.college || "None")
 
+        const collegeID = await pool.request()
+            .input('college', form.college)
+            .query("SELECT CollegeOfficeID FROM CollegeOffice WHERE CollegeOffice = @college")
+        console.log("[LOGIN] College result:")
+        console.table(collegeID.recordset)
+
         console.log("[LOGIN] Querying user in DB...");
         const result = await pool.request()
             .input('username', form.username)
             .input('password', form.password)
-            .query("SELECT * FROM Users WHERE username = @username AND password = @password")
-        console.table("[LOGIN] Query result:", result.recordset);
+            .input('college', collegeID.recordset[0].CollegeOfficeID)
+            .query("SELECT * FROM Users WHERE username = @username AND password = @password AND CollegeOfficeID = @college")
+        console.log("[LOGIN] Query result:");
+        console.table(result.recordset)
 
         if (
             result.rowsAffected < 1 ||
