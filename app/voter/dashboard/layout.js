@@ -1,7 +1,7 @@
 export default function VoterLayout({ children, voterInformation, electionStatus, voting, importantReminders }) {
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 p-4">
+    <div className="container mx-auto space-y-6 p-4">
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold text-gray-900">Voter Dashboard</h1>
