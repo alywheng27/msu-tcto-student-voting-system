@@ -1,6 +1,6 @@
 import { VoterSidebar } from '@/components/voter/Voter-Sidebar'
 
-export default function VoterLayout({ children }) {
+export default function VoterSSCLayout({ children }) {
 
   return (
     <div className="flex min-h-screen bg-gray-50">

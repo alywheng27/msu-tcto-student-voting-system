@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, CheckCircle2, Vote, Users, Clock, Calendar } from "lucide-react"
+import { AlertCircle, CheckCircle2, Calendar } from "lucide-react"
 
 export default function ImportantReminders() {
   return (
@@ -25,7 +25,7 @@ export default function ImportantReminders() {
             <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
             <div>
                 <p className="font-medium text-amber-900">One Vote Per Position</p>
-                <p className="text-sm text-amber-700">You can only vote once for each position. Choose carefully!</p>
+                <p className="text-sm text-amber-700">You can only vote once for other positions. Choose carefully!</p>
             </div>
             </div>
 

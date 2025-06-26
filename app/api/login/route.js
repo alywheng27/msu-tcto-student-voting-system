@@ -19,18 +19,30 @@ export async function POST(req) {
         // Do not log sensitive data like passwords
         console.log("[LOGIN] Attempting login for username:", form.username, "Role:", form.role || "None", "College:", form.college || "None")
 
-        const collegeID = await pool.request()
-            .input('college', form.college)
-            .query("SELECT CollegeOfficeID FROM CollegeOffice WHERE CollegeOffice = @college")
-        console.log("[LOGIN] College result:")
-        console.table(collegeID.recordset)
+        // Helper function to get CollegeOfficeID
+        async function getCollegeOfficeID(college) {
+            const collegeIDResult = await pool.request()
+                .input('college', college)
+                .query("SELECT CollegeOfficeID FROM CollegeOffice WHERE CollegeOffice = @college")
+            return collegeIDResult.recordset[0]?.CollegeOfficeID
+        }
 
+        let userQuery, userRequest;
+        if (form.college) {
+            const collegeOfficeID = await getCollegeOfficeID(form.college)
+            userQuery = `SELECT * FROM Users WHERE username = @username AND password = @password AND CollegeOfficeID = @college`;
+            userRequest = pool.request()
+                .input('username', form.username)
+                .input('password', form.password)
+                .input('college', collegeOfficeID)
+        } else {
+            userQuery = `SELECT * FROM Users WHERE username = @username AND password = @password`;
+            userRequest = pool.request()
+                .input('username', form.username)
+                .input('password', form.password)
+        }
         console.log("[LOGIN] Querying user in DB...");
-        const result = await pool.request()
-            .input('username', form.username)
-            .input('password', form.password)
-            .input('college', collegeID.recordset[0].CollegeOfficeID)
-            .query("SELECT * FROM Users WHERE username = @username AND password = @password AND CollegeOfficeID = @college")
+        const result = await userRequest.query(userQuery)
         console.log("[LOGIN] Query result:");
         console.table(result.recordset)
 

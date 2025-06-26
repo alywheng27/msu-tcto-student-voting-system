@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -25,27 +25,16 @@ export default function SSCVotingPage() {
     senators: [],
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
-
-  const parties = [
-    {
-      id: "unity",
-      name: "Unity Party",
-      color: "#2196F3",
-      logo: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: "progress",
-      name: "Progress Party",
-      color: "#4CAF50",
-      logo: "/placeholder.svg?height=200&width=200",
-    },
-    {
-      id: "reform",
-      name: "Reform Party",
-      color: "#FF9800",
-      logo: "/placeholder.svg?height=200&width=200",
-    },
-  ]
+  const [candidates, setCandidates] = useState({
+    president: [],
+    vicePresident: [],
+    senators: [],
+  })
+  const [loadingCandidates, setLoadingCandidates] = useState(true)
+  const [fetchError, setFetchError] = useState(null)
+  const [parties, setParties] = useState([])
+  const [loadingParties, setLoadingParties] = useState(true)
+  const [fetchPartiesError, setFetchPartiesError] = useState(null)
 
   const ssc = {
     id: "ssc",
@@ -55,32 +44,76 @@ export default function SSCVotingPage() {
     logo: "/placeholder.svg?height=100&width=100",
   }
 
-  const candidates = {
-    president: [
-      { id: "p1", name: "Ahmad Khan", party: "unity", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "p2", name: "Maria Santos", party: "progress", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "p3", name: "Ibrahim Ali", party: "reform", photo: "/placeholder.svg?height=200&width=200" },
-    ],
-    vicePresident: [
-      { id: "vp1", name: "Fatima Hassan", party: "unity", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "vp2", name: "Carlos Rodriguez", party: "progress", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "vp3", name: "Aisha Mohammed", party: "reform", photo: "/placeholder.svg?height=200&width=200" },
-    ],
-    senators: [
-      { id: "s1", name: "Omar Abdullah", party: "unity", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s2", name: "Sofia Garcia", party: "unity", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s3", name: "Jamal Hussein", party: "progress", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s4", name: "Leila Mahmoud", party: "progress", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s5", name: "Rashid Khan", party: "reform", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s6", name: "Nadia Ahmed", party: "reform", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s7", name: "Hassan Ali", party: "unity", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s8", name: "Zara Malik", party: "progress", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s9", name: "Karim Abadi", party: "reform", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s10", name: "Layla Ibrahim", party: "unity", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s11", name: "Mohammed Salah", party: "progress", photo: "/placeholder.svg?height=200&width=200" },
-      { id: "s12", name: "Amina Khalid", party: "reform", photo: "/placeholder.svg?height=200&width=200" },
-    ],
+  async function fetchCandidates() {
+    setLoadingCandidates(true)
+    setFetchError(null)
+    try {
+      const res = await fetch("/api/admin/candidates")
+      if (!res.ok) throw new Error("Failed to fetch candidates")
+      const data = await res.json()
+      // I-map ang data base sa position
+      const mapped = {
+        president: [],
+        vicePresident: [],
+        senators: [],
+      }
+      data.forEach((c) => {
+        if (c.Position?.toLowerCase() === "president") {
+          mapped.president.push({
+            id: c.CandidateID,
+            name: `${c.FirstName} ${c.Surname}`,
+            party: c.PartyID?.toString() || c.Party,
+            photo: c.Photo || "/candidates/no-photo.png",
+          })
+        } else if (c.Position?.toLowerCase() === "vice president") {
+          mapped.vicePresident.push({
+            id: c.CandidateID,
+            name: `${c.FirstName} ${c.Surname}`,
+            party: c.PartyID?.toString() || c.Party,
+            photo: c.Photo || "/candidates/no-photo.png",
+          })
+        } else if (c.Position?.toLowerCase() === "senator") {
+          mapped.senators.push({
+            id: c.CandidateID,
+            name: `${c.FirstName} ${c.Surname}`,
+            party: c.PartyID?.toString() || c.Party,
+            photo: c.Photo || "/candidates/no-photo.png",
+          })
+        }
+      })
+      setCandidates(mapped)
+    } catch (err) {
+      setFetchError(err.message)
+    } finally {
+      setLoadingCandidates(false)
+    }
   }
+
+  async function fetchParties() {
+    setLoadingParties(true)
+    setFetchPartiesError(null)
+    try {
+      const res = await fetch("/api/admin/parties")
+      if (!res.ok) throw new Error("Failed to fetch parties")
+      const data = await res.json()
+      const mapped = data.map((p) => ({
+        id: p.PartyID?.toString() || p.Party,
+        name: p.Party,
+        color: p.PartyColor || "#2196F3",
+        logo: p.Logo || "/parties/no-logo.png",
+      }))
+      setParties(mapped)
+    } catch (err) {
+      setFetchPartiesError(err.message)
+    } finally {
+      setLoadingParties(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchCandidates()
+    fetchParties()
+  }, [])
 
   const handlePartySelect = (partyId) => {
     setSelectedParty(partyId)
@@ -165,11 +198,33 @@ export default function SSCVotingPage() {
     }
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsSubmitting(true)
-    setTimeout(() => {
-      router.push("/voter/vote/success?type=ssc")
-    }, 1000)
+    try {
+      const res = await fetch("/api/voter/ssc", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ selections })
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        toast({
+          title: "Submission failed",
+          description: data.message || "An error occurred while submitting your vote.",
+          variant: "destructive"
+        })
+        setIsSubmitting(false)
+        return
+      }
+      router.replace("/voter/vote/success")
+    } catch (err) {
+      toast({
+        title: "Submission failed",
+        description: err.message || "An error occurred while submitting your vote.",
+        variant: "destructive"
+      })
+      setIsSubmitting(false)
+    }
   }
 
   const getSelectedCandidate = (type, id) => {

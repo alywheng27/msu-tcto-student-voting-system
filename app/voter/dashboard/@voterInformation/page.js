@@ -7,7 +7,6 @@ export default async function VoterInformation() {
     const cookieValue = await getCookies()
 
     const collegeFound = colleges.find((college) => college.CollegeOfficeID === cookieValue.collegeOfficeID)
-    console.log(cookieValue.collegeOfficeID)
     const voter = {
         firstName: cookieValue.firstName,
         surname: cookieValue.surname,
