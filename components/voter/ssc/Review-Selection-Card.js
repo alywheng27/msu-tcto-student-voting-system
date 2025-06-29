@@ -34,15 +34,15 @@ export function ReviewSelectionCard({ position, candidate, party, college, onEdi
           {party && (
             <>
               <div
-                className="absolute inset-0 opacity-[0.04]"
+                className="absolute inset-0 opacity-[0.1]"
                 style={{
                   background: `linear-gradient(135deg, ${party.color}20, ${party.color}05)`,
                 }}
               />
               <div
-                className="absolute inset-0 opacity-[0.08] bg-center bg-no-repeat"
+                className="absolute inset-0 opacity-[0.3] bg-center bg-no-repeat"
                 style={{
-                  backgroundImage: `url(${party.logo || "/placeholder.svg?height=200&width=200"})`,
+                  backgroundImage: `url(${party.logo || "/parties/no-logo.png"})`,
                   backgroundSize: "80px 80px",
                   backgroundPosition: "center right 10px",
                 }}

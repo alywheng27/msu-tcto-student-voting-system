@@ -98,7 +98,32 @@ export async function POST(request) {
             `);
         console.log("[CANDIDATES] User insert result:");
         console.table(userResult.recordset);
+        
         const userID = userResult.recordset[0].UserID;
+
+        // Insert into Voter table
+        console.log("[CANDIDATES] Inserting into Voter table...");
+        const resultUser = await pool.request()
+            .input('userID', userID)
+            .query(`
+                INSERT INTO Voter (UserID)
+                VALUES (@userID)
+            `)
+        if (resultUser.recordset && resultUser.recordset.length > 0) {
+            console.table(resultUser.recordset);
+        }
+
+        if (resultUser.rowsAffected < 1) {
+            console.error("[CANDIDATES] Failed to add voter.");
+            return Response.json({
+                message: "Failed to add position."
+            }, {
+                status: 500
+            })
+        }
+
+        console.log("[CANDIDATES] Voter added successfully.");
+
         const candidateResult = await pool.request()
             .input('userID', userID)
             .input('photo', photo)
@@ -109,7 +134,6 @@ export async function POST(request) {
                 VALUES (@userID, @photo, @positionID, @partyID)
             `);
         console.log("[CANDIDATES] Candidate insert result:");
-        console.table(candidateResult);
         if (candidateResult.rowsAffected < 1) {
             console.error("[CANDIDATES] Failed to add candidate.");
             return Response.json({ message: "Failed to add candidate." }, { status: 500 });

@@ -81,7 +81,7 @@ export default function LoginPage() {
         setTimeout(() => {
           if (data[0]?.UserTypeID == 1) {
             router.replace("/admin/dashboard")
-          }else if(data[0]?.UserTypeID == 2) {
+          }else if(data[0]?.UserTypeID == 2  || data[0]?.UserTypeID == 3) {
             router.replace("/voter/dashboard")
           }
         }, 100)

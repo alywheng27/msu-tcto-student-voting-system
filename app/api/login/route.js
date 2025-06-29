@@ -48,7 +48,7 @@ export async function POST(req) {
 
         if (
             result.rowsAffected < 1 ||
-            (result.recordset[0].UserTypeID == 1 && form.role == 'voter') ||
+            (result.recordset[0].UserTypeID == 1 && (form.role == 'voter' || form.role == 'candidate')) ||
             (result.recordset[0].UserTypeID == 2 && form.role == 'admin')
         ) {
             console.error("[LOGIN] Invalid credentials or mismatched role.");

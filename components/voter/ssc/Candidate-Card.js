@@ -29,9 +29,9 @@ export function CandidateCard({ candidate, party, isSelected, onSelect, selectio
 
             {/* Party logo as background */}
             <div
-              className="absolute inset-0 opacity-[0.08] bg-center bg-no-repeat transition-all duration-500 group-hover:opacity-[0.12] group-hover:scale-105"
+              className="absolute inset-0 opacity-[0.1] bg-center bg-no-repeat transition-all duration-500 group-hover:opacity-[0.3] group-hover:scale-105"
               style={{
-                backgroundImage: `url(${party.logo || "/placeholder.svg?height=200&width=200"})`,
+                backgroundImage: `url(${party.logo || "/parties/no-logo.png"})`,
                 backgroundSize: "120px 120px",
                 backgroundPosition: "center right 10px",
               }}
