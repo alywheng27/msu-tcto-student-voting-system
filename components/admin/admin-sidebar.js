@@ -217,7 +217,7 @@ export function AdminSidebar() {
               Are you sure you want to logout? You will need to login again to access the admin panel.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex gap-2 sm:gap-0">
+          <DialogFooter className="flex gap-2">
             <Button
               variant="outline"
               onClick={() => setShowLogoutConfirmation(false)}

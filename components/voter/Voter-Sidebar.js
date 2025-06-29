@@ -280,7 +280,7 @@ export function VoterSidebar() {
               Sigurado ka bang gusto mong mag-logout? Kailangan mong mag-login muli para makabalik sa voting portal.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex gap-2 sm:gap-0">
+          <DialogFooter className="flex gap-2">
             <Button
               variant="outline"
               onClick={() => setShowLogoutConfirmation(false)}
