@@ -277,7 +277,7 @@ export function VoterSidebar() {
           <DialogHeader>
             <DialogTitle>Confirm Logout</DialogTitle>
             <DialogDescription>
-              Sigurado ka bang gusto mong mag-logout? Kailangan mong mag-login muli para makabalik sa voting portal.
+              Are you sure you want to logout? You will need to login again to access the voting portal.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex gap-2">
