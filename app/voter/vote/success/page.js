@@ -149,12 +149,12 @@ export default function VoteSuccessPage() {
                   </Button>
                 </Link>
 
-                <Link href="/">
+                {/* <Link href="/">
                   <Button variant="outline" className="w-full gap-2">
                     <ArrowLeft className="w-4 h-4" />
                     Back to Home
                   </Button>
-                </Link>
+                </Link> */}
 
                 {/* <Button
                   onClick={generateReceipt}

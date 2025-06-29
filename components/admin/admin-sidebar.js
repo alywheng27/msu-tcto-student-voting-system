@@ -191,13 +191,13 @@ export function AdminSidebar() {
 
         {/* Footer */}
         <div className="border-t border-gray-200 p-4 space-y-2">
-          <Link
+          {/* <Link
             href="/"
             className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200"
           >
             <Home className="h-4 w-4 flex-shrink-0" />
             <span>Back to Home</span>
-          </Link>
+          </Link> */}
           <button
             onClick={() => setShowLogoutConfirmation(true)}
             className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200"
@@ -295,14 +295,14 @@ export function AdminSidebar() {
 
         {/* Mobile Footer */}
         <div className="border-t border-gray-200 p-4 space-y-2">
-          <Link
+          {/* <Link
             href="/"
             className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 touch-manipulation"
             onClick={() => setIsMobileMenuOpen(false)}
           >
             <Home className="h-5 w-5 flex-shrink-0" />
             <span>Back to Home</span>
-          </Link>
+          </Link> */}
           <button
             onClick={() => {
               setShowLogoutConfirmation(true)

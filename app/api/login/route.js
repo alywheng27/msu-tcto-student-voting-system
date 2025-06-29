@@ -28,15 +28,55 @@ export async function POST(req) {
         }
 
         let userQuery, userRequest;
-        if (form.college) {
+        if (form.college && form.role === 'voter') {
             const collegeOfficeID = await getCollegeOfficeID(form.college)
-            userQuery = `SELECT * FROM Users WHERE username = @username AND password = @password AND CollegeOfficeID = @college`;
+            userQuery = `
+                SELECT 
+                    U.*,
+                    V.VoterID,
+                    V.HasVotedSSC,
+                    V.HasVotedCollege,
+                    C.CandidateID,
+                    C.Photo,
+                    P.PositionID,
+                    P.Position,
+                    Party.PartyID,
+                    Party.Party,
+                    Party.PartyColor,
+                    Party.Logo
+                FROM Users U
+                LEFT JOIN Voter V ON U.UserID = V.UserID
+                LEFT JOIN Candidate C ON U.UserID = C.UserID
+                LEFT JOIN Position P ON C.PositionID = P.PositionID
+                LEFT JOIN Party ON C.PartyID = Party.PartyID
+                WHERE U.username = @username AND U.password = @password AND U.CollegeOfficeID = @college
+            `;
             userRequest = pool.request()
                 .input('username', form.username)
                 .input('password', form.password)
                 .input('college', collegeOfficeID)
         } else {
-            userQuery = `SELECT * FROM Users WHERE username = @username AND password = @password`;
+            userQuery = `
+                SELECT 
+                    U.*,
+                    V.VoterID,
+                    V.HasVotedSSC,
+                    V.HasVotedCollege,
+                    C.CandidateID,
+                    C.Photo,
+                    P.PositionID,
+                    P.Position,
+                    Party.PartyID,
+                    Party.Party,
+                    Party.PartyColor,
+                    Party.Logo
+                FROM Users U
+                LEFT JOIN Voter V ON U.UserID = V.UserID
+                LEFT JOIN Candidate C ON U.UserID = C.UserID
+                LEFT JOIN Position P ON C.PositionID = P.PositionID
+                LEFT JOIN Party ON C.PartyID = Party.PartyID
+                WHERE U.username = @username AND U.password = @password
+            `;
             userRequest = pool.request()
                 .input('username', form.username)
                 .input('password', form.password)
@@ -69,6 +109,25 @@ export async function POST(req) {
         cookieStore.set("MiddleName", result.recordset[0].MiddleName)
         cookieStore.set("Surname", result.recordset[0].Surname)
         cookieStore.set("ExtensionName", result.recordset[0].ExtensionName)
+        
+        // Set voter information if user is a voter
+        if (result.recordset[0].VoterID) {
+            cookieStore.set("VoterID", result.recordset[0].VoterID)
+            cookieStore.set("HasVotedSSC", result.recordset[0].HasVotedSSC || "False")
+            cookieStore.set("HasVotedCollege", result.recordset[0].HasVotedCollege || "False")
+        }
+        
+        // Set candidate information if user is a candidate
+        if (result.recordset[0].CandidateID) {
+            cookieStore.set("CandidateID", result.recordset[0].CandidateID)
+            cookieStore.set("CandidatePhoto", result.recordset[0].CandidatePhoto || "")
+            cookieStore.set("PositionID", result.recordset[0].PositionID || "")
+            cookieStore.set("Position", result.recordset[0].Position || "")
+            cookieStore.set("PartyID", result.recordset[0].PartyID || "")
+            cookieStore.set("Party", result.recordset[0].Party || "")
+            cookieStore.set("PartyColor", result.recordset[0].PartyColor || "")
+            cookieStore.set("PartyLogo", result.recordset[0].PartyLogo || "")
+        }
 
         console.log("[LOGIN]", form.username + " logged in successfully.")
         return Response.json(result.recordset, { status: 200 })
