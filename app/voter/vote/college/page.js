@@ -42,7 +42,7 @@ export default function CollegeVotingPage() {
   const [loadingParties, setLoadingParties] = useState(false)
   const [fetchError, setFetchError] = useState(null)
   const [fetchPartiesError, setFetchPartiesError] = useState(null)
-  const [loadingColleges, setLoadingColleges] = useState(null)
+  const [loadingColleges, setLoadingColleges] = useState(true)
   const [fetchCollegesError, setFetchCollegesError] = useState(null)
 
   const collegeOffice = colleges.find((c) => c.id === cookieValue.collegeOfficeID)
@@ -337,463 +337,606 @@ export default function CollegeVotingPage() {
 
   return (
     <div className="space-y-8 container mx-auto px-4">
-      <div>
-        <h1 className="text-3xl font-bold mb-2" style={{ color: college.color }}>
-          {college.name} Election
-        </h1>
-        <p className="text-muted-foreground">Cast your vote for your college representatives</p>
-      </div>
-
-      <div className="flex justify-between items-center overflow-x-auto pb-2">
-        <div className="flex space-x-2 min-w-max">
-          <Badge variant={step === "mode" ? "default" : "outline"}>Mode</Badge>
-          <ChevronRight className="h-4 w-4" />
-          <Badge variant={step === "governor" ? "default" : "outline"}>Governor</Badge>
-          <ChevronRight className="h-4 w-4" />
-          <Badge variant={step === "viceGovernor" ? "default" : "outline"}>Vice Governor</Badge>
-          <ChevronRight className="h-4 w-4" />
-          <Badge variant={step === "mayor" ? "default" : "outline"}>Mayor</Badge>
-          <ChevronRight className="h-4 w-4" />
-          <Badge variant={step === "viceMayor" ? "default" : "outline"}>Vice Mayor</Badge>
-          <ChevronRight className="h-4 w-4" />
-          <Badge variant={step === "boardMembers" ? "default" : "outline"}>Board Members</Badge>
-          <ChevronRight className="h-4 w-4" />
-          <Badge variant={step === "review" ? "default" : "outline"}>Review</Badge>
+      {loadingColleges ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center space-y-3">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="text-muted-foreground">Loading college information...</p>
+          </div>
         </div>
-      </div>
+      ) : fetchCollegesError ? (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error Loading College Information</AlertTitle>
+          <AlertDescription>
+            {fetchCollegesError}. Please try refreshing the page or contact support if the problem persists.
+          </AlertDescription>
+        </Alert>
+      ) : (
+        <>
+          <div>
+            <h1 className="text-3xl font-bold mb-2" style={{ color: college.color }}>
+              {college.name} Election
+            </h1>
+            <p className="text-muted-foreground">Cast your vote for your college representatives</p>
+          </div>
 
-      <Card>
-        {step === "mode" && (
-          <>
-            <CardHeader>
-              <CardTitle>Select Voting Mode</CardTitle>
-              <CardDescription>Choose how you want to vote for the College election</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="individual" onValueChange={(value) => setVotingMode(value)}>
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="individual">Individual Mode</TabsTrigger>
-                  <TabsTrigger value="party">Party Mode</TabsTrigger>
-                </TabsList>
-                <TabsContent value="individual" className="mt-4">
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Individual Mode</AlertTitle>
-                    <AlertDescription>
-                      Select candidates individually for each position. You can choose candidates from different parties
-                      or skip positions you don&apos;t want to vote for.
-                    </AlertDescription>
-                  </Alert>
-                </TabsContent>
-                <TabsContent value="party" className="mt-4">
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertTitle>Party Mode</AlertTitle>
-                    <AlertDescription>
-                      Select a party to automatically vote for all its candidates. You can still modify individual
-                      selections or skip positions in the next steps.
-                    </AlertDescription>
-                  </Alert>
+          <div className="flex justify-between items-center overflow-x-auto pb-2">
+            <div className="flex space-x-2 min-w-max">
+              <Badge variant={step === "mode" ? "default" : "outline"}>Mode</Badge>
+              <ChevronRight className="h-4 w-4" />
+              <Badge variant={step === "governor" ? "default" : "outline"}>Governor</Badge>
+              <ChevronRight className="h-4 w-4" />
+              <Badge variant={step === "viceGovernor" ? "default" : "outline"}>Vice Governor</Badge>
+              <ChevronRight className="h-4 w-4" />
+              <Badge variant={step === "mayor" ? "default" : "outline"}>Mayor</Badge>
+              <ChevronRight className="h-4 w-4" />
+              <Badge variant={step === "viceMayor" ? "default" : "outline"}>Vice Mayor</Badge>
+              <ChevronRight className="h-4 w-4" />
+              <Badge variant={step === "boardMembers" ? "default" : "outline"}>Board Members</Badge>
+              <ChevronRight className="h-4 w-4" />
+              <Badge variant={step === "review" ? "default" : "outline"}>Review</Badge>
+            </div>
+          </div>
 
-                  <div className="mt-4">
-                    <Select value={selectedParty} onValueChange={handlePartySelect}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a party" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {parties.map((party) => (
-                          <SelectItem key={party.id} value={party.id}>
-                            <div className="flex items-center">
-                              <div className="h-3 w-3 rounded-full mr-2" style={{ backgroundColor: party.color }}></div>
-                              {party.name}
+          <Card>
+            {step === "mode" && (
+              <>
+                <CardHeader>
+                  <CardTitle>Select Voting Mode</CardTitle>
+                  <CardDescription>Choose how you want to vote for the College election</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Tabs defaultValue="individual" onValueChange={(value) => setVotingMode(value)}>
+                    <TabsList className="grid w-full grid-cols-2">
+                      <TabsTrigger value="individual">Individual Mode</TabsTrigger>
+                      <TabsTrigger value="party">Party Mode</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="individual" className="mt-4">
+                      <Alert>
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Individual Mode</AlertTitle>
+                        <AlertDescription>
+                          Select candidates individually for each position. You can choose candidates from different parties
+                          or skip positions you don&apos;t want to vote for.
+                        </AlertDescription>
+                      </Alert>
+                    </TabsContent>
+                    <TabsContent value="party" className="mt-4">
+                      <Alert>
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Party Mode</AlertTitle>
+                        <AlertDescription>
+                          Select a party to automatically vote for all its candidates. You can still modify individual
+                          selections or skip positions in the next steps.
+                        </AlertDescription>
+                      </Alert>
+
+                      <div className="mt-4">
+                        {loadingParties ? (
+                          <div className="flex items-center justify-center py-8">
+                            <div className="text-center space-y-3">
+                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                              <p className="text-muted-foreground">Loading parties...</p>
                             </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </>
-        )}
+                          </div>
+                        ) : fetchPartiesError ? (
+                          <Alert variant="destructive">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertTitle>Error Loading Parties</AlertTitle>
+                            <AlertDescription>
+                              {fetchPartiesError}. Please try refreshing the page or contact support if the problem persists.
+                            </AlertDescription>
+                          </Alert>
+                        ) : (
+                          <Select value={selectedParty} onValueChange={handlePartySelect}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a party" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {parties.map((party) => (
+                                <SelectItem key={party.id} value={party.id}>
+                                  <div className="flex items-center">
+                                    <div className="h-3 w-3 rounded-full mr-2" style={{ backgroundColor: party.color }}></div>
+                                    {party.name}
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </>
+            )}
 
-        {step === "governor" && (
-          <>
-            <CardHeader>
-              <CardTitle>Select Governor</CardTitle>
-              <CardDescription>Choose one candidate for College Governor or skip this position</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {candidates.governor.map((candidate) => (
-                  <CandidateCard
-                    key={candidate.id}
-                    candidate={candidate}
-                    party={getPartyById(candidate.party)}
-                    isSelected={selections.governor === candidate.id}
-                    onSelect={() => handleSelectCandidate("governor", candidate.id)}
-                    selectionMode="single"
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </>
-        )}
-
-        {step === "viceGovernor" && (
-          <>
-            <CardHeader>
-              <CardTitle>Select Vice Governor</CardTitle>
-              <CardDescription>Choose one candidate for College Vice Governor or skip this position</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {candidates.viceGovernor.map((candidate) => (
-                  <CandidateCard
-                    key={candidate.id}
-                    candidate={candidate}
-                    party={getPartyById(candidate.party)}
-                    isSelected={selections.viceGovernor === candidate.id}
-                    onSelect={() => handleSelectCandidate("viceGovernor", candidate.id)}
-                    selectionMode="single"
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </>
-        )}
-
-        {step === "mayor" && (
-          <>
-            <CardHeader>
-              <CardTitle>Select Mayor</CardTitle>
-              <CardDescription>Choose one candidate for College Mayor or skip this position</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {candidates.mayor.map((candidate) => (
-                  <CandidateCard
-                    key={candidate.id}
-                    candidate={candidate}
-                    party={getPartyById(candidate.party)}
-                    isSelected={selections.mayor === candidate.id}
-                    onSelect={() => handleSelectCandidate("mayor", candidate.id)}
-                    selectionMode="single"
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </>
-        )}
-
-        {step === "viceMayor" && (
-          <>
-            <CardHeader>
-              <CardTitle>Select Vice Mayor</CardTitle>
-              <CardDescription>Choose one candidate for College Vice Mayor or skip this position</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {candidates.viceMayor.map((candidate) => (
-                  <CandidateCard
-                    key={candidate.id}
-                    candidate={candidate}
-                    party={getPartyById(candidate.party)}
-                    isSelected={selections.viceMayor === candidate.id}
-                    onSelect={() => handleSelectCandidate("viceMayor", candidate.id)}
-                    selectionMode="single"
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </>
-        )}
-
-        {step === "boardMembers" && (
-          <>
-            <CardHeader>
-              <CardTitle>Select Board Members</CardTitle>
-              <CardDescription>
-                Choose up to 6 candidates for College Board Members or skip this position
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Alert className="mb-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Selection Limit</AlertTitle>
-                <AlertDescription>
-                  You have selected {selections.boardMembers.length} of 6 possible board members.
-                </AlertDescription>
-              </Alert>
-
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {candidates.boardMembers.map((candidate) => (
-                  <CandidateCard
-                    key={candidate.id}
-                    candidate={candidate}
-                    party={getPartyById(candidate.party)}
-                    isSelected={selections.boardMembers.includes(candidate.id)}
-                    onSelect={() => handleSelectCandidate("boardMembers", candidate.id)}
-                    selectionMode="multiple"
-                    disabled={selections.boardMembers.length >= 6 && !selections.boardMembers.includes(candidate.id)}
-                  />
-                ))}
-              </div>
-            </CardContent>
-          </>
-        )}
-
-        {step === "review" && (
-          <>
-            <CardHeader className="pb-4">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <CardTitle className="text-2xl">Review Your Selections</CardTitle>
-                  <CardDescription>
-                    Please review your selections before submitting your vote for {college.name}
-                  </CardDescription>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold" style={{ color: college.color }}>
-                      {getTotalSelections()}
+            {step === "governor" && (
+              <>
+                <CardHeader>
+                  <CardTitle>Select Governor</CardTitle>
+                  <CardDescription>Choose one candidate for College Governor or skip this position</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loadingCandidates ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center space-y-3">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                        <p className="text-muted-foreground">Loading candidates...</p>
+                      </div>
                     </div>
-                    <div className="text-xs text-muted-foreground">of {getMaxPossibleSelections()} selected</div>
-                  </div>
-                  <div
-                    className="w-12 h-12 rounded-full overflow-hidden border-2"
-                    style={{ borderColor: college.color }}
-                  >
-                    <img
-                      src={college.logo || "/placeholder.svg?height=48&width=48"}
-                      alt={`${college.name} logo`}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* College Header */}
-              <div className="bg-gradient-to-r from-gray-50 to-white p-4 rounded-lg border">
-                <div className="flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-lg overflow-hidden border-2" style={{ borderColor: college.color }}>
-                    <img
-                      src={college.logo || "/placeholder.svg?height=64&width=64"}
-                      alt={`${college.name} logo`}
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold" style={{ color: college.color }}>
-                      {college.name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">College Election Ballot</p>
-                    <Badge variant="outline" style={{ borderColor: college.color, color: college.color }}>
-                      {college.shortName}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
+                  ) : fetchError ? (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Error Loading Candidates</AlertTitle>
+                      <AlertDescription>
+                        {fetchError}. Please try refreshing the page or contact support if the problem persists.
+                      </AlertDescription>
+                    </Alert>
+                  ) : candidates.governor.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-muted-foreground">No candidates available for Governor position.</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {candidates.governor.map((candidate) => (
+                        <CandidateCard
+                          key={candidate.id}
+                          candidate={candidate}
+                          party={getPartyById(candidate.party)}
+                          isSelected={selections.governor === candidate.id}
+                          onSelect={() => handleSelectCandidate("governor", candidate.id)}
+                          selectionMode="single"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </>
+            )}
 
-              {/* Single Positions */}
-              <div className="grid gap-4 md:grid-cols-2">
-                {/* Governor */}
-                <ReviewSelectionCard
-                  position="Governor"
-                  candidate={selections.governor ? getSelectedCandidate("governor", selections.governor) : null}
-                  party={
-                    selections.governor
-                      ? getPartyById(getSelectedCandidate("governor", selections.governor)?.party)
-                      : null
-                  }
-                  college={college}
-                  onEdit={() => handleEditPosition("governor")}
-                  onRemove={() => handleRemoveSelection("governor")}
-                  isSkipped={!selections.governor}
-                />
+            {step === "viceGovernor" && (
+              <>
+                <CardHeader>
+                  <CardTitle>Select Vice Governor</CardTitle>
+                  <CardDescription>Choose one candidate for College Vice Governor or skip this position</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loadingCandidates ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center space-y-3">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                        <p className="text-muted-foreground">Loading candidates...</p>
+                      </div>
+                    </div>
+                  ) : fetchError ? (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Error Loading Candidates</AlertTitle>
+                      <AlertDescription>
+                        {fetchError}. Please try refreshing the page or contact support if the problem persists.
+                      </AlertDescription>
+                    </Alert>
+                  ) : candidates.viceGovernor.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-muted-foreground">No candidates available for Vice Governor position.</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {candidates.viceGovernor.map((candidate) => (
+                        <CandidateCard
+                          key={candidate.id}
+                          candidate={candidate}
+                          party={getPartyById(candidate.party)}
+                          isSelected={selections.viceGovernor === candidate.id}
+                          onSelect={() => handleSelectCandidate("viceGovernor", candidate.id)}
+                          selectionMode="single"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </>
+            )}
 
-                {/* Vice Governor */}
-                <ReviewSelectionCard
-                  position="Vice Governor"
-                  candidate={
-                    selections.viceGovernor ? getSelectedCandidate("viceGovernor", selections.viceGovernor) : null
-                  }
-                  party={
-                    selections.viceGovernor
-                      ? getPartyById(getSelectedCandidate("viceGovernor", selections.viceGovernor)?.party)
-                      : null
-                  }
-                  college={college}
-                  onEdit={() => handleEditPosition("viceGovernor")}
-                  onRemove={() => handleRemoveSelection("viceGovernor")}
-                  isSkipped={!selections.viceGovernor}
-                />
+            {step === "mayor" && (
+              <>
+                <CardHeader>
+                  <CardTitle>Select Mayor</CardTitle>
+                  <CardDescription>Choose one candidate for College Mayor or skip this position</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loadingCandidates ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center space-y-3">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                        <p className="text-muted-foreground">Loading candidates...</p>
+                      </div>
+                    </div>
+                  ) : fetchError ? (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Error Loading Candidates</AlertTitle>
+                      <AlertDescription>
+                        {fetchError}. Please try refreshing the page or contact support if the problem persists.
+                      </AlertDescription>
+                    </Alert>
+                  ) : candidates.mayor.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-muted-foreground">No candidates available for Mayor position.</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {candidates.mayor.map((candidate) => (
+                        <CandidateCard
+                          key={candidate.id}
+                          candidate={candidate}
+                          party={getPartyById(candidate.party)}
+                          isSelected={selections.mayor === candidate.id}
+                          onSelect={() => handleSelectCandidate("mayor", candidate.id)}
+                          selectionMode="single"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </>
+            )}
 
-                {/* Mayor */}
-                <ReviewSelectionCard
-                  position="Mayor"
-                  candidate={selections.mayor ? getSelectedCandidate("mayor", selections.mayor) : null}
-                  party={selections.mayor ? getPartyById(getSelectedCandidate("mayor", selections.mayor)?.party) : null}
-                  college={college}
-                  onEdit={() => handleEditPosition("mayor")}
-                  onRemove={() => handleRemoveSelection("mayor")}
-                  isSkipped={!selections.mayor}
-                />
+            {step === "viceMayor" && (
+              <>
+                <CardHeader>
+                  <CardTitle>Select Vice Mayor</CardTitle>
+                  <CardDescription>Choose one candidate for College Vice Mayor or skip this position</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loadingCandidates ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center space-y-3">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                        <p className="text-muted-foreground">Loading candidates...</p>
+                      </div>
+                    </div>
+                  ) : fetchError ? (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Error Loading Candidates</AlertTitle>
+                      <AlertDescription>
+                        {fetchError}. Please try refreshing the page or contact support if the problem persists.
+                      </AlertDescription>
+                    </Alert>
+                  ) : candidates.viceMayor.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-muted-foreground">No candidates available for Vice Mayor position.</p>
+                    </div>
+                  ) : (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {candidates.viceMayor.map((candidate) => (
+                        <CandidateCard
+                          key={candidate.id}
+                          candidate={candidate}
+                          party={getPartyById(candidate.party)}
+                          isSelected={selections.viceMayor === candidate.id}
+                          onSelect={() => handleSelectCandidate("viceMayor", candidate.id)}
+                          selectionMode="single"
+                        />
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </>
+            )}
 
-                {/* Vice Mayor */}
-                <ReviewSelectionCard
-                  position="Vice Mayor"
-                  candidate={selections.viceMayor ? getSelectedCandidate("viceMayor", selections.viceMayor) : null}
-                  party={
-                    selections.viceMayor
-                      ? getPartyById(getSelectedCandidate("viceMayor", selections.viceMayor)?.party)
-                      : null
-                  }
-                  college={college}
-                  onEdit={() => handleEditPosition("viceMayor")}
-                  onRemove={() => handleRemoveSelection("viceMayor")}
-                  isSkipped={!selections.viceMayor}
-                />
-              </div>
+            {step === "boardMembers" && (
+              <>
+                <CardHeader>
+                  <CardTitle>Select Board Members</CardTitle>
+                  <CardDescription>
+                    Choose up to 6 candidates for College Board Members or skip this position
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {loadingCandidates ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center space-y-3">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                        <p className="text-muted-foreground">Loading candidates...</p>
+                      </div>
+                    </div>
+                  ) : fetchError ? (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>Error Loading Candidates</AlertTitle>
+                      <AlertDescription>
+                        {fetchError}. Please try refreshing the page or contact support if the problem persists.
+                      </AlertDescription>
+                    </Alert>
+                  ) : candidates.boardMembers.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-muted-foreground">No candidates available for Board Members position.</p>
+                    </div>
+                  ) : (
+                    <>
+                      <Alert className="mb-4">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Selection Limit</AlertTitle>
+                        <AlertDescription>
+                          You have selected {selections.boardMembers.length} of 6 possible board members.
+                        </AlertDescription>
+                      </Alert>
 
-              {/* Board Members */}
-              <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-medium">Board Members</h3>
-                    <p className="text-sm text-muted-foreground">{selections.boardMembers.length} of 6 selected</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={() => handleEditPosition("boardMembers")}>
-                      <Edit2 className="h-4 w-4 mr-2" />
-                      Edit
-                    </Button>
-                  </div>
-                </div>
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {candidates.boardMembers.map((candidate) => (
+                          <CandidateCard
+                            key={candidate.id}
+                            candidate={candidate}
+                            party={getPartyById(candidate.party)}
+                            isSelected={selections.boardMembers.includes(candidate.id)}
+                            onSelect={() => handleSelectCandidate("boardMembers", candidate.id)}
+                            selectionMode="multiple"
+                            disabled={selections.boardMembers.length >= 6 && !selections.boardMembers.includes(candidate.id)}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </CardContent>
+              </>
+            )}
 
-                {selections.boardMembers.length > 0 ? (
-                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {getSelectedBoardMembers().map((boardMember, index) => (
+            {step === "review" && (
+              <>
+                <CardHeader className="pb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                      <CardTitle className="text-2xl">Review Your Selections</CardTitle>
+                      <CardDescription>
+                        Please review your selections before submitting your vote for {college.name}
+                      </CardDescription>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold" style={{ color: college.color }}>
+                          {getTotalSelections()}
+                        </div>
+                        <div className="text-xs text-muted-foreground">of {getMaxPossibleSelections()} selected</div>
+                      </div>
                       <div
-                        key={boardMember.id}
-                        className="relative group p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                        className="w-12 h-12 rounded-full overflow-hidden border-2"
+                        style={{ borderColor: college.color }}
                       >
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 border-2 border-white shadow-sm">
-                            <img
-                              src={boardMember.photo || "/placeholder.svg?height=48&width=48"}
-                              alt={boardMember.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm line-clamp-1">{boardMember.name}</p>
-                            <Badge
-                              style={{ backgroundColor: getPartyById(boardMember.party)?.color }}
-                              className="text-white text-xs"
-                            >
-                              {getPartyById(boardMember.party)?.name}
-                            </Badge>
-                            <p className="text-xs text-muted-foreground mt-1">#{index + 1} Board Member</p>
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
-                            onClick={() => handleRemoveSelection("boardMembers", boardMember.id)}
+                        <img
+                          src={college.logo || "/placeholder.svg?height=48&width=48"}
+                          alt={`${college.name} logo`}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* College Header */}
+                  <div className="bg-gradient-to-r from-gray-50 to-white p-4 rounded-lg border">
+                    <div className="flex items-center gap-3">
+                      <div className="w-16 h-16 rounded-lg overflow-hidden border-2" style={{ borderColor: college.color }}>
+                        <img
+                          src={college.logo || "/placeholder.svg?height=64&width=64"}
+                          alt={`${college.name} logo`}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold" style={{ color: college.color }}>
+                          {college.name}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">College Election Ballot</p>
+                        <Badge variant="outline" style={{ borderColor: college.color, color: college.color }}>
+                          {college.shortName}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Single Positions */}
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {/* Governor */}
+                    <ReviewSelectionCard
+                      position="Governor"
+                      candidate={selections.governor ? getSelectedCandidate("governor", selections.governor) : null}
+                      party={
+                        selections.governor
+                          ? getPartyById(getSelectedCandidate("governor", selections.governor)?.party)
+                          : null
+                      }
+                      college={college}
+                      onEdit={() => handleEditPosition("governor")}
+                      onRemove={() => handleRemoveSelection("governor")}
+                      isSkipped={!selections.governor}
+                    />
+
+                    {/* Vice Governor */}
+                    <ReviewSelectionCard
+                      position="Vice Governor"
+                      candidate={
+                        selections.viceGovernor ? getSelectedCandidate("viceGovernor", selections.viceGovernor) : null
+                      }
+                      party={
+                        selections.viceGovernor
+                          ? getPartyById(getSelectedCandidate("viceGovernor", selections.viceGovernor)?.party)
+                          : null
+                      }
+                      college={college}
+                      onEdit={() => handleEditPosition("viceGovernor")}
+                      onRemove={() => handleRemoveSelection("viceGovernor")}
+                      isSkipped={!selections.viceGovernor}
+                    />
+
+                    {/* Mayor */}
+                    <ReviewSelectionCard
+                      position="Mayor"
+                      candidate={selections.mayor ? getSelectedCandidate("mayor", selections.mayor) : null}
+                      party={selections.mayor ? getPartyById(getSelectedCandidate("mayor", selections.mayor)?.party) : null}
+                      college={college}
+                      onEdit={() => handleEditPosition("mayor")}
+                      onRemove={() => handleRemoveSelection("mayor")}
+                      isSkipped={!selections.mayor}
+                    />
+
+                    {/* Vice Mayor */}
+                    <ReviewSelectionCard
+                      position="Vice Mayor"
+                      candidate={selections.viceMayor ? getSelectedCandidate("viceMayor", selections.viceMayor) : null}
+                      party={
+                        selections.viceMayor
+                          ? getPartyById(getSelectedCandidate("viceMayor", selections.viceMayor)?.party)
+                          : null
+                      }
+                      college={college}
+                      onEdit={() => handleEditPosition("viceMayor")}
+                      onRemove={() => handleRemoveSelection("viceMayor")}
+                      isSkipped={!selections.viceMayor}
+                    />
+                  </div>
+
+                  {/* Board Members */}
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h3 className="text-lg font-medium">Board Members</h3>
+                        <p className="text-sm text-muted-foreground">{selections.boardMembers.length} of 6 selected</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={() => handleEditPosition("boardMembers")}>
+                          <Edit2 className="h-4 w-4 mr-2" />
+                          Edit
+                        </Button>
+                      </div>
+                    </div>
+
+                    {selections.boardMembers.length > 0 ? (
+                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                        {getSelectedBoardMembers().map((boardMember, index) => (
+                          <div
+                            key={boardMember.id}
+                            className="relative group p-3 border rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
                           >
-                            <X className="h-4 w-4" />
-                          </Button>
+                            <div className="flex items-center gap-3">
+                              <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 border-2 border-white shadow-sm">
+                                <img
+                                  src={boardMember.photo || "/placeholder.svg?height=48&width=48"}
+                                  alt={boardMember.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-sm line-clamp-1">{boardMember.name}</p>
+                                <Badge
+                                  style={{ backgroundColor: getPartyById(boardMember.party)?.color }}
+                                  className="text-white text-xs"
+                                >
+                                  {getPartyById(boardMember.party)?.name}
+                                </Badge>
+                                <p className="text-xs text-muted-foreground mt-1">#{index + 1} Board Member</p>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
+                                onClick={() => handleRemoveSelection("boardMembers", boardMember.id)}
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
+                        <p className="text-muted-foreground italic">No board members selected</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => handleEditPosition("boardMembers")}
+                        >
+                          Select Board Members
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Summary Statistics */}
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
+                    <h4 className="font-medium mb-3 text-blue-900">Selection Summary</h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+                      <div>
+                        <div className="text-2xl font-bold text-blue-600">{getTotalSelections()}</div>
+                        <div className="text-xs text-blue-700">Total Selections</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-green-600">
+                          {Object.values(selections).filter((s) => (Array.isArray(s) ? s.length > 0 : s !== "")).length}
+                        </div>
+                        <div className="text-xs text-green-700">Positions Filled</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-orange-600">
+                          {5 - Object.values(selections).filter((s) => (Array.isArray(s) ? s.length > 0 : s !== "")).length}
+                        </div>
+                        <div className="text-xs text-orange-700">Positions Skipped</div>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold" style={{ color: college.color }}>
+                          {Math.round((getTotalSelections() / getMaxPossibleSelections()) * 100)}%
+                        </div>
+                        <div className="text-xs" style={{ color: college.color }}>
+                          Completion
                         </div>
                       </div>
-                    ))}
+                    </div>
                   </div>
+
+                  {/* Final Warning */}
+                  <Alert className="bg-yellow-50 border-yellow-200">
+                    <AlertCircle className="h-4 w-4 text-yellow-600" />
+                    <AlertTitle className="text-yellow-600">Important Notice</AlertTitle>
+                    <AlertDescription className="text-yellow-700">
+                      Once submitted, your vote cannot be changed. Please ensure your selections are correct. You can still
+                      edit any position by clicking the &ldquo;Edit&rdquo; button above.
+                    </AlertDescription>
+                  </Alert>
+                </CardContent>
+              </>
+            )}
+
+            <CardFooter className="flex justify-between">
+              {step !== "mode" && (
+                <Button variant="outline" onClick={handleBack} disabled={isSubmitting}>
+                  Back
+                </Button>
+              )}
+
+              <div className="flex gap-2">
+                {step !== "mode" && step !== "review" && (
+                  <Button variant="secondary" onClick={handleNext} disabled={isSubmitting}>
+                    Skip
+                  </Button>
+                )}
+                {step !== "review" ? (
+                  <Button onClick={handleNext} style={{ backgroundColor: college.color }} disabled={isSubmitting}>
+                    Next
+                  </Button>
                 ) : (
-                  <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
-                    <p className="text-muted-foreground italic">No board members selected</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-2"
-                      onClick={() => handleEditPosition("boardMembers")}
-                    >
-                      Select Board Members
-                    </Button>
-                  </div>
+                  <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting..." : "Submit Vote"}
+                  </Button>
                 )}
               </div>
-
-              {/* Summary Statistics */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
-                <h4 className="font-medium mb-3 text-blue-900">Selection Summary</h4>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-blue-600">{getTotalSelections()}</div>
-                    <div className="text-xs text-blue-700">Total Selections</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-green-600">
-                      {Object.values(selections).filter((s) => (Array.isArray(s) ? s.length > 0 : s !== "")).length}
-                    </div>
-                    <div className="text-xs text-green-700">Positions Filled</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-orange-600">
-                      {5 - Object.values(selections).filter((s) => (Array.isArray(s) ? s.length > 0 : s !== "")).length}
-                    </div>
-                    <div className="text-xs text-orange-700">Positions Skipped</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold" style={{ color: college.color }}>
-                      {Math.round((getTotalSelections() / getMaxPossibleSelections()) * 100)}%
-                    </div>
-                    <div className="text-xs" style={{ color: college.color }}>
-                      Completion
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Final Warning */}
-              <Alert className="bg-yellow-50 border-yellow-200">
-                <AlertCircle className="h-4 w-4 text-yellow-600" />
-                <AlertTitle className="text-yellow-600">Important Notice</AlertTitle>
-                <AlertDescription className="text-yellow-700">
-                  Once submitted, your vote cannot be changed. Please ensure your selections are correct. You can still
-                  edit any position by clicking the &ldquo;Edit&rdquo; button above.
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </>
-        )}
-
-        <CardFooter className="flex justify-between">
-          {step !== "mode" && (
-            <Button variant="outline" onClick={handleBack} disabled={isSubmitting}>
-              Back
-            </Button>
-          )}
-
-          <div className="flex gap-2">
-            {step !== "mode" && step !== "review" && (
-              <Button variant="secondary" onClick={handleNext} disabled={isSubmitting}>
-                Skip
-              </Button>
-            )}
-            {step !== "review" ? (
-              <Button onClick={handleNext} style={{ backgroundColor: college.color }} disabled={isSubmitting}>
-                Next
-              </Button>
-            ) : (
-              <Button onClick={handleSubmit} className="bg-green-600 hover:bg-green-700" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Vote"}
-              </Button>
-            )}
-          </div>
-        </CardFooter>
-      </Card>
+            </CardFooter>
+          </Card>
+        </>
+      )}
     </div>
   )
 }

@@ -308,21 +308,38 @@ export default function SSCVotingPage() {
                   </Alert>
 
                   <div className="mt-4">
-                    <Select value={selectedParty} onValueChange={handlePartySelect}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a party" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {parties.map((party) => (
-                          <SelectItem key={party.id} value={party.id}>
-                            <div className="flex items-center">
-                              <div className="h-3 w-3 rounded-full mr-2" style={{ backgroundColor: party.color }}></div>
-                              {party.name}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    {loadingParties ? (
+                      <div className="flex items-center justify-center py-8">
+                        <div className="text-center space-y-3">
+                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                          <p className="text-muted-foreground">Loading parties...</p>
+                        </div>
+                      </div>
+                    ) : fetchPartiesError ? (
+                      <Alert variant="destructive">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertTitle>Error Loading Parties</AlertTitle>
+                        <AlertDescription>
+                          {fetchPartiesError}. Please try refreshing the page or contact support if the problem persists.
+                        </AlertDescription>
+                      </Alert>
+                    ) : (
+                      <Select value={selectedParty} onValueChange={handlePartySelect}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a party" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {parties.map((party) => (
+                            <SelectItem key={party.id} value={party.id}>
+                              <div className="flex items-center">
+                                <div className="h-3 w-3 rounded-full mr-2" style={{ backgroundColor: party.color }}></div>
+                                {party.name}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                   </div>
                 </TabsContent>
               </Tabs>
@@ -337,18 +354,39 @@ export default function SSCVotingPage() {
               <CardDescription>Choose one candidate for SSC President or skip this position</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {candidates.president.map((candidate) => (
-                  <CandidateCard
-                    key={candidate.id}
-                    candidate={candidate}
-                    party={getPartyById(candidate.party)}
-                    isSelected={selections.president === candidate.id}
-                    onSelect={() => handleSelectCandidate("president", candidate.id)}
-                    selectionMode="single"
-                  />
-                ))}
-              </div>
+              {loadingCandidates ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="text-center space-y-3">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="text-muted-foreground">Loading candidates...</p>
+                  </div>
+                </div>
+              ) : fetchError ? (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error Loading Candidates</AlertTitle>
+                  <AlertDescription>
+                    {fetchError}. Please try refreshing the page or contact support if the problem persists.
+                  </AlertDescription>
+                </Alert>
+              ) : candidates.president.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">No candidates available for President position.</p>
+                </div>
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {candidates.president.map((candidate) => (
+                    <CandidateCard
+                      key={candidate.id}
+                      candidate={candidate}
+                      party={getPartyById(candidate.party)}
+                      isSelected={selections.president === candidate.id}
+                      onSelect={() => handleSelectCandidate("president", candidate.id)}
+                      selectionMode="single"
+                    />
+                  ))}
+                </div>
+              )}
             </CardContent>
           </>
         )}
@@ -360,18 +398,39 @@ export default function SSCVotingPage() {
               <CardDescription>Choose one candidate for SSC Vice President or skip this position</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {candidates.vicePresident.map((candidate) => (
-                  <CandidateCard
-                    key={candidate.id}
-                    candidate={candidate}
-                    party={getPartyById(candidate.party)}
-                    isSelected={selections.vicePresident === candidate.id}
-                    onSelect={() => handleSelectCandidate("vicePresident", candidate.id)}
-                    selectionMode="single"
-                  />
-                ))}
-              </div>
+              {loadingCandidates ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="text-center space-y-3">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="text-muted-foreground">Loading candidates...</p>
+                  </div>
+                </div>
+              ) : fetchError ? (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error Loading Candidates</AlertTitle>
+                  <AlertDescription>
+                    {fetchError}. Please try refreshing the page or contact support if the problem persists.
+                  </AlertDescription>
+                </Alert>
+              ) : candidates.vicePresident.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">No candidates available for Vice President position.</p>
+                </div>
+              ) : (
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {candidates.vicePresident.map((candidate) => (
+                    <CandidateCard
+                      key={candidate.id}
+                      candidate={candidate}
+                      party={getPartyById(candidate.party)}
+                      isSelected={selections.vicePresident === candidate.id}
+                      onSelect={() => handleSelectCandidate("vicePresident", candidate.id)}
+                      selectionMode="single"
+                    />
+                  ))}
+                </div>
+              )}
             </CardContent>
           </>
         )}
@@ -383,27 +442,50 @@ export default function SSCVotingPage() {
               <CardDescription>Choose up to 10 candidates for SSC Senators or skip this position</CardDescription>
             </CardHeader>
             <CardContent>
-              <Alert className="mb-4">
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Selection Limit</AlertTitle>
-                <AlertDescription>
-                  You have selected {selections.senators.length} of 10 possible senators.
-                </AlertDescription>
-              </Alert>
+              {loadingCandidates ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="text-center space-y-3">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="text-muted-foreground">Loading candidates...</p>
+                  </div>
+                </div>
+              ) : fetchError ? (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error Loading Candidates</AlertTitle>
+                  <AlertDescription>
+                    {fetchError}. Please try refreshing the page or contact support if the problem persists.
+                  </AlertDescription>
+                </Alert>
+              ) : candidates.senators.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">No candidates available for Senators position.</p>
+                </div>
+              ) : (
+                <>
+                  <Alert className="mb-4">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Selection Limit</AlertTitle>
+                    <AlertDescription>
+                      You have selected {selections.senators.length} of 10 possible senators.
+                    </AlertDescription>
+                  </Alert>
 
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {candidates.senators.map((candidate) => (
-                  <CandidateCard
-                    key={candidate.id}
-                    candidate={candidate}
-                    party={getPartyById(candidate.party)}
-                    isSelected={selections.senators.includes(candidate.id)}
-                    onSelect={() => handleSelectCandidate("senators", candidate.id)}
-                    selectionMode="multiple"
-                    disabled={selections.senators.length >= 10 && !selections.senators.includes(candidate.id)}
-                  />
-                ))}
-              </div>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    {candidates.senators.map((candidate) => (
+                      <CandidateCard
+                        key={candidate.id}
+                        candidate={candidate}
+                        party={getPartyById(candidate.party)}
+                        isSelected={selections.senators.includes(candidate.id)}
+                        onSelect={() => handleSelectCandidate("senators", candidate.id)}
+                        selectionMode="multiple"
+                        disabled={selections.senators.length >= 10 && !selections.senators.includes(candidate.id)}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
             </CardContent>
           </>
         )}
