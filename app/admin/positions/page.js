@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Archive, RotateCcw, Users, Crown, Loader2, Trash2 } from "lucide-react"
+import { Plus, Pencil, Archive, RotateCcw, Users, Crown, Loader2, Trash2, AlertTriangle } from "lucide-react"
 import { DeletePositionDialog } from "@/components/admin/positions/DeletePositionDialog"
 import AddPositionModal from "@/components/admin/positions/AddPositionModal"
 import EditPositionModal from "@/components/admin/positions/EditPositionModal"
@@ -20,15 +20,7 @@ export default function PositionsPage() {
   const [selectedType, setSelectedType] = useState("ssc")
   const [positions, setPositions] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  const showErrorToast = (message) => {
-    toast({
-      title: "Error",
-      description: message || "Failed to fetch positions. Please try again.",
-      variant: "destructive"
-    })
-  }
+  const [fetchError, setFetchError] = useState("")
 
   const fetchPositions = async () => {
     setLoading(true)
@@ -36,17 +28,14 @@ export default function PositionsPage() {
       const response = await fetch('/api/admin/positions')
       if (!response.ok) {
         const errorMsg = `HTTP error! status: ${response.status}`
-        setError(errorMsg)
-        showErrorToast(errorMsg)
+        setFetchError(errorMsg)
         return
       }
       const data = await response.json()
       setPositions(data)
-      setError(null)
     } catch (err) {
       console.error('Error fetching positions:', err)
-      setError(err.message)
-      showErrorToast(err.message)
+      setFetchError(err.message || "Failed to fetch positions. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -151,11 +140,11 @@ export default function PositionsPage() {
     )
   }
 
-  if (error) {
+  if (fetchError) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Error loading positions: {error}</p>
+          <p className="text-red-600 mb-4">Error loading positions: {fetchError}</p>
           <Button onClick={() => window.location.reload()}>
             Try Again
           </Button>
@@ -201,7 +190,14 @@ export default function PositionsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {sscPositions.length > 0 ? (
+              {fetchError ? (
+                <div className="flex flex-1 min-h-[250px] items-center justify-center col-span-full">
+                  <div className="flex flex-col items-center gap-2 text-destructive">
+                    <AlertTriangle className="w-8 h-8 mb-1" />
+                    <h2 className="text-2xl font-semibold">{fetchError}</h2>
+                  </div>
+                </div>
+              ) : sscPositions.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {sscPositions.map((position) => (
                     <PositionCard key={position.PositionID} position={position} />
@@ -235,7 +231,14 @@ export default function PositionsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {collegePositions.length > 0 ? (
+              {fetchError ? (
+                <div className="flex flex-1 min-h-[250px] items-center justify-center col-span-full">
+                  <div className="flex flex-col items-center gap-2 text-destructive">
+                    <AlertTriangle className="w-8 h-8 mb-1" />
+                    <h2 className="text-2xl font-semibold">{fetchError}</h2>
+                  </div>
+                </div>
+              ) : collegePositions.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {collegePositions.map((position) => (
                     <PositionCard key={position.PositionID} position={position} />
