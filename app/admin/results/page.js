@@ -5,11 +5,12 @@ import { getParties, getPositions, getElectionResults } from '@/lib/results'
 import { getColleges } from "@/lib/voters"
 
 export default async function ResultsPage() {
-  const colleges = await getColleges()
-  const parties = await getParties()
-  const positions = await getPositions()
+  // const colleges = await getColleges()
+  // const parties = await getParties()
+  // const positions = await getPositions()
+  // const sscResults = await getElectionResults("ssc")
 
-  const sscResults = await getElectionResults("ssc")
+  const [colleges, parties, positions, sscResults] = await Promise.all([getColleges(), getParties(), getPositions(), getElectionResults("ssc")])
 
   // Pre-fetch all college results
   const collegeResultsData = await Promise.all(

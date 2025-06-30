@@ -3,8 +3,10 @@ import { Users } from "lucide-react"
 import { getColleges, getCookies } from "@/lib/voters"
 
 export default async function VoterInformation() {
-    const colleges = await getColleges()
-    const cookieValue = await getCookies()
+    // const colleges = await getColleges()
+    // const cookieValue = await getCookies()
+
+    const [colleges, cookieValue] = await Promise.all([getColleges(), getCookies()])
 
     const collegeFound = colleges.find((college) => college.CollegeOfficeID === cookieValue.collegeOfficeID)
     const voter = {

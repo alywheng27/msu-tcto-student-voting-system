@@ -6,8 +6,10 @@ import Link from "next/link"
 import { getCookies, getVoters } from "@/lib/voters"
 
 export default async function Voting() {
-    const voters = await getVoters()
-    const cookieValue = await getCookies()
+    // const voters = await getVoters()
+    // const cookieValue = await getCookies()
+
+    const [voters, cookieValue] = await Promise.all([getVoters(), getCookies()])
 
     const voterFound = voters.find((voter) => voter.UserID === cookieValue.userID)
     
