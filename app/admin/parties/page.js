@@ -4,7 +4,7 @@ import Image from "next/image"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react"
+import { Plus, Pencil, Trash2, Loader2, AlertTriangle } from "lucide-react"
 import { DeletePartyDialog } from "@/components/admin/parties/Delete-Party-Dialog"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import AddPartyForm from "@/components/admin/parties/AddPartyForm"
@@ -151,7 +151,13 @@ export default function PartiesPage() {
               </div>
             </CardContent>
           </Card>
-        )) : <h2 className="flex justify-center text-2xl">0 data found.</h2>}
+        )) : 
+        <div className="flex flex-1 min-h-[250px] items-center justify-center col-span-full">
+          <div className="flex flex-col items-center gap-2 text-destructive">
+            <AlertTriangle className="w-8 h-8 mb-1" />
+            <h2 className="text-2xl font-semibold">0 data found.</h2>
+          </div>
+        </div>}
       </div>
 
       {!loading && parties.length === 0 && (

@@ -13,6 +13,7 @@ import Image from "next/image"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toast"
 import { Loader2 } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 
 export default function CandidatesPage() {
   const { toast, dismiss, toasts } = useToast()
@@ -24,9 +25,11 @@ export default function CandidatesPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
   const itemsPerPage = 8
+  const [fetchError, setFetchError] = useState("")
 
   const fetchCandidates = async () => {
     setIsLoading(true)
+    setFetchError("")
     try {
       const res = await fetch("/api/admin/candidates")
       if (!res.ok) {
@@ -36,11 +39,7 @@ export default function CandidatesPage() {
       const data = await res.json()
       setCandidates(data)
     } catch (err) {
-      toast({
-        title: "Error",
-        description: err.message || "Failed to fetch candidates. Please try again.",
-        variant: "destructive"
-      })
+      setFetchError(err.message || "Failed to fetch candidates. Please try again.")
       setCandidates([])
     } finally {
       setIsLoading(false)
@@ -201,44 +200,55 @@ export default function CandidatesPage() {
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
-                  {getPaginatedData(filterCandidates(sscCandidates)).map((candidate) => {
-                    return (
-                      <TableRow key={candidate.CandidateID}>
-                        <TableCell className="font-medium">{candidate.FirstName} {candidate.Surname}</TableCell>
-                        <TableCell>
-                          <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
-                            <Image
-                              src={candidate.Photo || "/candidates/no-photo.png"}
-                              alt={candidate.Surname}
-                              className="w-full h-full object-cover"
-                              width={250}
-                              height={250}
-                            />
-                          </div>
-                        </TableCell>
-                        <TableCell>{candidate.Position}</TableCell>
-                        <TableCell>
-                          <Badge style={{ backgroundColor: candidate.PartyColor || "#888" }}>
-                            {candidate.Party}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="ghost" size="sm" onClick={() => openEditModal(candidate)}>
-                            Edit
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-500"
-                            onClick={() => openDeleteModal(candidate)}
-                          >
-                            Delete
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
+                <TableBody className={fetchError ? "min-h-[300px] h-[300px]" : ""}>
+                  {fetchError ? (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center text-destructive h-[300px] align-middle p-0">
+                        <div className="flex flex-col justify-center items-center h-full w-full gap-2">
+                          <AlertTriangle className="w-8 h-8 text-destructive mb-1" />
+                          <span>{fetchError}</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    getPaginatedData(filterCandidates(sscCandidates)).map((candidate) => {
+                      return (
+                        <TableRow key={candidate.CandidateID}>
+                          <TableCell className="font-medium">{candidate.FirstName} {candidate.Surname}</TableCell>
+                          <TableCell>
+                            <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
+                              <Image
+                                src={candidate.Photo || "/candidates/no-photo.png"}
+                                alt={candidate.Surname}
+                                className="w-full h-full object-cover"
+                                width={250}
+                                height={250}
+                              />
+                            </div>
+                          </TableCell>
+                          <TableCell>{candidate.Position}</TableCell>
+                          <TableCell>
+                            <Badge style={{ backgroundColor: candidate.PartyColor || "#888" }}>
+                              {candidate.Party}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="ghost" size="sm" onClick={() => openEditModal(candidate)}>
+                              Edit
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-500"
+                              onClick={() => openDeleteModal(candidate)}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })
+                  )}
                 </TableBody>
               </Table>
               <div className="flex items-center justify-end space-x-2 mt-4">
@@ -308,53 +318,64 @@ export default function CandidatesPage() {
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
-                <TableBody>
-                  {getPaginatedData(filterCandidates(collegeCandidates)).map((candidate) => {
-                    const position = positions.find((p) => p.id === candidate.position)
-                    const party = parties.find((p) => p.id === candidate.party)
-                    const college = colleges.find((c) => c.id === candidate.college)
+                <TableBody className={fetchError ? "min-h-[300px] h-[300px]" : ""}>
+                  {fetchError ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center text-destructive h-[300px] align-middle p-0">
+                        <div className="flex flex-col justify-center items-center h-full w-full gap-2">
+                          <AlertTriangle className="w-8 h-8 text-destructive mb-1" />
+                          <span>{fetchError}</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    getPaginatedData(filterCandidates(collegeCandidates)).map((candidate) => {
+                      const position = positions.find((p) => p.id === candidate.position)
+                      const party = parties.find((p) => p.id === candidate.party)
+                      const college = colleges.find((c) => c.id === candidate.college)
 
-                    return (
-                      <TableRow key={candidate.CandidateID}>
-                        <TableCell className="font-medium">{candidate.FirstName} {candidate.Surname}</TableCell>
-                        <TableCell>
-                          <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
-                            <Image
-                              src={candidate.Photo || "/candidates/no-photo.png"}
-                              alt={candidate.Surname}
-                              className="w-full h-full object-cover"
-                              width={250}
-                              height={250}
-                            />
-                          </div>
-                        </TableCell>
-                        <TableCell>{candidate.Position}</TableCell>
-                        <TableCell>
-                          <Badge variant="outline" style={{ borderColor: candidate.CollegeOfficeColor || "#888" }}>
-                            {candidate.CollegeOfficeCode}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge style={{ backgroundColor: candidate.PartyColor || "#888" }}>
-                            {candidate.Party}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="ghost" size="sm" onClick={() => openEditModal(candidate)}>
-                            Edit
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-500"
-                            onClick={() => openDeleteModal(candidate)}
-                          >
-                            Delete
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
+                      return (
+                        <TableRow key={candidate.CandidateID}>
+                          <TableCell className="font-medium">{candidate.FirstName} {candidate.Surname}</TableCell>
+                          <TableCell>
+                            <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-200">
+                              <Image
+                                src={candidate.Photo || "/candidates/no-photo.png"}
+                                alt={candidate.Surname}
+                                className="w-full h-full object-cover"
+                                width={250}
+                                height={250}
+                              />
+                            </div>
+                          </TableCell>
+                          <TableCell>{candidate.Position}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" style={{ borderColor: candidate.CollegeOfficeColor || "#888" }}>
+                              {candidate.CollegeOfficeCode}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge style={{ backgroundColor: candidate.PartyColor || "#888" }}>
+                              {candidate.Party}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="ghost" size="sm" onClick={() => openEditModal(candidate)}>
+                              Edit
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-500"
+                              onClick={() => openDeleteModal(candidate)}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })
+                  )}
                 </TableBody>
               </Table>
               <div className="flex items-center justify-end space-x-2 mt-4">

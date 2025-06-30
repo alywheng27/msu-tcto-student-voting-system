@@ -12,6 +12,7 @@ import { VoterManagementModal } from "@/components/admin/voters/Voter-Management
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toast"
 import { Loader2 } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 
 export default function VotersPage() {
   const { toast, dismiss, toasts } = useToast()
@@ -25,14 +26,7 @@ export default function VotersPage() {
   const [collegesLoading, setCollegesLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 8
-
-  const showErrorToast = (message) => {
-    toast({
-      title: "Error",
-      description: message || "Failed to fetch voters. Please try again.",
-      variant: "destructive"
-    })
-  }
+  const [fetchError, setFetchError] = useState("")
 
   const fetchVoters = async () => {
     setIsLoading(true)
@@ -40,7 +34,7 @@ export default function VotersPage() {
       const response = await fetch('/api/admin/voters')
       if (!response.ok) {
         const errorMsg = `HTTP error! status: ${response.status}`
-        showErrorToast(errorMsg)
+        setFetchError(errorMsg)
         setVoters([])
         return
       }
@@ -48,7 +42,7 @@ export default function VotersPage() {
       setVoters(data)
     } catch (error) {
       console.error("Error loading voters:", error)
-      showErrorToast(error.message)
+      setFetchError(error.message || "Failed to fetch voters. Please try again.")
       setVoters([])
     } finally {
       setIsLoading(false)
@@ -161,66 +155,82 @@ export default function VotersPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Username</TableHead>
-                <TableHead>College</TableHead>
-                <TableHead>SSC Vote</TableHead>
-                <TableHead>College Vote</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Array.isArray(filteredVoters)
-                ? getPaginatedData(filteredVoters).map((voter) => {
-                    return (
-                      <TableRow key={voter.VoterID}>
-                        <TableCell className="font-medium">{voter.FirstName} {voter.Surname}</TableCell>
-                        <TableCell>{voter.Username}</TableCell>
-                        <TableCell>
-                            <Badge variant="outline" style={{ borderColor: voter.CollegeOfficeColor || '#ccc' }}>
-                              {voter.CollegeOfficeCode}
-                            </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {voter.HasVotedSSC ? (
-                            <Badge variant="default" className="bg-green-500">
-                              Voted
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline">Not Voted</Badge>
-                          )}
-                        </TableCell>
-                        <TableCell>
-                          {voter.HasVotedCollege ? (
-                            <Badge variant="default" className="bg-green-500">
-                              Voted
-                            </Badge>
-                          ) : (
-                            <Badge variant="outline">Not Voted</Badge>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="ghost" size="sm" onClick={() => handleEditVoter(voter)}>
-                            Edit
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-red-500"
-                            onClick={() => handleDeleteVoter(voter)}
-                          >
-                            Delete
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })
-                : null}
-            </TableBody>
-          </Table>
+          {fetchError ? (
+            <div className="flex flex-1 min-h-[250px] items-center justify-center col-span-full">
+              <div className="flex flex-col items-center gap-2 text-destructive">
+                <AlertTriangle className="w-8 h-8 mb-1" />
+                <h2 className="text-2xl font-semibold">{fetchError}</h2>
+              </div>
+            </div>
+          ) : voters.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Username</TableHead>
+                  <TableHead>College</TableHead>
+                  <TableHead>SSC Vote</TableHead>
+                  <TableHead>College Vote</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {Array.isArray(filteredVoters)
+                  ? getPaginatedData(filteredVoters).map((voter) => {
+                      return (
+                        <TableRow key={voter.VoterID}>
+                          <TableCell className="font-medium">{voter.FirstName} {voter.Surname}</TableCell>
+                          <TableCell>{voter.Username}</TableCell>
+                          <TableCell>
+                              <Badge variant="outline" style={{ borderColor: voter.CollegeOfficeColor || '#ccc' }}>
+                                {voter.CollegeOfficeCode}
+                              </Badge>
+                          </TableCell>
+                          <TableCell>
+                            {voter.HasVotedSSC ? (
+                              <Badge variant="default" className="bg-green-500">
+                                Voted
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline">Not Voted</Badge>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {voter.HasVotedCollege ? (
+                              <Badge variant="default" className="bg-green-500">
+                                Voted
+                              </Badge>
+                            ) : (
+                              <Badge variant="outline">Not Voted</Badge>
+                            )}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="ghost" size="sm" onClick={() => handleEditVoter(voter)}>
+                              Edit
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-500"
+                              onClick={() => handleDeleteVoter(voter)}
+                            >
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })
+                  : null}
+              </TableBody>
+            </Table>
+          ) : (
+            <div className="flex flex-1 min-h-[250px] items-center justify-center col-span-full">
+              <div className="flex flex-col items-center gap-2 text-destructive">
+                <AlertTriangle className="w-8 h-8 mb-1" />
+                <h2 className="text-2xl font-semibold">0 data found.</h2>
+              </div>
+            </div>
+          )}
           {/* Pagination Controls */}
           <div className="flex items-center justify-end space-x-2 mt-4">
             <Button
