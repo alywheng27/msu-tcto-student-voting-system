@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,10 +12,12 @@ import { useToast } from "@/hooks/use-toast"
 import { AlertCircle, ChevronRight, Edit2, X } from "lucide-react"
 import { CandidateCard } from "@/components/voter/ssc/Candidate-Card"
 import { ReviewSelectionCard } from "@/components/voter/ssc/Review-Selection-Card"
+import Cookies from "js-cookie"
 
 export default function SSCVotingPage() {
   const router = useRouter()
   const { toast } = useToast()
+  const [cookieValue, setCookieValue] = useState({})
   const [votingMode, setVotingMode] = useState("individual")
   const [selectedParty, setSelectedParty] = useState("")
   const [step, setStep] = useState("mode")
@@ -43,6 +45,27 @@ export default function SSCVotingPage() {
     color: "#1E90FF",
     logo: "/placeholder.svg?height=100&width=100",
   }
+
+  function fetchCookies() {
+    // Read cookies using js-cookie
+    return {
+      hasVotedSSC: Cookies.get("HasVotedSSC"),
+      // Add more cookies if needed
+    }
+  }
+
+  const alreadyVoted = useCallback(() => {
+    if (cookieValue.hasVotedSSC === 'true') {
+      router.replace("/voter/vote/voted")
+    }
+  }, [cookieValue.hasVotedSSC, router])
+
+  useEffect(() => {
+    fetchCandidates()
+    fetchParties()
+    setCookieValue(fetchCookies())
+    alreadyVoted()
+  }, [alreadyVoted])
 
   async function fetchCandidates() {
     setLoadingCandidates(true)
@@ -109,11 +132,6 @@ export default function SSCVotingPage() {
       setLoadingParties(false)
     }
   }
-
-  useEffect(() => {
-    fetchCandidates()
-    fetchParties()
-  }, [])
 
   const handlePartySelect = (partyId) => {
     setSelectedParty(partyId)

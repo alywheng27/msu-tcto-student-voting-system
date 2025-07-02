@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -65,9 +65,16 @@ export default function CollegeVotingPage() {
     // Read cookies using js-cookie
     return {
       collegeOfficeID: Cookies.get("CollegeOfficeID"),
+      hasVotedCollege: Cookies.get("HasVotedCollege"),
       // Add more cookies if needed
     }
   }
+
+  const alreadyVoted = useCallback(() => {
+    if (cookieValue.hasVotedCollege === 'true') {
+      router.replace("/voter/vote/voted")
+    }
+  }, [cookieValue.hasVotedCollege, router])
 
   async function fetchColleges() {
     setLoadingColleges(true)
@@ -173,7 +180,8 @@ export default function CollegeVotingPage() {
     fetchParties()
     fetchColleges()
     setCookieValue(fetchCookies())
-  }, [])
+    alreadyVoted()
+  }, [alreadyVoted])
 
   const positionLabels = {
     governor: "Governor",

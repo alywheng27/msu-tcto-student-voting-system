@@ -26,6 +26,8 @@ export default async function ResultsPage() {
     return b.decree - a.decree
   })
 
+  console.log(reorderedSscResults)
+
   return (
     <div className="space-y-8">
       <div>
@@ -78,30 +80,44 @@ export default async function ResultsPage() {
                     <p className="text-gray-500">Click on any position tab above to view the election results</p>
                   </div>
                 </TabsContent>
-
+                
                 {reorderedSscResults.map((positionResult) => {
                   const totalVotes = positionResult.candidates.reduce((sum, candidate) => sum + candidate.votes, 0)
 
-                  // Draw logic: Only for single-slot positions
+                  // Draw logic for senators (special case)
+                  let senatorDrawVotes = null
+                  const positionObj = positions.find(p => p.PositionID === positionResult.positionId)
+                  const maxSelections = positionObj.MaximumSelection
+                  if (positionResult.position === "Senator" && positionResult.candidates.length > maxSelections) {
+                    const lastWinnerVotes = positionResult.candidates[maxSelections - 1]?.votes
+                    const nextVotes = positionResult.candidates[maxSelections]?.votes
+                    if (nextVotes !== undefined && lastWinnerVotes === nextVotes) {
+                      senatorDrawVotes = lastWinnerVotes
+                    }
+                  }
+
+                  // Draw logic: Only for single-slot positions (default)
                   const maxVotes = Math.max(...positionResult.candidates.map(c => c.votes))
                   const topCandidates = positionResult.candidates.filter(c => c.votes === maxVotes)
-                  // Find the maxSelections for this position
-                  const positionObj = positions.find(p => p.PositionID === positionResult.positionId)
-                  const maxSelections = positionObj?.MaxSelections || 1
                   const isDraw = topCandidates.length > 1 && maxSelections === 1
 
                   return (
                     <TabsContent key={positionResult.positionId} value={positionResult.positionId} className="mt-6">
                       <div className="space-y-3">
                         {positionResult.candidates.map((candidate, index) => {
-                          
                           const party = parties.find((p) => p.PartyID === candidate.party.PartyID)
                           const isWinner = index === 0
 
                           // For senators, multiple winners
-                          const isWinnerSenator = positionResult.positionId === "senator" && index < 10
-                          const showAsWinner = positionResult.positionId === "senator" ? isWinnerSenator : isWinner
-                          const showAsDraw = isDraw && candidate.votes === maxVotes
+                          const isWinnerSenator = positionResult.position === "Senator" && index < 10
+                          const showAsWinner = positionResult.position === "Senator" ? isWinnerSenator : isWinner
+                          // Special senator draw logic
+                          let showAsDraw = false
+                          if (positionResult.position === "Senator" && senatorDrawVotes !== null) {
+                            showAsDraw = candidate.votes === senatorDrawVotes
+                          } else {
+                            showAsDraw = isDraw && candidate.votes === maxVotes
+                          }
 
                           return (
                             <CandidateResultCard
@@ -223,12 +239,21 @@ export default async function ResultsPage() {
                             {reorderedCollegeResults.map((positionResult) => {
                               const totalVotes = positionResult.candidates.reduce((sum, candidate) => sum + candidate.votes, 0)
 
-                              // Draw logic: Only for single-slot positions
+                              // Draw logic for board members (special case)
+                              let boardDrawVotes = null
+                              const positionObj = positions.find(p => p.PositionID === positionResult.positionId)
+                              const maxSelections = positionObj.MaximumSelection
+                              if (positionResult.position === "Board Member" && positionResult.candidates.length > maxSelections) {
+                                const lastWinnerVotes = positionResult.candidates[maxSelections - 1]?.votes
+                                const nextVotes = positionResult.candidates[maxSelections]?.votes
+                                if (nextVotes !== undefined && lastWinnerVotes === nextVotes) {
+                                  boardDrawVotes = lastWinnerVotes
+                                }
+                              }
+
+                              // Draw logic: Only for single-slot positions (default)
                               const maxVotes = Math.max(...positionResult.candidates.map(c => c.votes))
                               const topCandidates = positionResult.candidates.filter(c => c.votes === maxVotes)
-                              // Find the maxSelections for this position
-                              const positionObj = positions.find(p => p.PositionID === positionResult.positionId)
-                              const maxSelections = positionObj?.MaxSelections || 1
                               const isDraw = topCandidates.length > 1 && maxSelections === 1
 
                               return (
@@ -238,11 +263,16 @@ export default async function ResultsPage() {
                                       const party = parties.find((p) => p.PartyID === candidate.party.PartyID)
                                       const isWinner = index === 0
 
-                                      // For board members, multiple winners (top 6)
-                                      const isBoardMemberWinner = positionResult.positionId === "board-member" && index < 6
-                                      const showAsWinner =
-                                        positionResult.positionId === "board-member" ? isBoardMemberWinner : isWinner
-                                      const showAsDraw = isDraw && candidate.votes === maxVotes
+                                      // For board members, multiple winners (top N)
+                                      const isBoardMemberWinner = positionResult.position === "Board Member" && index < maxSelections
+                                      const showAsWinner = positionResult.position === "Board Member" ? isBoardMemberWinner : isWinner
+                                      // Special Board Member draw logic
+                                      let showAsDraw = false
+                                      if (positionResult.position === "Board Member" && boardDrawVotes !== null) {
+                                        showAsDraw = candidate.votes === boardDrawVotes
+                                      } else {
+                                        showAsDraw = isDraw && candidate.votes === maxVotes
+                                      }
 
                                       return (
                                         <CandidateResultCard

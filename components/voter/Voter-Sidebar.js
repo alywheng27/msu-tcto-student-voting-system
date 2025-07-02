@@ -33,7 +33,6 @@ export function VoterSidebar() {
     { href: "/voter/dashboard", icon: Home, label: "Dashboard" },
   ]
 
-  console.log(cookieValue)
   // Add SSC Voting link only if user hasn't voted for SSC yet
   if (cookieValue.hasVotedSSC == "False") {
     menuItems.push({ href: "/voter/vote/ssc", icon: Vote, label: "SSC Voting" })
