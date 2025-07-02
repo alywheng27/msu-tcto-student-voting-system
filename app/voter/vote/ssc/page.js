@@ -13,6 +13,7 @@ import { AlertCircle, ChevronRight, Edit2, X } from "lucide-react"
 import { CandidateCard } from "@/components/voter/ssc/Candidate-Card"
 import { ReviewSelectionCard } from "@/components/voter/ssc/Review-Selection-Card"
 import Cookies from "js-cookie"
+import Image from "next/image"
 
 export default function SSCVotingPage() {
   const router = useRouter()
@@ -526,10 +527,12 @@ export default function SSCVotingPage() {
                     <div className="text-xs text-muted-foreground">of {getMaxPossibleSelections()} selected</div>
                   </div>
                   <div className="w-12 h-12 rounded-full overflow-hidden border-2" style={{ borderColor: ssc.color }}>
-                    <img
+                    <Image
                       src={ssc.logo || "/placeholder.svg?height=48&width=48"}
                       alt={`${ssc.name} logo`}
                       className="w-full h-full object-contain"
+                      width={48}
+                      height={48}
                     />
                   </div>
                 </div>
@@ -540,10 +543,12 @@ export default function SSCVotingPage() {
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
                 <div className="flex items-center gap-3">
                   <div className="w-16 h-16 rounded-lg overflow-hidden border-2" style={{ borderColor: ssc.color }}>
-                    <img
+                    <Image
                       src={ssc.logo || "/placeholder.svg?height=64&width=64"}
                       alt={`${ssc.name} logo`}
                       className="w-full h-full object-contain"
+                      width={64}
+                      height={64}
                     />
                   </div>
                   <div>
@@ -617,10 +622,12 @@ export default function SSCVotingPage() {
                       >
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 border-2 border-white shadow-sm">
-                            <img
+                            <Image
                               src={senator.photo || "/placeholder.svg?height=48&width=48"}
                               alt={senator.name}
                               className="w-full h-full object-cover"
+                              width={48}
+                              height={48}
                             />
                           </div>
                           <div className="flex-1 min-w-0">
