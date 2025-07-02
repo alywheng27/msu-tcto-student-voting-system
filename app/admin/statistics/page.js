@@ -44,12 +44,6 @@ export default function StatisticsPage() {
       setColleges(collegesData);
       setVoters(votersData);
       setLoading(false);
-      // Debug initial data
-      console.log('votes', votesData);
-      console.log('candidates', candidatesData);
-      console.log('positions', positionsData);
-      console.log('colleges', collegesData);
-      console.log('voters', votersData);
     });
   }, []);
 
@@ -65,10 +59,6 @@ export default function StatisticsPage() {
     if (dateTo !== '' && dayjs(vote.VoteTimeSubmitted).isAfter(dayjs(dateTo).endOf('day'))) match = false;
     return match;
   });
-  // Debug filter values and result
-  console.log('college filter', college);
-  console.log('position filter', position);
-  console.log('filteredVotes', filteredVotes);
 
   // Helper: Prepare candidate report data (use filteredVotes)
   const candidateReport = Object.values(
@@ -131,7 +121,8 @@ export default function StatisticsPage() {
   // Helper: Prepare vote list report data (use filteredVotes)
   const voteListReport = filteredVotes.map((vote) => {
     const candidate = candidates.find(c => c.CandidateID === vote.CandidateID) || {};
-    const voterName = vote.FirstName && vote.Surname ? `${vote.FirstName} ${vote.Surname}` : vote.FirstName || vote.Surname || "";
+    const voter = voters.find(v => v.UserID === vote.VoterID) || {};
+    const voterName = voter.FirstName && voter.Surname ? `${voter.FirstName} ${voter.Surname}` : voter.FirstName || voter.Surname || "";
     const candidateName = candidate.FirstName && candidate.Surname ? `${candidate.FirstName} ${candidate.Surname}` : candidate.FirstName || candidate.Surname || "";
     return {
       "Vote ID": vote.VoteID,

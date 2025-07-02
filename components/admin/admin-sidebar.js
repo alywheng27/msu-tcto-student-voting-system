@@ -52,12 +52,12 @@ export function AdminSidebar() {
     { href: "/admin/voters", icon: Users, label: "Voters" },
     { href: "/admin/results", icon: BarChart3, label: "Results" },
     { href: "/admin/statistics", icon: BarChart, label: "Statistics" },
-    { href: "/admin/calendar", icon: Calendar, label: "Calendar" },
-    { href: "/admin/simulation", icon: FlaskConical, label: "Simulation" },
-    { href: "/admin/audit-logs", icon: Shield, label: "Audit Logs" },
-    { href: "/admin/appearance", icon: Palette, label: "Appearance" },
-    { href: "/admin/system-info", icon: Info, label: "System Info" },
-    { href: "/admin/settings", icon: Settings, label: "Settings" },
+    // { href: "/admin/calendar", icon: Calendar, label: "Calendar" },
+    // { href: "/admin/simulation", icon: FlaskConical, label: "Simulation" },
+    // { href: "/admin/audit-logs", icon: Shield, label: "Audit Logs" },
+    // { href: "/admin/appearance", icon: Palette, label: "Appearance" },
+    // { href: "/admin/system-info", icon: Info, label: "System Info" },
+    // { href: "/admin/settings", icon: Settings, label: "Settings" },
   ]
 
   const handleLogout = async () => {
