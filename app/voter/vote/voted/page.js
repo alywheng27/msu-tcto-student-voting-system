@@ -17,11 +17,11 @@ export default function AlreadyVotedPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center mt-4">
-          <Link href="/voter/dashboard" passHref>
-            <Button as="a" className="w-full max-w-xs" size="lg">
+          <Button asChild className="w-full max-w-xs" size="lg">
+            <Link href="/voter/dashboard">
               Return to Dashboard
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </CardContent>
       </Card>
     </div>

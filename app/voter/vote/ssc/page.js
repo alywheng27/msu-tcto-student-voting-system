@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -55,19 +55,16 @@ export default function SSCVotingPage() {
     }
   }
 
-  const alreadyVoted = useCallback(() => {
-    if (cookieValue.hasVotedSSC === 'true') {
-      router.replace("/voter/vote/voted")
-    }
-  }, [cookieValue.hasVotedSSC, router])
-
   useEffect(() => {
     fetchCandidates()
     fetchParties()
-    setCookieValue(fetchCookies())
-    alreadyVoted()
-  }, [alreadyVoted])
+    const cookies = fetchCookies()
+    setCookieValue(cookies)
 
+    if (cookies.hasVotedSSC === 'true') {
+      router.replace("/voter/vote/voted")
+    }
+  }, [router])
   async function fetchCandidates() {
     setLoadingCandidates(true)
     setFetchError(null)

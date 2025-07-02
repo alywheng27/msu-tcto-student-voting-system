@@ -5,6 +5,22 @@ import { getParties, getPositions, getElectionResults } from '@/lib/results'
 import { getColleges } from "@/lib/voters"
 import Image from "next/image"
 
+// Helper function to detect draw votes for multi-winner positions
+function getDrawVotes(positionResult, positionObj) {
+  const maxSelections = positionObj?.MaximumSelection || positionObj?.MaxSelections || 1
+  if (
+    (positionResult.position === "Senator" || positionResult.position === "Board Member") &&
+    positionResult.candidates.length > maxSelections
+  ) {
+    const lastWinnerVotes = positionResult.candidates[maxSelections - 1]?.votes
+    const nextVotes = positionResult.candidates[maxSelections]?.votes
+    if (nextVotes !== undefined && lastWinnerVotes === nextVotes) {
+      return lastWinnerVotes
+    }
+  }
+  return null
+}
+
 export default async function ResultsPage() {
   const [colleges, parties, positions, sscResults] = await Promise.all([getColleges(), getParties(), getPositions(), getElectionResults("ssc")])
 
@@ -20,8 +36,6 @@ export default async function ResultsPage() {
   const reorderedSscResults = sscResults.sort((a, b) => {
     return b.decree - a.decree
   })
-
-  console.log(reorderedSscResults)
 
   return (
     <div className="space-y-8">
@@ -78,18 +92,10 @@ export default async function ResultsPage() {
                 
                 {reorderedSscResults.map((positionResult) => {
                   const totalVotes = positionResult.candidates.reduce((sum, candidate) => sum + candidate.votes, 0)
-
-                  // Draw logic for senators (special case)
-                  let senatorDrawVotes = null
                   const positionObj = positions.find(p => p.PositionID === positionResult.positionId)
                   const maxSelections = positionObj.MaximumSelection
-                  if (positionResult.position === "Senator" && positionResult.candidates.length > maxSelections) {
-                    const lastWinnerVotes = positionResult.candidates[maxSelections - 1]?.votes
-                    const nextVotes = positionResult.candidates[maxSelections]?.votes
-                    if (nextVotes !== undefined && lastWinnerVotes === nextVotes) {
-                      senatorDrawVotes = lastWinnerVotes
-                    }
-                  }
+                  // Use helper for draw logic
+                  const drawVotes = getDrawVotes(positionResult, positionObj)
 
                   // Draw logic: Only for single-slot positions (default)
                   const maxVotes = Math.max(...positionResult.candidates.map(c => c.votes))
@@ -104,12 +110,12 @@ export default async function ResultsPage() {
                           const isWinner = index === 0
 
                           // For senators, multiple winners
-                          const isWinnerSenator = positionResult.position === "Senator" && index < 10
+                          const isWinnerSenator = positionResult.position === "Senator" && index < maxSelections
                           const showAsWinner = positionResult.position === "Senator" ? isWinnerSenator : isWinner
-                          // Special senator draw logic
+                          // Use helper for draw logic
                           let showAsDraw = false
-                          if (positionResult.position === "Senator" && senatorDrawVotes !== null) {
-                            showAsDraw = candidate.votes === senatorDrawVotes
+                          if (positionResult.position === "Senator" && drawVotes !== null) {
+                            showAsDraw = candidate.votes === drawVotes
                           } else {
                             showAsDraw = isDraw && candidate.votes === maxVotes
                           }
@@ -233,18 +239,10 @@ export default async function ResultsPage() {
 
                             {reorderedCollegeResults.map((positionResult) => {
                               const totalVotes = positionResult.candidates.reduce((sum, candidate) => sum + candidate.votes, 0)
-
-                              // Draw logic for board members (special case)
-                              let boardDrawVotes = null
                               const positionObj = positions.find(p => p.PositionID === positionResult.positionId)
                               const maxSelections = positionObj.MaximumSelection
-                              if (positionResult.position === "Board Member" && positionResult.candidates.length > maxSelections) {
-                                const lastWinnerVotes = positionResult.candidates[maxSelections - 1]?.votes
-                                const nextVotes = positionResult.candidates[maxSelections]?.votes
-                                if (nextVotes !== undefined && lastWinnerVotes === nextVotes) {
-                                  boardDrawVotes = lastWinnerVotes
-                                }
-                              }
+                              // Use helper for draw logic
+                              const drawVotes = getDrawVotes(positionResult, positionObj)
 
                               // Draw logic: Only for single-slot positions (default)
                               const maxVotes = Math.max(...positionResult.candidates.map(c => c.votes))
@@ -261,10 +259,10 @@ export default async function ResultsPage() {
                                       // For board members, multiple winners (top N)
                                       const isBoardMemberWinner = positionResult.position === "Board Member" && index < maxSelections
                                       const showAsWinner = positionResult.position === "Board Member" ? isBoardMemberWinner : isWinner
-                                      // Special Board Member draw logic
+                                      // Use helper for draw logic
                                       let showAsDraw = false
-                                      if (positionResult.position === "Board Member" && boardDrawVotes !== null) {
-                                        showAsDraw = candidate.votes === boardDrawVotes
+                                      if (positionResult.position === "Board Member" && drawVotes !== null) {
+                                        showAsDraw = candidate.votes === drawVotes
                                       } else {
                                         showAsDraw = isDraw && candidate.votes === maxVotes
                                       }
