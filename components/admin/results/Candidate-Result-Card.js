@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Trophy, Medal, Award } from "lucide-react"
+import Image from "next/image"
 
 export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, votes, totalVotes }) {
   const votePercentage = totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(1) : 0
@@ -74,13 +75,15 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
             {/* Candidate Photo */}
             <div className="flex-shrink-0 relative">
               <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-full overflow-hidden bg-gray-100 border-2 border-white shadow-md ring-2 ring-gray-100">
-                <img
+                <Image
                   src={candidate.photo || "/candidates/no-photo.png"}
                   alt={candidate.name}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.src = "/candidates/no-photo.png"
                   }}
+                  width={160}
+                  height={160}
                 />
               </div>
 

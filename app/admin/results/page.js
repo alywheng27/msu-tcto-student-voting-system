@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CandidateResultCard } from "@/components/admin/results/Candidate-Result-Card"
 import { getParties, getPositions, getElectionResults } from '@/lib/results'
 import { getColleges } from "@/lib/voters"
+import Image from "next/image"
 
 export default async function ResultsPage() {
   // const colleges = await getColleges()
@@ -158,10 +159,12 @@ export default async function ResultsPage() {
                     <TabsContent key={college.CollegeOfficeID} value={college.CollegeOfficeID} className="mt-6 space-y-6">
                       <div className="text-center mb-6">
                         <div className="flex items-center justify-center gap-3 mb-2">
-                          <img
+                          <Image
                             src={college.Logo || "/candidates/no-photo.png"}
                             alt={`${college.CollegeOffice} logo`}
                             className="w-12 h-12 object-contain"
+                            width={250}
+                            height={250}
                           />
                           <h3 className="text-2xl font-bold" style={{ color: college.CollegeOfficeColor }}>
                             {college.CollegeOffice}

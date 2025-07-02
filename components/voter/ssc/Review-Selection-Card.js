@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Edit2, X, User } from "lucide-react"
+import Image from "next/image"
 
 export function ReviewSelectionCard({ position, candidate, party, college, onEdit, onRemove, isSkipped = false }) {
   if (isSkipped) {
@@ -74,13 +75,15 @@ export function ReviewSelectionCard({ position, candidate, party, college, onEdi
             {/* Candidate Info */}
             <div className="flex items-center gap-3">
               <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 border-2 border-white shadow-md ring-2 ring-gray-100">
-                <img
+                <Image
                   src={candidate?.photo || "/placeholder.svg?height=56&width=56"}
                   alt={candidate?.name || "Candidate"}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.src = "/placeholder.svg?height=56&width=56"
                   }}
+                  width={250}
+                  height={250}
                 />
               </div>
               <div className="flex-1 min-w-0">

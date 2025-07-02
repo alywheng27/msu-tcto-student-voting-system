@@ -3,6 +3,7 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { CheckCircle2 } from "lucide-react"
+import Image from "next/image"
 
 export function CandidateCard({ candidate, party, isSelected, onSelect, selectionMode, disabled = false }) {
   return (
@@ -47,13 +48,15 @@ export function CandidateCard({ candidate, party, isSelected, onSelect, selectio
           {/* Candidate Photo */}
           <div className="flex-shrink-0 relative">
             <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gray-100 border-3 border-white shadow-lg ring-2 ring-gray-100 transition-all duration-300 group-hover:ring-4 group-hover:ring-gray-200">
-              <img
+              <Image
                 src={candidate.photo || "/placeholder.svg?height=120&width=120"}
                 alt={`${candidate.name}, candidate for ${candidate.position}`}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 onError={(e) => {
                   e.target.src = "/placeholder.svg?height=120&width=120"
                 }}
+                width={120}
+                height={120}
               />
             </div>
 
