@@ -7,12 +7,12 @@ import College from "@/components/admin/dashboard/College"
 import Party from "@/components/admin/dashboard/Party"
 
 // Lib
-import { getVotingStats, getPartyResults } from "@/lib/data"
+import { getVotingStats, getPartyResults } from "@/lib/dashboard"
 
 
 export default async function AdminDashboardPage() {
   const stats = await getVotingStats()
-  const sscPartyResults = await getPartyResults("ssc")
+  const sscPartyResults = await getPartyResults("all")
   
   const collegeData = stats.collegeStats.map((college) => ({
     name: college.name,
