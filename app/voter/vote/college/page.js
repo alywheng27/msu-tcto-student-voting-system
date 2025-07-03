@@ -488,7 +488,7 @@ export default function CollegeVotingPage() {
                       <p className="text-muted-foreground">No candidates available for Governor position.</p>
                     </div>
                   ) : (
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                       {candidates.governor.map((candidate) => (
                         <CandidateCard
                           key={candidate.id}
@@ -532,7 +532,7 @@ export default function CollegeVotingPage() {
                       <p className="text-muted-foreground">No candidates available for Vice Governor position.</p>
                     </div>
                   ) : (
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                       {candidates.viceGovernor.map((candidate) => (
                         <CandidateCard
                           key={candidate.id}
@@ -576,7 +576,7 @@ export default function CollegeVotingPage() {
                       <p className="text-muted-foreground">No candidates available for Mayor position.</p>
                     </div>
                   ) : (
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                       {candidates.mayor.map((candidate) => (
                         <CandidateCard
                           key={candidate.id}
@@ -620,7 +620,7 @@ export default function CollegeVotingPage() {
                       <p className="text-muted-foreground">No candidates available for Vice Mayor position.</p>
                     </div>
                   ) : (
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                       {candidates.viceMayor.map((candidate) => (
                         <CandidateCard
                           key={candidate.id}
@@ -675,7 +675,7 @@ export default function CollegeVotingPage() {
                         </AlertDescription>
                       </Alert>
 
-                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                         {candidates.boardMembers.map((candidate) => (
                           <CandidateCard
                             key={candidate.id}

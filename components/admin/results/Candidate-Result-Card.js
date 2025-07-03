@@ -77,7 +77,7 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
               <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-full overflow-hidden bg-gray-100 border-2 border-white shadow-md ring-2 ring-gray-100">
                 <Image
                   src={candidate.photo || "/candidates/no-photo.png"}
-                  alt={candidate.name}
+                  alt={`${candidate.firstName} ${candidate.surname}`}
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.src = "/candidates/no-photo.png"
@@ -99,7 +99,7 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
             <div className="flex-1 min-w-0 space-y-1 sm:space-y-2">
               <div className="flex items-start justify-between gap-2">
                 <h4 className="font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-2 text-gray-900">
-                  {candidate.name}
+                  {candidate.firstName} {candidate.surname}
                 </h4>
 
                 {/* Status Badge */}
