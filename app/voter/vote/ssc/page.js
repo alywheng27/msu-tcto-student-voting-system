@@ -390,7 +390,7 @@ export default function SSCVotingPage() {
                   <p className="text-muted-foreground">No candidates available for President position.</p>
                 </div>
               ) : (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                   {candidates.president.map((candidate) => (
                     <CandidateCard
                       key={candidate.id}
@@ -434,7 +434,7 @@ export default function SSCVotingPage() {
                   <p className="text-muted-foreground">No candidates available for Vice President position.</p>
                 </div>
               ) : (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                   {candidates.vicePresident.map((candidate) => (
                     <CandidateCard
                       key={candidate.id}
@@ -487,7 +487,7 @@ export default function SSCVotingPage() {
                     </AlertDescription>
                   </Alert>
 
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
                     {candidates.senators.map((candidate) => (
                       <CandidateCard
                         key={candidate.id}
