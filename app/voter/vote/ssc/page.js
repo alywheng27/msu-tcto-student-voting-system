@@ -38,6 +38,7 @@ export default function SSCVotingPage() {
   const [parties, setParties] = useState([])
   const [loadingParties, setLoadingParties] = useState(true)
   const [fetchPartiesError, setFetchPartiesError] = useState(null)
+  const [sscLogoSrc, setSscLogoSrc] = useState("")
 
   const ssc = {
     id: "ssc",
@@ -64,7 +65,10 @@ export default function SSCVotingPage() {
     if (cookies.hasVotedSSC === 'true') {
       router.replace("/voter/vote/voted")
     }
+
+    setSscLogoSrc(ssc.logo)
   }, [router])
+
   async function fetchCandidates() {
     setLoadingCandidates(true)
     setFetchError(null)
@@ -523,14 +527,14 @@ export default function SSCVotingPage() {
                     </div>
                     <div className="text-xs text-muted-foreground">of {getMaxPossibleSelections()} selected</div>
                   </div>
-                  {/* <div className="w-12 h-12 rounded-full overflow-hidden border-2" style={{ borderColor: ssc.color }}> */}
                   <div className="w-12 h-12 rounded-full overflow-hidden">
                     <Image
-                      src={ssc.logo}
-                      alt={`${ssc.name} logo`}
+                      src={sscLogoSrc}
+                      alt="Supreme Student Council logo"
                       className="w-full h-full object-contain"
                       width={48}
                       height={48}
+                      onError={() => setSscLogoSrc("/parties/no-logo.png")}
                     />
                   </div>
                 </div>
@@ -540,14 +544,14 @@ export default function SSCVotingPage() {
               {/* SSC Header */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
                 <div className="flex items-center gap-3">
-                  {/* <div className="w-16 h-16 rounded-lg overflow-hidden border-2" style={{ borderColor: ssc.color }}> */}
                   <div className="w-16 h-16 rounded-lg overflow-hidden">
                     <Image
-                      src={ssc.logo}
-                      alt={`${ssc.name} logo`}
+                      src={sscLogoSrc}
+                      alt="Supreme Student Council logo"
                       className="w-full h-full object-contain"
                       width={64}
                       height={64}
+                      onError={() => setSscLogoSrc("/parties/no-logo.png")}
                     />
                   </div>
                   <div>
