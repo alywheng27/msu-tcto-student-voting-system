@@ -44,7 +44,7 @@ export default function SSCVotingPage() {
     name: "Supreme Student Council",
     shortName: "SSC",
     color: "#1E90FF",
-    logo: "/placeholder.svg?height=100&width=100",
+    logo: "/colleges/ssc.png",
   }
 
   function fetchCookies() {
@@ -523,9 +523,10 @@ export default function SSCVotingPage() {
                     </div>
                     <div className="text-xs text-muted-foreground">of {getMaxPossibleSelections()} selected</div>
                   </div>
-                  <div className="w-12 h-12 rounded-full overflow-hidden border-2" style={{ borderColor: ssc.color }}>
+                  {/* <div className="w-12 h-12 rounded-full overflow-hidden border-2" style={{ borderColor: ssc.color }}> */}
+                  <div className="w-12 h-12 rounded-full overflow-hidden">
                     <Image
-                      src={ssc.logo || "/placeholder.svg?height=48&width=48"}
+                      src={ssc.logo}
                       alt={`${ssc.name} logo`}
                       className="w-full h-full object-contain"
                       width={48}
@@ -539,9 +540,10 @@ export default function SSCVotingPage() {
               {/* SSC Header */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
                 <div className="flex items-center gap-3">
-                  <div className="w-16 h-16 rounded-lg overflow-hidden border-2" style={{ borderColor: ssc.color }}>
+                  {/* <div className="w-16 h-16 rounded-lg overflow-hidden border-2" style={{ borderColor: ssc.color }}> */}
+                  <div className="w-16 h-16 rounded-lg overflow-hidden">
                     <Image
-                      src={ssc.logo || "/placeholder.svg?height=64&width=64"}
+                      src={ssc.logo}
                       alt={`${ssc.name} logo`}
                       className="w-full h-full object-contain"
                       width={64}

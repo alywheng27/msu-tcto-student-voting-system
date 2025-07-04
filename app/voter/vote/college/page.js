@@ -53,7 +53,7 @@ export default function CollegeVotingPage() {
     name: collegeOffice.name,
     shortName: collegeOffice.code,
     color: collegeOffice.color,
-    logo: "/parties/no-logo.png",
+    logo: collegeOffice.logo,
   } : {
     id: "",
     name: "",
@@ -89,6 +89,7 @@ export default function CollegeVotingPage() {
         name: c.CollegeOffice,
         color: c.CollegeOfficeColor || "#2196F3",
         code: c.CollegeOfficeCode,
+        logo: c.CollegeOfficeLogo,
       })))
     } catch (err) {
       setFetchCollegesError(err.message)
@@ -712,11 +713,10 @@ export default function CollegeVotingPage() {
                         <div className="text-xs text-muted-foreground">of {getMaxPossibleSelections()} selected</div>
                       </div>
                       <div
-                        className="w-12 h-12 rounded-full overflow-hidden border-2"
-                        style={{ borderColor: college.color }}
-                      >
+                        // className="w-12 h-12 rounded-full overflow-hidden border-2" style={{ borderColor: college.color }}>
+                        className="w-12 h-12 rounded-full overflow-hidden">
                         <Image
-                          src={college.logo || "/placeholder.svg?height=48&width=48"}
+                          src={college.logo}
                           alt={`${college.name} logo`}
                           className="w-full h-full object-contain"
                           width={48}
@@ -730,9 +730,10 @@ export default function CollegeVotingPage() {
                   {/* College Header */}
                   <div className="bg-gradient-to-r from-gray-50 to-white p-4 rounded-lg border">
                     <div className="flex items-center gap-3">
-                      <div className="w-16 h-16 rounded-lg overflow-hidden border-2" style={{ borderColor: college.color }}>
+                      {/* <div className="w-16 h-16 rounded-lg overflow-hidden border-2" style={{ borderColor: college.color }}> */}
+                      <div className="w-16 h-16 rounded-lg overflow-hidden">
                         <Image
-                          src={college.logo || "/placeholder.svg?height=64&width=64"}
+                          src={college.logo}
                           alt={`${college.name} logo`}
                           className="w-full h-full object-contain"
                           width={64}
