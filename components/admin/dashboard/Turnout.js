@@ -1,6 +1,6 @@
 "use client"
-import { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
-import { ResponsiveContainer, PieChart, Pie } from "recharts"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { ResponsiveContainer, PieChart, Pie, Legend } from "recharts"
 
 export default function Turnout({ pieData, pieConfig }) {
     return (
@@ -15,7 +15,7 @@ export default function Turnout({ pieData, pieConfig }) {
                         nameKey="name"
                         dataKey="value"
                     />
-                    <ChartLegend />
+                    <Legend />
                 </PieChart>
             </ResponsiveContainer>
         </ChartContainer>

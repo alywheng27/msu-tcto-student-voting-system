@@ -17,8 +17,8 @@ import { getVotingStats } from "@/lib/dashboard"
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { VotingCountdown } from "@/components/Voting-Countdown"
-// import { PublicStats } from "@/components/public-stats"
+import { VotingCountdown } from "@/components/main/Voting-Countdown"
+import { PublicStats } from "@/components/main/Public-Stats";
 
 export default async function Home() {
   const electionInfo = getElectionInfo();
@@ -65,10 +65,10 @@ export default async function Home() {
           </div>
         </section> */}
 
-        {/* <section id="statistics" className="mb-16">
+        <section id="statistics" className="mb-16">
           <h3 className="text-3xl font-bold text-center mb-8 text-gray-900">Election Statistics</h3>
           <PublicStats />
-        </section> */}
+        </section>
 
         <section id="statistics" className="mb-16">
           <div className="text-center mb-12">
