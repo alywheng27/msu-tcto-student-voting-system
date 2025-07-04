@@ -78,7 +78,9 @@ export default async function Home() {
           <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
             {stats.collegeStats.map((collegeStat) => {
               const college = colleges.find((c) => c.CollegeOfficeCode === collegeStat.name)
-              const turnoutPercentage = (collegeStat.votersCount / collegeStat.totalStudents) * 100
+              const turnoutPercentage = collegeStat.totalStudents > 0
+                ? (collegeStat.votersCount / collegeStat.totalStudents) * 100
+                : 0
 
               return (
                 <Card
@@ -168,11 +170,9 @@ export default async function Home() {
                         <Progress
                           value={turnoutPercentage}
                           className="h-3 bg-gray-200"
-                          style={
-                            {
-                              "--progress-foreground": college?.color || "#888",
-                            }
-                          }
+                          style={{
+                            "--progress-foreground": college?.CollegeOfficeColor || "#888",
+                          }}
                         />
                         <div className="flex justify-between text-xs text-gray-500">
                           <span>0%</span>
