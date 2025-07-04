@@ -70,7 +70,7 @@ export default async function Home() {
           <PublicStats />
         </section>
 
-        <section id="statistics" className="mb-16">
+        <section id="college-participation" className="mb-16">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-bold mb-4 text-gray-900">College Participation</h3>
             <p className="text-gray-600 text-lg">Track voting progress across all colleges</p>

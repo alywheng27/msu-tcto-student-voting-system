@@ -56,16 +56,15 @@ export async function PublicStats() {
     value: {
       label: "Value",
     },
-    voted: {
+    "Voted": {
       label: "Voted",
       color: "var(--chart-1)",
     },
-    not_voted: {
+    "Not Voted": {
       label: "Not Voted",
       color: "var(--chart-2)",
     },
   }
-
   return (
     <div className="space-y-8">
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

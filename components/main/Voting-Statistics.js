@@ -4,8 +4,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, ChartLegend, ChartLegendContent, LabelList } from "recharts"
 
+import PropTypes from 'prop-types'
+
 export default function VotingStatistics({ collegeConfig, collegeData }) {
-  return (
+    if (!collegeData || !Array.isArray(collegeData)) {
+        return <div>No voting data available</div>
+    }
+
+    VotingStatistics.propTypes = {
+    collegeConfig: PropTypes.object.isRequired,
+    collegeData: PropTypes.arrayOf(
+        PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        voters: PropTypes.number.isRequired,
+        nonVoters: PropTypes.number.isRequired
+        })
+    ).isRequired
+    }
+    
+    return (
     <>
         <Card>
             <CardHeader>
@@ -15,8 +32,13 @@ export default function VotingStatistics({ collegeConfig, collegeData }) {
               <div className="h-[430px] w-full">
                 <ChartContainer config={collegeConfig} className="mx-auto max-h-[430px]" >
                   <ResponsiveContainer>
-                    <BarChart accessibilityLayer data={collegeData} barSize={40}>
-                      <CartesianGrid strokeDasharray="3 3" />
+                    <BarChart 
+                      accessibilityLayer 
+                      data={collegeData} 
+                      barSize={40}
+                      aria-label="Voting statistics by college showing voter and non-voter counts"
+                    >                      
+                        <CartesianGrid strokeDasharray="3 3" />
                         <XAxis
                             dataKey="name"
                             angle={-45}

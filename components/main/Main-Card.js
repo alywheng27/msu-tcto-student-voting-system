@@ -1,7 +1,16 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 
-export default function MainCard({ totalStudents, totalVoters }) {
+import PropTypes from 'prop-types'
+
+export default function MainCard({ totalStudents = 0, totalVoters = 0 }) {
+  MainCard.propTypes = {
+    totalStudents: PropTypes.number.isRequired,
+    totalVoters:   PropTypes.number.isRequired
+  }  
+
+  const totalStudentsPercent = totalVoters / totalStudents * 100
+  
   return (
     <>
     <Card>
@@ -20,9 +29,9 @@ export default function MainCard({ totalStudents, totalVoters }) {
           <CardContent>
             <div className="text-2xl font-bold">{totalVoters}</div>
             <p className="text-xs text-muted-foreground">
-              {((totalVoters / totalStudents) * 100).toFixed(1)}% of total students
+              {totalStudentsPercent.toFixed(1)}% of total students
             </p>
-            <Progress value={(totalVoters / totalStudents) * 100} className="h-2 mt-2" />
+            <Progress value={totalStudentsPercent} className="h-2 mt-2" />
           </CardContent>
         </Card>
         <Card>
