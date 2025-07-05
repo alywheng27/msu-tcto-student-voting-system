@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-// import { users } from "@/lib/data2"
 import { Plus, Search } from "lucide-react"
 import { VoterManagementModal } from "@/components/admin/voters/Voter-Management-Modal"
 import { useToast } from "@/hooks/use-toast"
@@ -22,8 +21,8 @@ export default function VotersPage() {
   const [modalMode, setModalMode] = useState("add")
   const [selectedVoter, setSelectedVoter] = useState(null)
   const [search, setSearch] = useState("")
-  const [colleges, setColleges] = useState([])
-  const [collegesLoading, setCollegesLoading] = useState(true)
+  // const [colleges, setColleges] = useState([])
+  // const [collegesLoading, setCollegesLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 8
   const [fetchError, setFetchError] = useState("")
@@ -53,25 +52,25 @@ export default function VotersPage() {
     fetchVoters()
   }, [])
 
-  const fetchColleges = async () => {
-    setCollegesLoading(true)
-    try {
-      const response = await fetch('/api/login/college')
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      const data = await response.json()
-      setColleges(data)
-    } catch (error) {
-      setColleges([])
-    } finally {
-      setCollegesLoading(false)
-    }
-  }
+  // const fetchColleges = async () => {
+  //   setCollegesLoading(true)
+  //   try {
+  //     const response = await fetch('/api/login/college')
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! status: ${response.status}`)
+  //     }
+  //     const data = await response.json()
+  //     setColleges(data)
+  //   } catch (error) {
+  //     setColleges([])
+  //   } finally {
+  //     setCollegesLoading(false)
+  //   }
+  // }
 
-  useEffect(() => {
-    fetchColleges()
-  }, [])
+  // useEffect(() => {
+  //   fetchColleges()
+  // }, [])
 
   const handleAddVoter = () => {
     setSelectedVoter(null)
@@ -91,7 +90,6 @@ export default function VotersPage() {
     setModalOpen(true)
   }
 
-  // Filter voters based on search
   const filteredVoters = voters.filter((voter) => {
     const searchLower = search.toLowerCase()
     const nameMatch = voter.FirstName?.toLowerCase().includes(searchLower) || voter.MiddleName?.toLowerCase().includes(searchLower) || voter.Surname?.toLowerCase().includes(searchLower) || voter.ExtensionName?.toLowerCase().includes(searchLower)
@@ -102,7 +100,6 @@ export default function VotersPage() {
     return nameMatch || usernameMatch || collegeMatch || sscVoteMatch || collegeVoteMatch
   })
 
-  // Pagination helpers
   const getPaginatedData = (data) => {
     const startIndex = (currentPage - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
@@ -231,7 +228,7 @@ export default function VotersPage() {
               </div>
             </div>
           )}
-          {/* Pagination Controls */}
+
           <div className="flex items-center justify-end space-x-2 mt-4">
             <Button
               variant="outline"

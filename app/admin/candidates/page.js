@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { parties, positions, colleges } from "@/lib/data2"
 import { Camera } from "lucide-react"
 import { CandidateManagementModal } from "@/components/admin/candidates/Candidate-Management-Modal"
 import Image from "next/image"
@@ -26,6 +25,9 @@ export default function CandidatesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const itemsPerPage = 8
   const [fetchError, setFetchError] = useState("")
+  const [parties, setParties] = useState([])
+  const [positions, setPositions] = useState([])
+  const [colleges, setColleges] = useState([])
 
   const fetchCandidates = async () => {
     setIsLoading(true)
@@ -45,6 +47,18 @@ export default function CandidatesPage() {
       setIsLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetch('/api/admin/parties')
+      .then(res => res.json())
+      .then(setParties)
+    fetch('/api/admin/positions')
+      .then(res => res.json())
+      .then(setPositions)
+    fetch('/api/login/college')
+      .then(res => res.json())
+      .then(setColleges)
+  }, [])
 
   useEffect(() => {
     fetchCandidates()
@@ -97,7 +111,6 @@ export default function CandidatesPage() {
     fetchCandidates();
   }
 
-  // Add pagination functions
   const getPaginatedData = (data) => {
     const startIndex = (currentPage - 1) * itemsPerPage
     const endIndex = startIndex + itemsPerPage
@@ -106,7 +119,6 @@ export default function CandidatesPage() {
 
   const totalPages = (data) => Math.ceil(data.length / itemsPerPage)
 
-  // Add search filter function
   const filterCandidates = (candidates) => {
     if (!searchQuery) return candidates;
     
@@ -136,7 +148,6 @@ export default function CandidatesPage() {
     )
   }
 
-  // Group candidates by position type (SSC or College)
   const sscCandidates = candidates.filter((candidate) => candidate.PositionType === "SSC")
 
   const collegeCandidates = candidates.filter((candidate) => candidate.PositionType === "College")
@@ -174,7 +185,7 @@ export default function CandidatesPage() {
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value)
-                      setCurrentPage(1) // Reset to first page when searching
+                      setCurrentPage(1)
                     }}
                     className="w-[300px] px-4 py-2 rounded-md border border-input bg-background"
                   />
@@ -291,7 +302,7 @@ export default function CandidatesPage() {
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value)
-                      setCurrentPage(1) // Reset to first page when searching
+                      setCurrentPage(1) 
                     }}
                     className="w-[300px] px-4 py-2 rounded-md border border-input bg-background"
                   />
@@ -413,5 +424,5 @@ export default function CandidatesPage() {
       />
       <Toaster toasts={toasts} onDismiss={dismiss} />
     </div>
-  )
+  );
 }

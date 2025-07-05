@@ -27,7 +27,6 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
 
-    // Auto-generate ID from name (for convenience)
     if (field === "name") {
       const generatedId = value
         .toLowerCase()
@@ -37,7 +36,6 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
     }
   }
 
-  // Helper function para mag-reset ng form
   const getInitialFormData = () => ({
     name: "",
     id: "",
@@ -50,7 +48,6 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
     allowSkip: true,
   })
 
-  // Helper function para sa validation
   const validateForm = (data) => {
     if (!data.name || !data.id || !data.type) {
       return {
@@ -73,7 +70,6 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
     e.preventDefault()
     setIsLoading(true)
 
-    // Validation
     const validationError = validateForm(formData)
     if (validationError) {
       onSuccess?.(validationError)
@@ -141,7 +137,6 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid lg:grid-cols-3 gap-6">
-            {/* Position Type Selection */}
             <div className="lg:col-span-1">
               <Card>
                 <CardHeader>
@@ -192,9 +187,7 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
               </Card>
             </div>
 
-            {/* Form Fields Section */}
             <div className="lg:col-span-2 space-y-4">
-              {/* Basic Information */}
               <Card>
                 <CardHeader>
                   <CardTitle>Basic Information</CardTitle>
@@ -251,7 +244,6 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
             </div>
           </div>
 
-          {/* Preview Section */}
           {formData.name && (
             <Card>
               <CardHeader>
@@ -290,7 +282,6 @@ export default function AddPositionModal({ isOpen, onClose, defaultType = "ssc",
             </Card>
           )}
 
-          {/* Action Buttons */}
           <div className="flex justify-end gap-4 pt-6 border-t">
             <Button type="button" variant="outline" onClick={handleClose}>
               Cancel

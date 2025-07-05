@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,13 +15,14 @@ import { ReviewSelectionCard } from "@/components/voter/ssc/Review-Selection-Car
 import Cookies from "js-cookie"
 import Image from "next/image"
 
+export const dynamic = 'force-dynamic'
+
 export default function CollegeVotingPage() {
   const router = useRouter()
   const { toast } = useToast()
   const [votingMode, setVotingMode] = useState("individual")
   const [selectedParty, setSelectedParty] = useState("")
   const [step, setStep] = useState("mode")
-  const [cookieValue, setCookieValue] = useState({})
   const [selections, setSelections] = useState({
     governor: "",
     viceGovernor: "",
@@ -46,7 +47,7 @@ export default function CollegeVotingPage() {
   const [loadingColleges, setLoadingColleges] = useState(true)
   const [fetchCollegesError, setFetchCollegesError] = useState(null)
 
-  const collegeOffice = colleges.find((c) => c.id === cookieValue.collegeOfficeID)
+  const collegeOffice = colleges.find((c) => c.id === Cookies.get("CollegeOfficeID"))
   
   const college = collegeOffice ? {
     id: collegeOffice.id,
@@ -61,21 +62,6 @@ export default function CollegeVotingPage() {
     color: "#2196F3",
     logo: "/parties/no-logo.png",
   }
-
-  function fetchCookies() {
-    // Read cookies using js-cookie
-    return {
-      collegeOfficeID: Cookies.get("CollegeOfficeID"),
-      hasVotedCollege: Cookies.get("HasVotedCollege"),
-      // Add more cookies if needed
-    }
-  }
-
-  const alreadyVoted = useCallback(() => {
-    if (cookieValue.hasVotedCollege === 'true') {
-      router.replace("/voter/vote/voted")
-    }
-  }, [cookieValue.hasVotedCollege, router])
 
   async function fetchColleges() {
     setLoadingColleges(true)
@@ -106,7 +92,6 @@ export default function CollegeVotingPage() {
       if (!res.ok) throw new Error("Failed to fetch candidates")
       const data = await res.json()
       
-      // Map candidates by position and filter by college
       const mapped = {
         governor: [],
         viceGovernor: [],
@@ -115,7 +100,6 @@ export default function CollegeVotingPage() {
         boardMembers: [],
       }
       data.forEach((c) => {
-        // if (c.CollegeOfficeCode?.toLowerCase() !== college.id) return
         const pos = c.Position?.toLowerCase()
         if (pos === "governor") mapped.governor.push({
           id: c.CandidateID,
@@ -181,17 +165,11 @@ export default function CollegeVotingPage() {
     fetchCandidates()
     fetchParties()
     fetchColleges()
-    setCookieValue(fetchCookies())
-    alreadyVoted()
-  }, [alreadyVoted])
 
-  const positionLabels = {
-    governor: "Governor",
-    viceGovernor: "Vice Governor",
-    mayor: "Mayor",
-    viceMayor: "Vice Mayor",
-    boardMembers: "Board Members",
-  }
+    if (Cookies.get("HasVotedCollege") === 'true') {
+      router.replace("/voter/vote/voted")
+    }
+  }, [router])
 
   const handlePartySelect = (partyId) => {
     setSelectedParty(partyId)
@@ -342,7 +320,7 @@ export default function CollegeVotingPage() {
   }
 
   const getMaxPossibleSelections = () => {
-    return 4 + 6 // 4 single positions + 6 board members
+    return 4 + 6
   }
 
   return (
@@ -713,7 +691,6 @@ export default function CollegeVotingPage() {
                         <div className="text-xs text-muted-foreground">of {getMaxPossibleSelections()} selected</div>
                       </div>
                       <div
-                        // className="w-12 h-12 rounded-full overflow-hidden border-2" style={{ borderColor: college.color }}>
                         className="w-12 h-12 rounded-full overflow-hidden">
                         <Image
                           src={college.logo}
@@ -727,10 +704,8 @@ export default function CollegeVotingPage() {
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* College Header */}
                   <div className="bg-gradient-to-r from-gray-50 to-white p-4 rounded-lg border">
                     <div className="flex items-center gap-3">
-                      {/* <div className="w-16 h-16 rounded-lg overflow-hidden border-2" style={{ borderColor: college.color }}> */}
                       <div className="w-16 h-16 rounded-lg overflow-hidden">
                         <Image
                           src={college.logo}
@@ -752,9 +727,7 @@ export default function CollegeVotingPage() {
                     </div>
                   </div>
 
-                  {/* Single Positions */}
                   <div className="grid gap-4 md:grid-cols-2">
-                    {/* Governor */}
                     <ReviewSelectionCard
                       position="Governor"
                       candidate={selections.governor ? getSelectedCandidate("governor", selections.governor) : null}
@@ -769,7 +742,6 @@ export default function CollegeVotingPage() {
                       isSkipped={!selections.governor}
                     />
 
-                    {/* Vice Governor */}
                     <ReviewSelectionCard
                       position="Vice Governor"
                       candidate={
@@ -786,7 +758,6 @@ export default function CollegeVotingPage() {
                       isSkipped={!selections.viceGovernor}
                     />
 
-                    {/* Mayor */}
                     <ReviewSelectionCard
                       position="Mayor"
                       candidate={selections.mayor ? getSelectedCandidate("mayor", selections.mayor) : null}
@@ -797,7 +768,6 @@ export default function CollegeVotingPage() {
                       isSkipped={!selections.mayor}
                     />
 
-                    {/* Vice Mayor */}
                     <ReviewSelectionCard
                       position="Vice Mayor"
                       candidate={selections.viceMayor ? getSelectedCandidate("viceMayor", selections.viceMayor) : null}
@@ -813,7 +783,6 @@ export default function CollegeVotingPage() {
                     />
                   </div>
 
-                  {/* Board Members */}
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <div>
@@ -882,7 +851,6 @@ export default function CollegeVotingPage() {
                     )}
                   </div>
 
-                  {/* Summary Statistics */}
                   <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
                     <h4 className="font-medium mb-3 text-blue-900">Selection Summary</h4>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
@@ -913,7 +881,6 @@ export default function CollegeVotingPage() {
                     </div>
                   </div>
 
-                  {/* Final Warning */}
                   <Alert className="bg-yellow-50 border-yellow-200">
                     <AlertCircle className="h-4 w-4 text-yellow-600" />
                     <AlertTitle className="text-yellow-600">Important Notice</AlertTitle>

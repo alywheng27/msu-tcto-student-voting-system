@@ -28,7 +28,6 @@ export default function StatisticsPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
 
-  // Fetch all needed data on mount
   useEffect(() => {
     setLoading(true);
     Promise.all([
@@ -47,20 +46,16 @@ export default function StatisticsPage() {
     });
   }, []);
 
-  // Filtering logic for frontend (since backend returns all votes)
   const filteredVotes = votes.filter((vote) => {
     let match = true;
     const candidate = candidates.find(c => c.CandidateID === vote.CandidateID);
-    // College filter
     if (college !== 'all' && candidate && String(candidate.CollegeOfficeID) !== String(college)) match = false;
-    // Position filter
     if (position !== 'all' && candidate && String(candidate.PositionID) !== String(position)) match = false;
     if (dateFrom !== '' && dayjs(vote.VoteTimeSubmitted).isBefore(dayjs(dateFrom))) match = false;
     if (dateTo !== '' && dayjs(vote.VoteTimeSubmitted).isAfter(dayjs(dateTo).endOf('day'))) match = false;
     return match;
   });
 
-  // Helper: Prepare candidate report data (use filteredVotes)
   const candidateReport = Object.values(
     filteredVotes.reduce((acc, vote) => {
       const candidate = candidates.find(c => c.CandidateID === vote.CandidateID) || {};
@@ -83,7 +78,6 @@ export default function StatisticsPage() {
     }, {})
   );
 
-  // Search and pagination for candidate report
   const filteredCandidateReport = candidateReport.filter(row => {
     const q = search.toLowerCase();
     return (
@@ -97,10 +91,8 @@ export default function StatisticsPage() {
   const totalPages = Math.ceil(filteredCandidateReport.length / pageSize) || 1;
   const paginatedCandidateReport = filteredCandidateReport.slice((page - 1) * pageSize, page * pageSize);
 
-  // Reset page to 1 if search or pageSize changes
   useEffect(() => { setPage(1); }, [search, pageSize]);
 
-  // Chart data (votes per candidate, use filteredVotes)
   const candidateStats = filteredVotes.reduce((acc, vote) => {
     const candidate = candidates.find(c => c.CandidateID === vote.CandidateID) || {};
     const key = vote.CandidateID + "-" + (candidate.FirstName || vote.FirstName || "") + " " + (candidate.Surname || vote.Surname || "");
@@ -110,7 +102,6 @@ export default function StatisticsPage() {
   }, {});
   const candidateChartData = Object.values(candidateStats);
 
-  // Compute voted: count of voters with HasVotedSSC or HasVotedCollege true
   const votedCount = voters.filter(v => v.HasVotedSSC === true || v.HasVotedCollege === true).length;
   const notVotedCount = voters.filter(v => v.HasVotedSSC === false && v.HasVotedCollege === false).length;
   const turnoutData = [
@@ -118,7 +109,6 @@ export default function StatisticsPage() {
     { name: "Not Voted", value: notVotedCount, fill: "#EF4444" },
   ];
 
-  // Helper: Prepare vote list report data (use filteredVotes)
   const voteListReport = filteredVotes.map((vote) => {
     const candidate = candidates.find(c => c.CandidateID === vote.CandidateID) || {};
     const voter = voters.find(v => v.UserID === vote.VoterID) || {};
@@ -132,7 +122,6 @@ export default function StatisticsPage() {
     };
   });
 
-  // Export functions (candidates report only)
   const exportCSV = () => {
     const ws = XLSX.utils.json_to_sheet(candidateReport);
     const wb = XLSX.utils.book_new();
@@ -167,7 +156,6 @@ export default function StatisticsPage() {
     doc.save("candidates-report.pdf");
   };
 
-  // Export functions for vote list
   const exportVoteListCSV = () => {
     const ws = XLSX.utils.json_to_sheet(voteListReport);
     const wb = XLSX.utils.book_new();
@@ -252,7 +240,6 @@ export default function StatisticsPage() {
 
           <Card className="mb-8 p-6">
             <div className="flex flex-wrap gap-4 items-end">
-              {/* Candidate Report Export Buttons */}
               <div className="flex flex-row gap-2 items-end">
                 <span className="font-semibold mr-2 self-center">Candidate Report:</span>
                 <Button onClick={exportCSV} disabled={candidateReport.length === 0}>Export CSV</Button>
@@ -260,7 +247,6 @@ export default function StatisticsPage() {
                 <Button onClick={exportPDF} disabled={candidateReport.length === 0}>Export PDF</Button>
               </div>
             </div>
-            {/* Vote List Report Export Buttons (inline, below) */}
             <div className="flex flex-row gap-2 items-end">
               <span className="font-semibold mr-2 self-center">Vote List Report:</span>
               <Button onClick={exportVoteListCSV} disabled={voteListReport.length === 0}>Export CSV</Button>
@@ -280,7 +266,6 @@ export default function StatisticsPage() {
                     <XAxis dataKey="name" angle={-45} textAnchor="end" height={60} tick={{ fontSize: 12 }} tickLine={false} tickMargin={5} axisLine={false} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent hideLabel />} />
-                    {/* <ChartLegend content={<ChartLegendContent />} /> */}
                     <Bar dataKey="votes" fill="#4F46E5" radius={8} />
                   </BarChart>
                 </ResponsiveContainer>
@@ -344,7 +329,6 @@ export default function StatisticsPage() {
                 ))}
               </TableBody>
             </Table>
-            {/* Pagination Controls */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mt-4">
               <div>
                 Page {page} of {totalPages}

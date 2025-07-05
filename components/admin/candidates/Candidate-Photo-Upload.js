@@ -59,8 +59,6 @@ export function CandidatePhotoUpload({ value, onChange, className = "" }) {
 
   return (
     <div className={`space-y-4 ${className}`}>
-      {/* <Label htmlFor="photo">Candidate Photo</Label> */}
-
       {preview ? (
         <Card className="relative overflow-hidden">
           <CardContent className="p-0">

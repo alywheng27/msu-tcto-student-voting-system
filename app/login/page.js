@@ -75,9 +75,6 @@ export default function LoginPage() {
       if (res.status == 200) {
         let data = await res.json()
         
-        // setCurrentUser(user)
-        // Add Cookies
-        // Add a small delay to ensure state is set
         setTimeout(() => {
           if (data[0]?.UserTypeID == 1) {
             router.replace("/admin/dashboard")

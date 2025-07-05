@@ -31,7 +31,6 @@ export function ReviewSelectionCard({ position, candidate, party, college, onEdi
     <Card className="border-2 border-green-200 bg-green-50/30 hover:shadow-md transition-all duration-200 group">
       <CardContent className="p-0">
         <div className="relative">
-          {/* Party Logo Background */}
           {party && (
             <>
               <div
@@ -48,13 +47,10 @@ export function ReviewSelectionCard({ position, candidate, party, college, onEdi
                   backgroundPosition: "center right 10px",
                 }}
               />
-              {/* <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-white/60" /> */}
             </>
           )}
 
-          {/* Content */}
           <div className="relative p-4">
-            {/* Header */}
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-1">{position}</h4>
@@ -72,15 +68,14 @@ export function ReviewSelectionCard({ position, candidate, party, college, onEdi
               </div>
             </div>
 
-            {/* Candidate Info */}
             <div className="flex items-center gap-3">
               <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 border-2 border-white shadow-md ring-2 ring-gray-100">
                 <Image
-                  src={candidate?.photo || "/placeholder.svg?height=56&width=56"}
+                  src={candidate?.photo || "/candidates/no-photo.png"}
                   alt={candidate?.name || "Candidate"}
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    e.target.src = "/placeholder.svg?height=56&width=56"
+                    e.target.src = "/candidates/no-photo.png"
                   }}
                   width={250}
                   height={250}
@@ -98,7 +93,6 @@ export function ReviewSelectionCard({ position, candidate, party, college, onEdi
               </div>
             </div>
 
-            {/* Selection Indicator */}
             <div className="mt-3 pt-3 border-t border-green-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -109,9 +103,6 @@ export function ReviewSelectionCard({ position, candidate, party, college, onEdi
               </div>
             </div>
           </div>
-
-          {/* Selection Border */}
-          {/* <div className="absolute inset-0 border-2 border-green-400 rounded-lg pointer-events-none opacity-50" /> */}
         </div>
       </CardContent>
     </Card>

@@ -15,10 +15,11 @@ import { ReviewSelectionCard } from "@/components/voter/ssc/Review-Selection-Car
 import Cookies from "js-cookie"
 import Image from "next/image"
 
+export const dynamic = 'force-dynamic'
+
 export default function SSCVotingPage() {
   const router = useRouter()
   const { toast } = useToast()
-  const [cookieValue, setCookieValue] = useState({})
   const [votingMode, setVotingMode] = useState("individual")
   const [selectedParty, setSelectedParty] = useState("")
   const [step, setStep] = useState("mode")
@@ -45,29 +46,19 @@ export default function SSCVotingPage() {
     name: "Supreme Student Council",
     shortName: "SSC",
     color: "#1E90FF",
-    logo: "/colleges/ssc.png",
-  }
-
-  function fetchCookies() {
-    // Read cookies using js-cookie
-    return {
-      hasVotedSSC: Cookies.get("HasVotedSSC"),
-      // Add more cookies if needed
-    }
+    logo: "/colleges/SSC.png",
   }
 
   useEffect(() => {
     fetchCandidates()
     fetchParties()
-    const cookies = fetchCookies()
-    setCookieValue(cookies)
 
-    if (cookies.hasVotedSSC === 'true') {
+    if (Cookies.get("HasVotedSSC") === 'true') {
       router.replace("/voter/vote/voted")
     }
 
     setSscLogoSrc(ssc.logo)
-  }, [router])
+  }, [router, ssc.logo])
 
   async function fetchCandidates() {
     setLoadingCandidates(true)
@@ -76,7 +67,7 @@ export default function SSCVotingPage() {
       const res = await fetch("/api/admin/candidates")
       if (!res.ok) throw new Error("Failed to fetch candidates")
       const data = await res.json()
-      // I-map ang data base sa position
+
       const mapped = {
         president: [],
         vicePresident: [],
@@ -268,7 +259,7 @@ export default function SSCVotingPage() {
   }
 
   const getMaxPossibleSelections = () => {
-    return 2 + 10 // 2 single positions + 10 senators
+    return 2 + 10
   }
 
   return (
@@ -541,7 +532,6 @@ export default function SSCVotingPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* SSC Header */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
                 <div className="flex items-center gap-3">
                   <div className="w-16 h-16 rounded-lg overflow-hidden">
@@ -566,9 +556,7 @@ export default function SSCVotingPage() {
                 </div>
               </div>
 
-              {/* Single Positions */}
               <div className="grid gap-4 md:grid-cols-2">
-                {/* President */}
                 <ReviewSelectionCard
                   position="President"
                   candidate={selections.president ? getSelectedCandidate("president", selections.president) : null}
@@ -583,7 +571,6 @@ export default function SSCVotingPage() {
                   isSkipped={!selections.president}
                 />
 
-                {/* Vice President */}
                 <ReviewSelectionCard
                   position="Vice President"
                   candidate={
@@ -601,7 +588,6 @@ export default function SSCVotingPage() {
                 />
               </div>
 
-              {/* Senators */}
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <div>
@@ -665,7 +651,6 @@ export default function SSCVotingPage() {
                 )}
               </div>
 
-              {/* Summary Statistics */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
                 <h4 className="font-medium mb-3 text-blue-900">Selection Summary</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
@@ -696,7 +681,6 @@ export default function SSCVotingPage() {
                 </div>
               </div>
 
-              {/* Final Warning */}
               <Alert className="bg-yellow-50 border-yellow-200">
                 <AlertCircle className="h-4 w-4 text-yellow-600" />
                 <AlertTitle className="text-yellow-600">Important Notice</AlertTitle>

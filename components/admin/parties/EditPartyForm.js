@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Save, CheckCircle2, XCircle } from "lucide-react"
+import { Save } from "lucide-react"
 import { PartyLogoUpload } from "@/components/admin/parties/add/Party-Logo-Upload"
 import { ColorPicker } from "@/components/admin/parties/add/Color-Picker"
 import Image from "next/image"
@@ -30,7 +30,6 @@ export default function EditPartyForm({ party, onSuccess, onCancel, toast }) {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  // Helper function to validate the form
   const validateForm = (data) => {
     if (!data.name || !data.color) {
       return {
@@ -46,7 +45,6 @@ export default function EditPartyForm({ party, onSuccess, onCancel, toast }) {
     e.preventDefault()
     setIsLoading(true)
 
-    // Validate form
     const validationError = validateForm(formData)
     if (validationError) {
       toast && toast(validationError)
@@ -55,7 +53,6 @@ export default function EditPartyForm({ party, onSuccess, onCancel, toast }) {
     }
 
     try {
-      // Call API to update party
       const res = await fetch(`/api/admin/parties/edit`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -121,10 +118,6 @@ export default function EditPartyForm({ party, onSuccess, onCancel, toast }) {
                 <Label htmlFor="color">Party Color *</Label>
                 <ColorPicker color={formData.color} onChange={(color) => handleInputChange("color", color)} id="color" />
               </div>
-              {/* <div className="space-y-2">
-                <Label>Party Logo</Label>
-                <PartyLogoUpload value={formData.logo} onChange={(logo) => handleInputChange("logo", logo)} />
-              </div> */}
             </CardContent>
           </Card>
           <Card>

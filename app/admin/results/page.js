@@ -5,7 +5,8 @@ import { getParties, getPositions, getElectionResults } from '@/lib/results'
 import { getColleges } from "@/lib/voters"
 import Image from "next/image"
 
-// Helper function to detect draw votes for multi-winner positions
+export const dynamic = 'force-dynamic'
+
 function getDrawVotes(positionResult, positionObj) {
   const maxSelections = positionObj?.MaximumSelection || positionObj?.MaxSelections || 1
   if (
@@ -24,7 +25,6 @@ function getDrawVotes(positionResult, positionObj) {
 export default async function ResultsPage() {
   const [colleges, parties, positions, sscResults] = await Promise.all([getColleges(), getParties(), getPositions(), getElectionResults("ssc")])
 
-  // Pre-fetch all college results
   const collegeResultsData = await Promise.all(
     colleges.map(async (college) => ({
       college,
@@ -32,7 +32,6 @@ export default async function ResultsPage() {
     })),
   )
 
-  // Reorder SSC results: Senator, Vice President, President, Secretary
   const reorderedSscResults = sscResults.sort((a, b) => {
     return b.decree - a.decree
   })
@@ -51,7 +50,6 @@ export default async function ResultsPage() {
         </TabsList>
 
         <TabsContent value="ssc" className="mt-6 space-y-6">
-          {/* SSC Position Results with Tabs */}
           <Card>
             <CardHeader>
               <CardTitle>SSC Position Results</CardTitle>
@@ -77,7 +75,6 @@ export default async function ResultsPage() {
                   ))}
                 </TabsList>
 
-                {/* Overview Tab - Shows nothing, just placeholder */}
                 <TabsContent value="overview" className="mt-6">
                   <div className="text-center py-12">
                     <div className="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4">
@@ -94,10 +91,8 @@ export default async function ResultsPage() {
                   const totalVotes = positionResult.candidates.reduce((sum, candidate) => sum + candidate.votes, 0)
                   const positionObj = positions.find(p => p.PositionID === positionResult.positionId)
                   const maxSelections = positionObj.MaximumSelection
-                  // Use helper for draw logic
                   const drawVotes = getDrawVotes(positionResult, positionObj)
 
-                  // Draw logic: Only for single-slot positions (default)
                   const maxVotes = Math.max(...positionResult.candidates.map(c => c.votes))
                   const topCandidates = positionResult.candidates.filter(c => c.votes === maxVotes)
                   const isDraw = topCandidates.length > 1 && maxSelections === 1
@@ -109,10 +104,9 @@ export default async function ResultsPage() {
                           const party = parties.find((p) => p.PartyID === candidate.party.PartyID)
                           const isWinner = index === 0
 
-                          // For senators, multiple winners
                           const isWinnerSenator = positionResult.position === "Senator" && index < maxSelections
                           const showAsWinner = positionResult.position === "Senator" ? isWinnerSenator : isWinner
-                          // Use helper for draw logic
+
                           let showAsDraw = false
                           if (positionResult.position === "Senator" && drawVotes !== null) {
                             showAsDraw = candidate.votes === drawVotes
@@ -167,7 +161,6 @@ export default async function ResultsPage() {
                 </TabsList>
 
                 {collegeResultsData.map(({ college, results: collegeResults }) => {
-                  // Reorder college results: Board Member, Vice Mayor, Mayor, Vice Governor, Governor
                   const reorderedCollegeResults = collegeResults.sort((a, b) => {
                     return b.decree - a.decree
                   })
@@ -187,10 +180,8 @@ export default async function ResultsPage() {
                             {college.CollegeOffice}
                           </h3>
                         </div>
-                        {/* <p className="text-muted-foreground">{college.description}</p> */}
                       </div>
 
-                      {/* College Position Results with Tabs */}
                       <Card>
                         <CardHeader>
                           <CardTitle style={{ color: college.CollegeOfficeColor }}>{college.CollegeOfficeCode} Position Results</CardTitle>
@@ -224,7 +215,6 @@ export default async function ResultsPage() {
                               ))}
                             </TabsList>
 
-                            {/* College Overview Tab - Shows nothing, just placeholder */}
                             <TabsContent value="overview" className="mt-6">
                               <div className="text-center py-12">
                                 <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mx-auto mb-4">
@@ -241,10 +231,8 @@ export default async function ResultsPage() {
                               const totalVotes = positionResult.candidates.reduce((sum, candidate) => sum + candidate.votes, 0)
                               const positionObj = positions.find(p => p.PositionID === positionResult.positionId)
                               const maxSelections = positionObj.MaximumSelection
-                              // Use helper for draw logic
                               const drawVotes = getDrawVotes(positionResult, positionObj)
 
-                              // Draw logic: Only for single-slot positions (default)
                               const maxVotes = Math.max(...positionResult.candidates.map(c => c.votes))
                               const topCandidates = positionResult.candidates.filter(c => c.votes === maxVotes)
                               const isDraw = topCandidates.length > 1 && maxSelections === 1
@@ -256,10 +244,8 @@ export default async function ResultsPage() {
                                       const party = parties.find((p) => p.PartyID === candidate.party.PartyID)
                                       const isWinner = index === 0
 
-                                      // For board members, multiple winners (top N)
                                       const isBoardMemberWinner = positionResult.position === "Board Member" && index < maxSelections
                                       const showAsWinner = positionResult.position === "Board Member" ? isBoardMemberWinner : isWinner
-                                      // Use helper for draw logic
                                       let showAsDraw = false
                                       if (positionResult.position === "Board Member" && drawVotes !== null) {
                                         showAsDraw = candidate.votes === drawVotes

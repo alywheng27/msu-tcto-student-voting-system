@@ -20,6 +20,9 @@ import Footer from "@/components/Footer";
 import { VotingCountdown } from "@/components/main/Voting-Countdown"
 import { PublicStats } from "@/components/main/Public-Stats";
 
+// Force dynamic rendering to avoid build-time API calls
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
   const electionInfo = getElectionInfo();
   const [colleges, stats] = await Promise.all([getColleges(), getVotingStats()])

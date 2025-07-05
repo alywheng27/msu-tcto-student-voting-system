@@ -12,13 +12,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { AlertTriangle, CheckCircle2, XCircle } from "lucide-react"
+import { AlertTriangle } from "lucide-react"
 
 export function DeletePartyDialog({ party, children, toast, onSuccess }) {
   const [isOpen, setIsOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
-  // Helper function to delete the party
   const deleteParty = async (partyID) => {
     const res = await fetch(`/api/admin/parties/delete`, {
       method: 'DELETE',

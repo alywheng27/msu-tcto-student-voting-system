@@ -34,10 +34,8 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
     >
       <CardContent className="p-0">
         <div className="relative min-h-[100px] sm:min-h-[120px]">
-          {/* Party Logo Background - Enhanced for results */}
           {party && (
             <>
-              {/* Primary background with party color */}
               <div
                 className="absolute inset-0 opacity-[0.04]"
                 style={{
@@ -45,7 +43,6 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
                 }}
               />
 
-              {/* Party logo as background */}
               <div
                 className="absolute inset-0 opacity-[0.5] bg-center bg-no-repeat"
                 style={{
@@ -55,24 +52,19 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
                 }}
               />
 
-              {/* Gradient overlay for text readability */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/80 to-white/50" />
             </>
           )}
 
-          {/* Winner Glow Effect */}
           {isWinner && !isDraw && <div className="absolute inset-0 bg-gradient-to-r from-green-100/50 to-transparent" />}
           {isDraw && <div className="absolute inset-0 bg-gradient-to-r from-orange-100/50 to-transparent" />}
 
-          {/* Content */}
           <div className="relative p-3 sm:p-4 flex items-center gap-3 sm:gap-4">
-            {/* Rank Indicator */}
             <div className="flex-shrink-0 flex flex-col items-center justify-center">
               <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 mb-1">{getRankIcon()}</div>
               <Badge className={`text-xs px-2 py-0.5 ${getRankBadgeColor()}`}>#{rank}</Badge>
             </div>
 
-            {/* Candidate Photo */}
             <div className="flex-shrink-0 relative">
               <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-18 md:h-18 rounded-full overflow-hidden bg-gray-100 border-2 border-white shadow-md ring-2 ring-gray-100">
                 <Image
@@ -87,7 +79,6 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
                 />
               </div>
 
-              {/* Winner Crown */}
               {isWinner && !isDraw && rank === 1 && (
                 <div className="absolute -top-1 -right-1 bg-yellow-400 text-yellow-900 rounded-full p-1 shadow-sm">
                   <Trophy className="h-3 w-3" />
@@ -95,14 +86,12 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
               )}
             </div>
 
-            {/* Candidate Information */}
             <div className="flex-1 min-w-0 space-y-1 sm:space-y-2">
               <div className="flex items-start justify-between gap-2">
                 <h4 className="font-bold text-sm sm:text-base md:text-lg leading-tight line-clamp-2 text-gray-900">
                   {candidate.firstName} {candidate.surname}
                 </h4>
 
-                {/* Status Badge */}
                 <div className="flex-shrink-0">
                   {isDraw ? (
                     <Badge className="bg-orange-500 text-white text-xs sm:text-sm font-medium shadow-sm">
@@ -120,7 +109,6 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
                 </div>
               </div>
 
-              {/* Party Badge */}
               {party && (
                 <div className="flex items-center gap-2">
                   <Badge
@@ -133,7 +121,6 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
                 </div>
               )}
 
-              {/* Vote Statistics */}
               <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm">
                 <div className="flex items-center gap-1">
                   <span className="font-bold text-gray-900">{votes.toLocaleString()}</span>
@@ -150,7 +137,6 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
             </div>
           </div>
 
-          {/* Vote Progress Bar */}
           <div className="px-3 sm:px-4 pb-3 sm:pb-4">
             <div className="w-full bg-gray-200 rounded-full h-2 sm:h-3 overflow-hidden">
               <div
@@ -160,14 +146,12 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
                   backgroundColor: party?.PartyColor || "#6B7280",
                 }}
               >
-                {/* Shimmer effect for winners */}
                 {isWinner && (
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
                 )}
               </div>
             </div>
 
-            {/* Progress Labels */}
             <div className="flex justify-between text-xs text-gray-500 mt-1">
               <span>0%</span>
               <span className="font-medium" style={{ color: party?.PartyColor || "#6B7280" }}>
@@ -176,14 +160,6 @@ export function CandidateResultCard({ candidate, party, rank, isWinner, isDraw, 
               <span>100%</span>
             </div>
           </div>
-
-          {/* Winner Highlight Border */}
-          {/* {isWinner && !isDraw && (
-            <div className="absolute inset-0 border-2 border-green-400 rounded-lg pointer-events-none opacity-50" />
-          )} */}
-          {/* {isDraw && (
-            <div className="absolute inset-0 border-2 border-orange-400 rounded-lg pointer-events-none opacity-50" />
-          )} */}
         </div>
       </CardContent>
     </Card>

@@ -29,7 +29,6 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
   const [colleges, setColleges] = useState([])
   const [collegesLoading, setCollegesLoading] = useState(true)
 
-  // Initialize form data when modal opens or voter changes
   useEffect(() => {
     if (mode === "edit" && voter) {
       setFormData({
@@ -38,7 +37,7 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
         surname: voter.Surname || "",
         extensionName: voter.ExtensionName || "",
         username: voter.Username || "",
-        password: "", // Don't pre-fill password for security
+        password: "", 
         confirmPassword: "",
         college: voter.CollegeOffice || "",
         role: voter.UserType.toLowerCase() || "voter",
@@ -86,7 +85,6 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }))
     }
@@ -362,7 +360,6 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Personal Information */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-3">
               <User className="h-4 w-4" />
@@ -437,7 +434,6 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
             </div>
           </div>
 
-          {/* Account Information */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-3">
               <Shield className="h-4 w-4" />
@@ -469,7 +465,6 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="voter">Voter</SelectItem>
-                    {/* <SelectItem value="admin">Administrator</SelectItem> */}
                   </SelectContent>
                 </Select>
               </div>
@@ -518,7 +513,6 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
             </div>
           </div>
 
-          {/* Preview Section */}
           {formData.firstName && formData.username && (
             <div className="space-y-3 pt-4 border-t">
               <div className="flex items-center gap-2">
@@ -549,7 +543,6 @@ export function VoterManagementModal({ isOpen, onClose, mode, voter, onSuccess }
             </div>
           )}
 
-          {/* Action Buttons */}
           <div className="flex justify-end gap-3 pt-4 border-t">
             <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
               Cancel

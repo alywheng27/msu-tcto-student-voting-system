@@ -1,1 +1,0 @@
-console.log(votes, candidates, positions, colleges);

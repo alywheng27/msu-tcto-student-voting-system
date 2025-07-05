@@ -82,7 +82,6 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                 : "border-green-400"
       }`}
     >
-      {/* Animated background for critical countdown */}
       {urgencyLevel === "critical" && (
         <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-orange-500/10 animate-pulse"></div>
       )}
@@ -113,7 +112,6 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
       <CardContent className="relative">
         {timeLeft.total > 0 ? (
           <>
-            {/* Main Countdown Display */}
             <div className="grid grid-cols-4 md:gap-4 gap-0 md:mb-13 mb-5 md:mt-5 mt-0">
               <div className="text-center">
                 <div
@@ -181,7 +179,6 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
               </div>
             </div>
 
-            {/* Urgency Messages */}
             {urgencyLevel === "critical" && (
               <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
                 <AlertTriangle className="w-4 h-4 text-red-600 animate-bounce" />
@@ -226,7 +223,6 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
           </div>
         )}
 
-        {/* End Date Display */}
         <div className="mt-4 pt-3 border-t border-gray-200">
           <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
             <Calendar className="w-4 h-4" />

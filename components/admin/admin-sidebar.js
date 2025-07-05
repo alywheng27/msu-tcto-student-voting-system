@@ -32,7 +32,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useRouter } from "next/navigation"
-// import { ThemeToggle } from "@/components/theme-toggle"
+import Image from "next/image"
 
 export function AdminSidebar() {
   const pathname = usePathname()
@@ -61,10 +61,6 @@ export function AdminSidebar() {
   ]
 
   const handleLogout = async () => {
-    // TODO: Implement logout functionality
-    // console.log("Logout confirmed")
-    // setShowLogoutConfirmation(false)
-
       const res = await fetch("/api/logout", {
         method: "GET",
         headers: {
@@ -78,12 +74,10 @@ export function AdminSidebar() {
   }
 
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false)
   }, [pathname])
 
-  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       const sidebar = document.getElementById("mobile-admin-sidebar")
@@ -113,7 +107,6 @@ export function AdminSidebar() {
     }
   }, [isMobileMenuOpen])
 
-  // Handle escape key
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === "Escape" && isMobileMenuOpen) {
@@ -127,7 +120,6 @@ export function AdminSidebar() {
 
   return (
     <>
-      {/* Mobile Toggle Button */}
       <Button
         id="mobile-sidebar-toggle"
         variant="ghost"
@@ -141,7 +133,6 @@ export function AdminSidebar() {
         {isMobileMenuOpen ? <X className="h-5 w-5 text-gray-700" /> : <Menu className="h-5 w-5 text-gray-700" />}
       </Button>
 
-      {/* Mobile Overlay */}
       {isMobileMenuOpen && (
         <div
           className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300"
@@ -149,20 +140,20 @@ export function AdminSidebar() {
         />
       )}
 
-      {/* Desktop Sidebar - Always visible on desktop */}
       <aside className="hidden md:flex md:flex-col md:w-64 md:bg-white md:border-r md:border-gray-200 md:shadow-sm">
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-[#1E90FF] flex items-center justify-center text-white font-bold text-sm">
-              M
-            </div>
+            <Image
+              src="/MSU-TCTO.png"
+              alt="MSU-TCTO Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-full object-cover"
+            />
             <div className="font-semibold text-lg text-gray-900 dark:text-gray-100">MSU-TCTO</div>
           </div>
-          {/* <ThemeToggle variant="ghost" size="sm" /> */}
         </div>
 
-        {/* Navigation */}
         <nav className="flex-1 px-4 py-6 overflow-y-auto">
           <div className="space-y-1">
             <div className="px-3 py-2">
@@ -189,15 +180,7 @@ export function AdminSidebar() {
           </div>
         </nav>
 
-        {/* Footer */}
         <div className="border-t border-gray-200 p-4 space-y-2">
-          {/* <Link
-            href="/"
-            className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200"
-          >
-            <Home className="h-4 w-4 flex-shrink-0" />
-            <span>Back to Home</span>
-          </Link> */}
           <button
             onClick={() => setShowLogoutConfirmation(true)}
             className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors duration-200"
@@ -208,7 +191,6 @@ export function AdminSidebar() {
         </div>
       </aside>
 
-      {/* Logout Confirmation Modal */}
       <Dialog open={showLogoutConfirmation} onOpenChange={setShowLogoutConfirmation}>
         <DialogContent>
           <DialogHeader>
@@ -234,7 +216,6 @@ export function AdminSidebar() {
         </DialogContent>
       </Dialog>
 
-      {/* Mobile Sidebar - Toggle behavior */}
       <aside
         id="mobile-admin-sidebar"
         className={cn(
@@ -243,16 +224,18 @@ export function AdminSidebar() {
         )}
         aria-hidden={!isMobileMenuOpen}
       >
-        {/* Mobile Header */}
         <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-[#1E90FF] flex items-center justify-center text-white font-bold text-sm">
-              M
-            </div>
+            <Image
+              src="/MSU-TCTO.png"
+              alt="MSU-TCTO Logo"
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-full object-cover"
+            />
             <div className="font-semibold text-lg text-gray-900 dark:text-gray-100">MSU-TCTO</div>
           </div>
           <div className="flex items-center gap-2">
-            {/* <ThemeToggle variant="ghost" size="sm" /> */}
             <Button
               variant="ghost"
               size="sm"
@@ -265,7 +248,6 @@ export function AdminSidebar() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         <nav className="flex-1 px-4 py-6 overflow-y-auto">
           <div className="space-y-1">
             <div className="px-3 py-2">
@@ -293,16 +275,7 @@ export function AdminSidebar() {
           </div>
         </nav>
 
-        {/* Mobile Footer */}
         <div className="border-t border-gray-200 p-4 space-y-2">
-          {/* <Link
-            href="/"
-            className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200 touch-manipulation"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <Home className="h-5 w-5 flex-shrink-0" />
-            <span>Back to Home</span>
-          </Link> */}
           <button
             onClick={() => {
               setShowLogoutConfirmation(true)

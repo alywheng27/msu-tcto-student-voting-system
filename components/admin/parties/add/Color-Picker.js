@@ -9,7 +9,6 @@ import { Check, ChevronDown } from "lucide-react"
 export function ColorPicker({ color, onChange, id }) {
   const [isOpen, setIsOpen] = useState(false)
 
-  // Predefined colors
   const presetColors = [
     "#2196F3", // Blue
     "#4CAF50", // Green

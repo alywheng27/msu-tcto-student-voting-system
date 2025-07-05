@@ -49,6 +49,8 @@ export async function POST(request) {
             await pool.request()
                 .input('voterId', voterId)
                 .query(`UPDATE Voter SET HasVotedSSC = 'True' WHERE UserID = @voterId`);
+            
+            cookieStore.set("HasVotedSSC", "true")
 
             return Response.json({ message: 'Vote submitted successfully.' }, { status: 200 });
         } catch (err) {

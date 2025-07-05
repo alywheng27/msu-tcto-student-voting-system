@@ -17,10 +17,8 @@ export function CandidateCard({ candidate, party, isSelected, onSelect, selectio
       onClick={() => !disabled && onSelect()}
     >
       <div className="relative min-h-[140px] sm:min-h-[160px]">
-        {/* Party Logo Background - Multiple layers for better visual effect */}
         {party && (
           <>
-            {/* Primary background with party color */}
             <div
               className="absolute inset-0 opacity-[0.03]"
               style={{
@@ -28,7 +26,6 @@ export function CandidateCard({ candidate, party, isSelected, onSelect, selectio
               }}
             />
 
-            {/* Party logo as background */}
             <div
               className="absolute inset-0 opacity-[0.1] bg-center bg-no-repeat transition-all duration-500 group-hover:opacity-[0.3] group-hover:scale-105"
               style={{
@@ -38,29 +35,25 @@ export function CandidateCard({ candidate, party, isSelected, onSelect, selectio
               }}
             />
 
-            {/* Subtle gradient overlay for better text readability */}
             <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/70 to-white/40" />
           </>
         )}
 
-        {/* Content Container */}
         <div className="relative p-4 sm:p-5 flex items-center gap-3 sm:gap-4 h-full">
-          {/* Candidate Photo */}
           <div className="flex-shrink-0 relative">
             <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full overflow-hidden bg-gray-100 border-3 border-white shadow-lg ring-2 ring-gray-100 transition-all duration-300 group-hover:ring-4 group-hover:ring-gray-200">
               <Image
-                src={candidate.photo || "/placeholder.svg?height=120&width=120"}
+                src={candidate.photo || "/candidates/no-photo.png"}
                 alt={`${candidate.name}, candidate for ${candidate.position}`}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 onError={(e) => {
-                  e.target.src = "/placeholder.svg?height=120&width=120"
+                  e.target.src = "/candidates/no-photo.png"
                 }}
                 width={120}
                 height={120}
               />
             </div>
 
-            {/* Selection indicator on photo */}
             {isSelected && (
               <div className="absolute -top-1 -right-1 bg-[#1E90FF] text-white rounded-full p-1.5 shadow-lg animate-pulse ring-2 ring-white">
                 <CheckCircle2 className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -68,14 +61,11 @@ export function CandidateCard({ candidate, party, isSelected, onSelect, selectio
             )}
           </div>
 
-          {/* Candidate Information */}
           <div className="flex-1 min-w-0 space-y-2">
-            {/* Name */}
             <h3 className="font-bold text-base sm:text-lg md:text-xl leading-tight line-clamp-2 text-gray-900 group-hover:text-gray-800 transition-colors">
               {candidate.name}
             </h3>
 
-            {/* Party Badge */}
             {party && (
               <div className="flex items-center gap-2">
                 <Badge
@@ -88,13 +78,11 @@ export function CandidateCard({ candidate, party, isSelected, onSelect, selectio
               </div>
             )}
 
-            {/* Selection Status */}
             <div className="flex items-center justify-between">
               <p className="text-xs sm:text-sm text-gray-600 font-medium">
                 {selectionMode === "single" ? "Tap to select" : isSelected ? "Selected" : "Tap to select"}
               </p>
 
-              {/* Vote count if available */}
               {candidate.votes !== undefined && (
                 <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
                   {candidate.votes} votes
@@ -104,15 +92,6 @@ export function CandidateCard({ candidate, party, isSelected, onSelect, selectio
           </div>
         </div>
 
-        {/* Selection Overlay */}
-        {/* {isSelected && (
-          <div className="absolute inset-0 bg-blue-500/5 border-2 border-[#1E90FF] rounded-lg pointer-events-none" />
-        )} */}
-
-        {/* Hover Overlay */}
-        {/* <div className="absolute inset-0 bg-black/0 group-hover:bg-black/[0.02] transition-all duration-300 pointer-events-none rounded-lg" /> */}
-
-        {/* Selected Badge */}
         {isSelected && (
           <div className="absolute top-3 right-3">
             <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 border border-blue-200 shadow-sm">
@@ -121,7 +100,6 @@ export function CandidateCard({ candidate, party, isSelected, onSelect, selectio
           </div>
         )}
 
-        {/* Disabled Overlay */}
         {disabled && (
           <div className="absolute inset-0 bg-gray-500/20 flex items-center justify-center rounded-lg">
             <Badge variant="outline" className="bg-white/90 text-gray-600">

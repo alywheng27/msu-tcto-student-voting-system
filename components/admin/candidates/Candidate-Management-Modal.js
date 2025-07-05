@@ -38,7 +38,6 @@ export function CandidateManagementModal({
   })
   const [showPassword, setShowPassword] = useState(false)
 
-  // NEW: States for fetched data and loading
   const [parties, setParties] = useState([])
   const [positions, setPositions] = useState([])
   const [colleges, setColleges] = useState([])
@@ -47,7 +46,6 @@ export function CandidateManagementModal({
 
   const { toast } = useToast();
 
-  // Fetch parties, positions, and colleges from API
   useEffect(() => {
     const fetchData = async () => {
       setDataLoading(true)
@@ -76,7 +74,6 @@ export function CandidateManagementModal({
     fetchData()
   }, [])
 
-  // Initialize form data when modal opens or candidate changes
   useEffect(() => {
     if (mode === "edit" && candidate) {
       setFormData({
@@ -115,7 +112,6 @@ export function CandidateManagementModal({
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }))
     }
@@ -316,7 +312,6 @@ export function CandidateManagementModal({
     }
   }
 
-  // Check loading state for data
   if (dataLoading) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
@@ -412,7 +407,6 @@ export function CandidateManagementModal({
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid lg:grid-cols-3 gap-6">
-            {/* Photo Upload Section - Left */}
             <div className="lg:col-span-1">
               <div className="space-y-4">
                 <div className="flex items-center gap-2">
@@ -423,9 +417,7 @@ export function CandidateManagementModal({
               </div>
             </div>
 
-            {/* Form Fields Section - Right */}
             <div className="lg:col-span-2 space-y-4">
-              {/* Basic Information */}
               <div className="space-y-4">
                 <div className="flex items-center gap-2 mb-3">
                   <FileText className="h-4 w-4" />
@@ -539,7 +531,6 @@ export function CandidateManagementModal({
                 </div>
               </div>
 
-              {/* Account Information */}
               <div className="flex items-center gap-2 mb-3">
                 <Shield className="h-4 w-4" />
                 <h3 className="font-medium">Account Information</h3>
@@ -568,7 +559,6 @@ export function CandidateManagementModal({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="candidate">Candidate</SelectItem>
-                      {/* <SelectItem value="admin">Administrator</SelectItem> */}
                     </SelectContent>
                   </Select>
                 </div>
@@ -614,7 +604,6 @@ export function CandidateManagementModal({
             </div>
           </div>
 
-          {/* Preview Section */}
           {formData.firstName && formData.surname && formData.username && (
             <div className="space-y-3 pt-4 border-t">
               <div className="flex items-center gap-2">
@@ -657,7 +646,6 @@ export function CandidateManagementModal({
             </div>
           )}
 
-          {/* Validation Message */}
           {validationMessage.message && (
             <div className={`p-3 rounded-lg ${
               validationMessage.type === 'error' 
@@ -668,7 +656,6 @@ export function CandidateManagementModal({
             </div>
           )}
 
-          {/* Action Buttons */}
           <div className="flex justify-end gap-3 pt-4 border-t">
             <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
               Cancel

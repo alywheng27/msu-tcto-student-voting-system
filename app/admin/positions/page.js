@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Pencil, Archive, RotateCcw, Users, Crown, Loader2, Trash2, AlertTriangle } from "lucide-react"
+import { Plus, Pencil, Users, Crown, Loader2, Trash2, AlertTriangle } from "lucide-react"
 import { DeletePositionDialog } from "@/components/admin/positions/DeletePositionDialog"
 import AddPositionModal from "@/components/admin/positions/AddPositionModal"
 import EditPositionModal from "@/components/admin/positions/EditPositionModal"
@@ -41,12 +41,10 @@ export default function PositionsPage() {
     }
   }
 
-  // Fetch positions from API
   useEffect(() => {
     fetchPositions()
   }, [])
 
-  // Separate positions by type
   const sscPositions = positions.filter((position) => position.PositionType === "ssc" || position.PositionType === "SSC")
   const collegePositions = positions.filter((position) => position.PositionType === "college" || position.PositionType === "College")
 
@@ -63,7 +61,6 @@ export default function PositionsPage() {
   const handleCloseEditModal = () => {
     setIsEditModalOpen(false)
     setSelectedPosition(null)
-    // Refresh positions data after edit
     fetchPositions()
   }
 
@@ -260,7 +257,6 @@ export default function PositionsPage() {
         </TabsContent>
       </Tabs>
 
-      {/* Quick Stats */}
       <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardContent className="p-6 text-center">
@@ -285,7 +281,6 @@ export default function PositionsPage() {
         </Card>
       </div>
 
-      {/* Add Position Modal */}
       <AddPositionModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -296,7 +291,6 @@ export default function PositionsPage() {
         }}
       />
 
-      {/* Edit Position Modal */}
       <EditPositionModal
         isOpen={isEditModalOpen}
         onClose={handleCloseEditModal}
@@ -304,7 +298,6 @@ export default function PositionsPage() {
         onSuccess={toast}
       />
 
-      {/* Toast Notifications */}
       <Toaster toasts={toasts} onDismiss={dismiss} />
     </div>
   )

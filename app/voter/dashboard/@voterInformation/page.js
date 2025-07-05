@@ -2,10 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Users } from "lucide-react"
 import { getColleges, getCookies } from "@/lib/voters"
 
-export default async function VoterInformation() {
-    // const colleges = await getColleges()
-    // const cookieValue = await getCookies()
+export const dynamic = 'force-dynamic'
 
+export default async function VoterInformation() {
     const [colleges, cookieValue] = await Promise.all([getColleges(), getCookies()])
 
     const collegeFound = colleges.find((college) => college.CollegeOfficeID === cookieValue.collegeOfficeID)

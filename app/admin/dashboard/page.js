@@ -1,14 +1,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-// Components
 import Turnout from "@/components/admin/dashboard/Turnout"
 import College from "@/components/admin/dashboard/College"
 import Party from "@/components/admin/dashboard/Party"
 
-// Lib
 import { getVotingStats, getPartyResults } from "@/lib/dashboard"
 
+export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboardPage() {
   const stats = await getVotingStats()

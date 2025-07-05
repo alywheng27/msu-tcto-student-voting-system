@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Save, CheckCircle2, XCircle } from "lucide-react"
+import { Save } from "lucide-react"
 import { PartyLogoUpload } from "@/components/admin/parties/add/Party-Logo-Upload"
 import { ColorPicker } from "@/components/admin/parties/add/Color-Picker"
 
@@ -28,7 +28,6 @@ export default function AddPartyForm({ onSuccess, onCancel, toast }) {
     }
   }
 
-  // Helper function to validate the form
   const validateForm = (data) => {
     if (!data.name || !data.id || !data.color) {
       return {
@@ -44,7 +43,6 @@ export default function AddPartyForm({ onSuccess, onCancel, toast }) {
     e.preventDefault()
     setIsLoading(true)
 
-    // Validate form
     const validationError = validateForm(formData)
     if (validationError) {
       toast && toast(validationError)
@@ -80,7 +78,6 @@ export default function AddPartyForm({ onSuccess, onCancel, toast }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-        {/* Left: Party Logo & Preview */}
         <div className="col-span-2 flex flex-col gap-6">
           <Card>
             <CardHeader>
@@ -93,7 +90,6 @@ export default function AddPartyForm({ onSuccess, onCancel, toast }) {
           </Card>
           
         </div>
-        {/* Right: Party Name & Color */}
         <div className="col-span-1 md:col-span-3 flex flex-col gap-6">
           <Card>
             <CardHeader>
