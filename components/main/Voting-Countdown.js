@@ -114,10 +114,10 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
         {timeLeft.total > 0 ? (
           <>
             {/* Main Countdown Display */}
-            <div className="grid grid-cols-4 gap-4 mb-15 mt-10">
+            <div className="grid grid-cols-4 gap-4 mb-13 mt-5">
               <div className="text-center">
                 <div
-                  className={`text-7xl md:text-8xl font-bold ${
+                  className={`lg:text-7xl md:text-5xl text-3xl font-bold ${
                     urgencyLevel === "critical"
                       ? "text-red-600"
                       : urgencyLevel === "urgent"
@@ -129,11 +129,11 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                 >
                   {timeLeft.days.toString().padStart(2, "0")}
                 </div>
-                <div className="text-lg text-gray-500 font-medium">DAYS</div>
+                <div className="text-sm md:text-lg text-gray-500 font-medium">DAYS</div>
               </div>
               <div className="text-center">
                 <div
-                  className={`text-7xl md:text-8xl font-bold ${
+                  className={`lg:text-7xl md:text-5xl text-3xl font-bold ${
                     urgencyLevel === "critical"
                       ? "text-red-600"
                       : urgencyLevel === "urgent"
@@ -145,11 +145,11 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                 >
                   {timeLeft.hours.toString().padStart(2, "0")}
                 </div>
-                <div className="text-lg text-gray-500 font-medium">HOURS</div>
+                <div className="text-sm md:text-lg text-gray-500 font-medium">HOURS</div>
               </div>
               <div className="text-center">
                 <div
-                  className={`text-7xl md:text-8xl font-bold ${
+                  className={`lg:text-7xl md:text-5xl text-3xl font-bold ${
                     urgencyLevel === "critical"
                       ? "text-red-600"
                       : urgencyLevel === "urgent"
@@ -161,11 +161,11 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                 >
                   {timeLeft.minutes.toString().padStart(2, "0")}
                 </div>
-                <div className="text-lg text-gray-500 font-medium">MINUTES</div>
+                <div className="text-sm md:text-lg text-gray-500 font-medium">MINUTES</div>
               </div>
               <div className="text-center">
                 <div
-                  className={`text-7xl md:text-8xl font-bold ${
+                  className={`lg:text-7xl md:text-5xl text-3xl font-bold ${
                     urgencyLevel === "critical"
                       ? "text-red-600 animate-pulse"
                       : urgencyLevel === "urgent"
@@ -177,7 +177,7 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                 >
                   {timeLeft.seconds.toString().padStart(2, "0")}
                 </div>
-                <div className="text-lg text-gray-500 font-medium">SECONDS</div>
+                <div className="text-sm md:text-lg text-gray-500 font-medium">SECONDS</div>
               </div>
             </div>
 

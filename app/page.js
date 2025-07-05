@@ -25,6 +25,17 @@ export default async function Home() {
   const [colleges, stats] = await Promise.all([getColleges(), getVotingStats()])
   const votingStatus = getVotingStatus()
 
+  // Define explicit mapping from votingStatus.status to electionStatus
+  const statusMapping = {
+    "active": "active",
+    "upcoming": "upcoming", 
+    "ended": "ended",
+    "maintenance": "ended",
+    "disabled": "ended"
+  };
+
+  const electionStatus = statusMapping[votingStatus.status] || "ended";
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <Header />
@@ -60,9 +71,7 @@ export default async function Home() {
               <VotingCountdown
                 electionEndDate={electionInfo.endDate}
                 electionName={electionInfo.title}
-                electionStatus={
-                  votingStatus.status === "active" ? "active" : votingStatus.status === "upcoming" ? "upcoming" : "ended"
-                }
+                electionStatus={electionStatus}
               />
             </div>
           </section>
