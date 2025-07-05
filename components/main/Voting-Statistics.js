@@ -29,7 +29,7 @@ export default function VotingStatistics({ collegeConfig, collegeData }) {
               <CardTitle>Voting Statistics by College</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-[430px] w-full">
+              <div className="max-h-[430px] w-full">
                 <ChartContainer config={collegeConfig} className="mx-auto max-h-[430px]" >
                   <ResponsiveContainer>
                     <BarChart 

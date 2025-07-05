@@ -87,7 +87,7 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
         <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-orange-500/10 animate-pulse"></div>
       )}
 
-      <CardHeader className="relative pb-3">
+      <CardHeader className="relative md:pb-3 pb-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Clock
@@ -114,7 +114,7 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
         {timeLeft.total > 0 ? (
           <>
             {/* Main Countdown Display */}
-            <div className="grid grid-cols-4 gap-4 mb-13 mt-5">
+            <div className="grid grid-cols-4 md:gap-4 gap-0 md:mb-13 mb-5 md:mt-5 mt-0">
               <div className="text-center">
                 <div
                   className={`lg:text-7xl md:text-5xl text-3xl font-bold ${

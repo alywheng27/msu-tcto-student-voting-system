@@ -41,7 +41,7 @@ export default function OverallVotingTurnout({ pieConfig, pieData }) {
                 <CardTitle>Overall Voter Turnout</CardTitle>
                 </CardHeader>
                 <CardContent>
-                <div className="h-[430px] w-full">
+                <div className="max-h-[430px] w-full">
                     <ChartContainer config={pieConfig} className="mx-auto max-h-[430px]" >
                         <ResponsiveContainer>
                             <PieChart>

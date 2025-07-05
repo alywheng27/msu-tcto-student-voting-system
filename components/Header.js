@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { LogIn } from "lucide-react"
 import { Button } from "@/components/ui/button";
 
@@ -7,9 +8,13 @@ export default function Header() {
     <header className="bg-white shadow-sm border-b">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#1E90FF] to-[#0066CC] flex items-center justify-center text-white font-bold text-xl shadow-lg">
-              M
-            </div>
+            <Image
+              src="/MSU-TCTO.png"
+              alt="MSU-TCTO Logo"
+              width={48}
+              height={48}
+              className="h-12 w-12 object-contain shadow-lg rounded-full"
+            />
             <div>
               <h1 className="text-xl font-bold text-gray-900">MSU-TCTO Voting System</h1>
               <p className="text-sm text-gray-600">Student Election Portal</p>

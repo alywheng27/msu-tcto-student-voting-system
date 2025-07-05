@@ -41,8 +41,8 @@ export default async function Home() {
       <Header />
 
       <main className="container mx-auto px-4 pt-12">
-        <div className="min-h-[80vh]">
-          <section className="max-w-4xl mx-auto text-center mb-16">
+        <div className="min-h-[80dvh]">
+          <section className="max-w-4xl mx-auto text-center md:mb-16 mb-5">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-[#1E90FF] to-[#0066CC] bg-clip-text text-transparent">
               {electionInfo.title}
             </h2>
@@ -133,10 +133,12 @@ export default async function Home() {
                         <div className="flex items-center gap-2 mb-2">
                           <Badge
                             variant="secondary"
-                            className="text-xs font-medium"
+                            className="text-xs font-medium break-words whitespace-normal text-center"
                             style={{
                               backgroundColor: `${college?.CollegeOfficeColor || "#888"}20`,
                               color: college?.CollegeOfficeColor || "#888",
+                              maxWidth: "200px",
+                              wordWrap: "break-word",
                             }}
                           >
                             {college?.CollegeOffice || collegeStat.name}
