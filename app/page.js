@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 
 
 // lib
-import { getElectionInfo } from "@/lib/system-settings"
+import { getElectionInfo, getVotingStatus } from "@/lib/system-settings"
 import { getColleges } from "@/lib/voters"
 import { getVotingStats } from "@/lib/dashboard"
 
@@ -23,49 +23,53 @@ import { PublicStats } from "@/components/main/Public-Stats";
 export default async function Home() {
   const electionInfo = getElectionInfo();
   const [colleges, stats] = await Promise.all([getColleges(), getVotingStats()])
+  const votingStatus = getVotingStatus()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <Header />
 
-      <main className="container mx-auto px-4 py-12">
-        <section className="max-w-4xl mx-auto text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-[#1E90FF] to-[#0066CC] bg-clip-text text-transparent">
-            {electionInfo.title}
-          </h2>
-          <p className="text-gray-600 mb-8 text-lg leading-relaxed">{electionInfo.description}</p>
-          {electionInfo.systemMessage && (
-            <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-blue-800 text-center font-medium">{electionInfo.systemMessage}</p>
+      <main className="container mx-auto px-4 pt-12">
+        <div className="min-h-[80vh]">
+          <section className="max-w-4xl mx-auto text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-[#1E90FF] to-[#0066CC] bg-clip-text text-transparent">
+              {electionInfo.title}
+            </h2>
+            <p className="text-gray-600 mb-8 text-lg leading-relaxed">{electionInfo.description}</p>
+            {electionInfo.maintenanceMode === true && (
+              <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p className="text-blue-800 text-center font-medium">{electionInfo.systemMessage}</p>
+              </div>
+            )}
+            <div className="flex justify-center gap-4 flex-wrap">
+              <Link href="/login">
+                <Button size="lg" className="bg-[#1E90FF] hover:bg-blue-600 shadow-lg">
+                  Get Started
+                </Button>
+              </Link>
+              <Link href="#statistics">
+                <Button size="lg" variant="outline" className="border-[#1E90FF] text-[#1E90FF] hover:bg-blue-50">
+                  View Statistics
+                </Button>
+              </Link>
             </div>
-          )}
-          <div className="flex justify-center gap-4 flex-wrap">
-            <Link href="/login">
-              <Button size="lg" className="bg-[#1E90FF] hover:bg-blue-600 shadow-lg">
-                Get Started
-              </Button>
-            </Link>
-            <Link href="#statistics">
-              <Button size="lg" variant="outline" className="border-[#1E90FF] text-[#1E90FF] hover:bg-blue-50">
-                View Statistics
-              </Button>
-            </Link>
-          </div>
-        </section>
+          </section>
 
-        {/* <section className="mb-16">
-          <div className="max-w-2xl mx-auto">
-            <VotingCountdown
-              electionEndDate={electionInfo.endDate}
-              electionName={electionInfo.title}
-              electionStatus={
-                votingStatus.status === "active" ? "active" : votingStatus.status === "upcoming" ? "upcoming" : "ended"
-              }
-            />
-          </div>
-        </section> */}
+          <section className="">
+            <div className="max-w-6xl mx-auto">
+              <VotingCountdown
+                electionEndDate={electionInfo.endDate}
+                electionName={electionInfo.title}
+                electionStatus={
+                  votingStatus.status === "active" ? "active" : votingStatus.status === "upcoming" ? "upcoming" : "ended"
+                }
+              />
+            </div>
+          </section>
+        </div>
+        
 
-        <section id="statistics" className="mb-16">
+        <section id="statistics" className="mb-16 pt-16">
           <h3 className="text-3xl font-bold text-center mb-8 text-gray-900">Election Statistics</h3>
           <PublicStats />
         </section>
