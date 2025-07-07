@@ -96,7 +96,7 @@ export default function StatisticsPage() {
   const candidateStats = filteredVotes.reduce((acc, vote) => {
     const candidate = candidates.find(c => c.CandidateID === vote.CandidateID) || {};
     const key = vote.CandidateID + "-" + (candidate.FirstName || vote.FirstName || "") + " " + (candidate.Surname || vote.Surname || "");
-    if (!acc[key]) acc[key] = { name: (candidate.FirstName || vote.FirstName || "") + " " + (candidate.Surname || vote.Surname || ""), votes: 0 };
+    if (!acc[key]) acc[key] = { name: (candidate.Surname || vote.Surname || ""), votes: 0 };
     acc[key].votes++;
     return acc;
   }, {});
