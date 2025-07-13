@@ -208,18 +208,21 @@ export default function StatisticsPage() {
   const exportCSV = () => {
     const ws = XLSX.utils.json_to_sheet(candidateReport);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Candidates Report");
+    XLSX.utils.book_append_sheet(wb, ws, "SSC & Colleges Election Report");
     const buf = XLSX.write(wb, { bookType: "csv", type: "array" });
-    saveAs(new Blob([buf], { type: "text/csv" }), "candidates-report.csv");
+    saveAs(
+      new Blob([buf], { type: "text/csv" }),
+      "MSU-TCTO SSC and Colleges Election Report.csv"
+    );
   };
   const exportExcel = () => {
     const ws = XLSX.utils.json_to_sheet(candidateReport);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Candidates Report");
+    XLSX.utils.book_append_sheet(wb, ws, "SSC & Colleges Election Report");
     const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     saveAs(
       new Blob([buf], { type: "application/octet-stream" }),
-      "candidates-report.xlsx"
+      "MSU-TCTO SSC and Colleges Election Report.xlsx"
     );
   };
   const exportPDF = () => {
@@ -275,18 +278,21 @@ export default function StatisticsPage() {
   const exportVoteListCSV = () => {
     const ws = XLSX.utils.json_to_sheet(voteListReport);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Vote List Report");
+    XLSX.utils.book_append_sheet(wb, ws, "MSU-TCTO Students Votes Report");
     const buf = XLSX.write(wb, { bookType: "csv", type: "array" });
-    saveAs(new Blob([buf], { type: "text/csv" }), "vote-list-report.csv");
+    saveAs(
+      new Blob([buf], { type: "text/csv" }),
+      "MSU-TCTO Students Votes Report.csv"
+    );
   };
   const exportVoteListExcel = () => {
     const ws = XLSX.utils.json_to_sheet(voteListReport);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Vote List Report");
+    XLSX.utils.book_append_sheet(wb, ws, "MSU-TCTO Students Votes Report");
     const buf = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     saveAs(
       new Blob([buf], { type: "application/octet-stream" }),
-      "vote-list-report.xlsx"
+      "MSU-TCTO Students Votes Report.xlsx"
     );
   };
   const exportVoteListPDF = () => {
@@ -305,26 +311,12 @@ export default function StatisticsPage() {
     const rightImgX = pageWidth - imgWidth - 14;
 
     // Add left image
-    doc.addImage(
-      "/candidates/no-photo.png",
-      "PNG",
-      leftImgX,
-      5,
-      imgWidth,
-      imgHeight
-    );
+    doc.addImage("/MSU-TCTO.png", "PNG", leftImgX, 5, imgWidth, imgHeight);
     // Add right image
-    doc.addImage(
-      "/candidates/no-photo.png",
-      "PNG",
-      rightImgX,
-      5,
-      imgWidth,
-      imgHeight
-    );
+    doc.addImage("/colleges/SSC.png", "PNG", rightImgX, 5, imgWidth, imgHeight);
 
     // Center the title text between the images
-    const title = "MSU-TCTO Votes Report";
+    const title = "MSU-TCTO Students Votes Report";
     const textWidth = doc.getTextWidth(title);
     const textX = (pageWidth - textWidth) / 2;
     doc.text(title, textX, 16);
@@ -341,7 +333,7 @@ export default function StatisticsPage() {
       ]),
       startY: 28, // Adjusted to avoid overlapping with the image
     });
-    doc.save("MSU-TCTO Votes Report.pdf");
+    doc.save("MSU-TCTO Students Votes Report.pdf");
   };
 
   return (
