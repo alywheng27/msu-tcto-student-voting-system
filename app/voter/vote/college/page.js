@@ -26,8 +26,8 @@ export default function CollegeVotingPage() {
   const [selections, setSelections] = useState({
     governor: "",
     viceGovernor: "",
-    mayor: "",
-    viceMayor: "",
+    // mayor: "",
+    // viceMayor: "",
     boardMembers: [],
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -36,8 +36,8 @@ export default function CollegeVotingPage() {
   const [candidates, setCandidates] = useState({
     governor: [],
     viceGovernor: [],
-    mayor: [],
-    viceMayor: [],
+    // mayor: [],
+    // viceMayor: [],
     boardMembers: [],
   })
   const [loadingCandidates, setLoadingCandidates] = useState(false)
@@ -95,8 +95,8 @@ export default function CollegeVotingPage() {
       const mapped = {
         governor: [],
         viceGovernor: [],
-        mayor: [],
-        viceMayor: [],
+        // mayor: [],
+        // viceMayor: [],
         boardMembers: [],
       }
       data.forEach((c) => {
@@ -113,18 +113,18 @@ export default function CollegeVotingPage() {
           party: c.PartyID?.toString() || c.Party,
           photo: c.Photo || "/candidates/no-photo.png",
         })
-        else if (pos === "mayor") mapped.mayor.push({
-          id: c.CandidateID,
-          name: `${c.FirstName} ${c.Surname}`,
-          party: c.PartyID?.toString() || c.Party,
-          photo: c.Photo || "/candidates/no-photo.png",
-        })
-        else if (pos === "vice mayor" || pos === "vice-mayor") mapped.viceMayor.push({
-          id: c.CandidateID,
-          name: `${c.FirstName} ${c.Surname}`,
-          party: c.PartyID?.toString() || c.Party,
-          photo: c.Photo || "/candidates/no-photo.png",
-        })
+        // else if (pos === "mayor") mapped.mayor.push({
+        //   id: c.CandidateID,
+        //   name: `${c.FirstName} ${c.Surname}`,
+        //   party: c.PartyID?.toString() || c.Party,
+        //   photo: c.Photo || "/candidates/no-photo.png",
+        // })
+        // else if (pos === "vice mayor" || pos === "vice-mayor") mapped.viceMayor.push({
+        //   id: c.CandidateID,
+        //   name: `${c.FirstName} ${c.Surname}`,
+        //   party: c.PartyID?.toString() || c.Party,
+        //   photo: c.Photo || "/candidates/no-photo.png",
+        // })
         else if (pos === "board member" || pos === "board-member") mapped.boardMembers.push({
           id: c.CandidateID,
           name: `${c.FirstName} ${c.Surname}`,
@@ -176,15 +176,15 @@ export default function CollegeVotingPage() {
 
     const governorCandidate = candidates.governor.find((c) => c.party === partyId)
     const viceGovernorCandidate = candidates.viceGovernor.find((c) => c.party === partyId)
-    const mayorCandidate = candidates.mayor.find((c) => c.party === partyId)
-    const viceMayorCandidate = candidates.viceMayor.find((c) => c.party === partyId)
+    // const mayorCandidate = candidates.mayor.find((c) => c.party === partyId)
+    // const viceMayorCandidate = candidates.viceMayor.find((c) => c.party === partyId)
     const boardMemberCandidates = candidates.boardMembers.filter((c) => c.party === partyId).slice(0, 6)
 
     setSelections({
       governor: governorCandidate?.id || "",
       viceGovernor: viceGovernorCandidate?.id || "",
-      mayor: mayorCandidate?.id || "",
-      viceMayor: viceMayorCandidate?.id || "",
+      // mayor: mayorCandidate?.id || "",
+      // viceMayor: viceMayorCandidate?.id || "",
       boardMembers: boardMemberCandidates.map((c) => c.id),
     })
   }
@@ -221,8 +221,8 @@ export default function CollegeVotingPage() {
     const stepMap = {
       governor: "governor",
       viceGovernor: "viceGovernor",
-      mayor: "mayor",
-      viceMayor: "viceMayor",
+      // mayor: "mayor",
+      // viceMayor: "viceMayor",
       boardMembers: "boardMembers",
     }
     setStep(stepMap[position])
@@ -242,12 +242,14 @@ export default function CollegeVotingPage() {
     } else if (step === "governor") {
       setStep("viceGovernor")
     } else if (step === "viceGovernor") {
-      setStep("mayor")
-    } else if (step === "mayor") {
-      setStep("viceMayor")
-    } else if (step === "viceMayor") {
       setStep("boardMembers")
-    } else if (step === "boardMembers") {
+    } 
+    // else if (step === "mayor") {
+    //   setStep("viceMayor")
+    // } else if (step === "viceMayor") {
+    //   setStep("boardMembers")
+    // } 
+    else if (step === "boardMembers") {
       setStep("review")
     }
   }
@@ -257,12 +259,14 @@ export default function CollegeVotingPage() {
       setStep("mode")
     } else if (step === "viceGovernor") {
       setStep("governor")
-    } else if (step === "mayor") {
+    } 
+    // else if (step === "mayor") {
+    //   setStep("viceGovernor")
+    // } else if (step === "viceMayor") {
+    //   setStep("mayor")
+    // } 
+    else if (step === "boardMembers") {
       setStep("viceGovernor")
-    } else if (step === "viceMayor") {
-      setStep("mayor")
-    } else if (step === "boardMembers") {
-      setStep("viceMayor")
     } else if (step === "review") {
       setStep("boardMembers")
     }
@@ -313,14 +317,14 @@ export default function CollegeVotingPage() {
     let count = 0
     if (selections.governor) count++
     if (selections.viceGovernor) count++
-    if (selections.mayor) count++
-    if (selections.viceMayor) count++
+    // if (selections.mayor) count++
+    // if (selections.viceMayor) count++
     count += selections.boardMembers.length
     return count
   }
 
   const getMaxPossibleSelections = () => {
-    return 4 + 6
+    return 2 + 6
   }
 
   return (
@@ -357,10 +361,10 @@ export default function CollegeVotingPage() {
               <ChevronRight className="h-4 w-4" />
               <Badge variant={step === "viceGovernor" ? "default" : "outline"}>Vice Governor</Badge>
               <ChevronRight className="h-4 w-4" />
-              <Badge variant={step === "mayor" ? "default" : "outline"}>Mayor</Badge>
+              {/* <Badge variant={step === "mayor" ? "default" : "outline"}>Mayor</Badge>
               <ChevronRight className="h-4 w-4" />
               <Badge variant={step === "viceMayor" ? "default" : "outline"}>Vice Mayor</Badge>
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4" /> */}
               <Badge variant={step === "boardMembers" ? "default" : "outline"}>Board Members</Badge>
               <ChevronRight className="h-4 w-4" />
               <Badge variant={step === "review" ? "default" : "outline"}>Review</Badge>
@@ -528,7 +532,7 @@ export default function CollegeVotingPage() {
               </>
             )}
 
-            {step === "mayor" && (
+            {/* {step === "mayor" && (
               <>
                 <CardHeader>
                   <CardTitle>Select Mayor</CardTitle>
@@ -570,9 +574,9 @@ export default function CollegeVotingPage() {
                   )}
                 </CardContent>
               </>
-            )}
+            )} */}
 
-            {step === "viceMayor" && (
+            {/* {step === "viceMayor" && (
               <>
                 <CardHeader>
                   <CardTitle>Select Vice Mayor</CardTitle>
@@ -614,7 +618,7 @@ export default function CollegeVotingPage() {
                   )}
                 </CardContent>
               </>
-            )}
+            )} */}
 
             {step === "boardMembers" && (
               <>
@@ -758,7 +762,7 @@ export default function CollegeVotingPage() {
                       isSkipped={!selections.viceGovernor}
                     />
 
-                    <ReviewSelectionCard
+                    {/* <ReviewSelectionCard
                       position="Mayor"
                       candidate={selections.mayor ? getSelectedCandidate("mayor", selections.mayor) : null}
                       party={selections.mayor ? getPartyById(getSelectedCandidate("mayor", selections.mayor)?.party) : null}
@@ -766,9 +770,9 @@ export default function CollegeVotingPage() {
                       onEdit={() => handleEditPosition("mayor")}
                       onRemove={() => handleRemoveSelection("mayor")}
                       isSkipped={!selections.mayor}
-                    />
+                    /> */}
 
-                    <ReviewSelectionCard
+                    {/* <ReviewSelectionCard
                       position="Vice Mayor"
                       candidate={selections.viceMayor ? getSelectedCandidate("viceMayor", selections.viceMayor) : null}
                       party={
@@ -780,7 +784,7 @@ export default function CollegeVotingPage() {
                       onEdit={() => handleEditPosition("viceMayor")}
                       onRemove={() => handleRemoveSelection("viceMayor")}
                       isSkipped={!selections.viceMayor}
-                    />
+                    /> */}
                   </div>
 
                   <div>
@@ -866,7 +870,7 @@ export default function CollegeVotingPage() {
                       </div>
                       <div>
                         <div className="text-2xl font-bold text-orange-600">
-                          {5 - Object.values(selections).filter((s) => (Array.isArray(s) ? s.length > 0 : s !== "")).length}
+                          {3 - Object.values(selections).filter((s) => (Array.isArray(s) ? s.length > 0 : s !== "")).length}
                         </div>
                         <div className="text-xs text-orange-700">Positions Skipped</div>
                       </div>
