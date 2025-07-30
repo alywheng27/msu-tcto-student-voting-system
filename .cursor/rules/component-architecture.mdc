@@ -1,0 +1,102 @@
+# Component Architecture & Organization
+
+## 📁 Component Structure
+
+### Directory Organization
+```
+components/
+├── admin/          # Admin-specific components
+├── ui/             # Reusable UI components (shadcn/ui)
+├── voter/          # Voter-specific components
+├── login/          # Authentication components
+├── main/           # Public/homepage components
+└── Footer.js       # Global footer component
+```
+
+### Component Categories
+
+#### Admin Components (`components/admin/`)
+- **Dashboard**: Statistics, charts, and overview components
+- **Candidates**: Candidate management forms and modals
+- **Parties**: Party management with logo uploads
+- **Positions**: Position management dialogs
+- **Results**: Result display and export components
+- **Voters**: Voter management interfaces
+
+#### UI Components (`components/ui/`)
+- Built on shadcn/ui design system
+- Includes: buttons, cards, dialogs, forms, tables, charts
+- All components are reusable across the application
+- Follow consistent styling patterns
+
+#### Voter Components (`components/voter/`)
+- **Dashboard**: Election status, reminders, voter info
+- **Voting**: Candidate cards, review selections
+- **Success**: Vote receipt and confirmation components
+
+### Component Patterns
+
+#### Modal Components
+- Use Radix UI Dialog for accessibility
+- Implement proper focus management
+- Include loading states and error handling
+- Follow consistent naming: `ComponentName-Modal.js`
+
+#### Form Components
+- Use controlled components with React state
+- Implement proper validation
+- Include loading and error states
+- Use shadcn/ui form components
+
+#### Card Components
+- Use consistent padding and spacing
+- Implement hover states
+- Include proper image handling
+- Follow responsive design principles
+
+### State Management Patterns
+
+#### Local State
+```javascript
+const [isLoading, setIsLoading] = useState(false)
+const [error, setError] = useState(null)
+const [data, setData] = useState(null)
+```
+
+#### Form State
+```javascript
+const [formData, setFormData] = useState({
+  field1: '',
+  field2: ''
+})
+
+const handleInputChange = (e) => {
+  setFormData(prev => ({
+    ...prev,
+    [e.target.name]: e.target.value
+  }))
+}
+```
+
+### Props Patterns
+- Use destructuring for props
+- Provide default values where appropriate
+- Use PropTypes or TypeScript for type checking
+- Keep props interface minimal and focused
+
+### Event Handling
+- Use descriptive handler names (e.g., `handleVoteSubmit`)
+- Implement proper error handling
+- Use async/await for API calls
+- Provide user feedback for actions
+
+### Styling Guidelines
+- Use Tailwind CSS classes
+- Follow the design system from shadcn/ui
+- Maintain consistent spacing and typography
+- Use CSS variables for theme colors
+- Implement responsive design patterns
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,135 @@
+# API Routes Architecture
+
+## 🛣️ Route Structure
+
+### API Organization
+```
+app/api/
+├── admin/          # Admin-specific endpoints
+│   ├── candidates/ # Candidate management
+│   ├── parties/    # Party management
+│   ├── positions/  # Position management
+│   ├── results/    # Election results
+│   └── voters/     # Voter management
+├── login/          # Authentication endpoints
+├── logout/         # Logout functionality
+└── voter/          # Voter-specific endpoints
+```
+
+### Route Patterns
+
+#### GET Routes (Data Retrieval)
+```javascript
+export async function GET(request) {
+  try {
+    const pool = await connectToDB()
+    const result = await pool.request()
+      .query('SELECT * FROM TableName')
+    
+    return Response.json(result.recordset)
+  } catch (error) {
+    console.error('Error:', error)
+    return Response.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+```
+
+#### POST Routes (Data Creation)
+```javascript
+export async function POST(request) {
+  try {
+    const body = await request.json()
+    const pool = await connectToDB()
+    
+    const result = await pool.request()
+      .input('param1', sql.VarChar, body.param1)
+      .input('param2', sql.Int, body.param2)
+      .query('INSERT INTO TableName (col1, col2) VALUES (@param1, @param2)')
+    
+    return Response.json({ success: true, id: result.insertId })
+  } catch (error) {
+    console.error('Error:', error)
+    return Response.json({ error: 'Failed to create record' }, { status: 500 })
+  }
+}
+```
+
+#### PUT Routes (Data Updates)
+```javascript
+export async function PUT(request, { params }) {
+  try {
+    const { id } = params
+    const body = await request.json()
+    const pool = await connectToDB()
+    
+    const result = await pool.request()
+      .input('id', sql.Int, id)
+      .input('param1', sql.VarChar, body.param1)
+      .query('UPDATE TableName SET col1 = @param1 WHERE id = @id')
+    
+    return Response.json({ success: true })
+  } catch (error) {
+    console.error('Error:', error)
+    return Response.json({ error: 'Failed to update record' }, { status: 500 })
+  }
+}
+```
+
+#### DELETE Routes (Data Removal)
+```javascript
+export async function DELETE(request, { params }) {
+  try {
+    const { id } = params
+    const pool = await connectToDB()
+    
+    await pool.request()
+      .input('id', sql.Int, id)
+      .query('DELETE FROM TableName WHERE id = @id')
+    
+    return Response.json({ success: true })
+  } catch (error) {
+    console.error('Error:', error)
+    return Response.json({ error: 'Failed to delete record' }, { status: 500 })
+  }
+}
+```
+
+### Database Connection
+- Always use the connection pool from [lib/db.js](mdc:lib/db.js)
+- Import required SQL types: `import sql from 'mssql'`
+- Use parameterized queries to prevent SQL injection
+- Handle connection errors gracefully
+
+### Error Handling
+- Implement try-catch blocks for all database operations
+- Return appropriate HTTP status codes
+- Log errors for debugging
+- Provide meaningful error messages
+
+### Authentication & Authorization
+- Check user authentication status via cookies
+- Validate user permissions for admin routes
+- Implement proper session management
+- Use middleware for route protection
+
+### Response Patterns
+- Use consistent response format
+- Include success/error indicators
+- Return appropriate HTTP status codes
+- Handle CORS if needed
+
+### Data Validation
+- Validate request body data
+- Check required fields
+- Sanitize user inputs
+- Implement proper type checking
+
+### File Upload Handling
+- Use FormData for file uploads
+- Validate file types and sizes
+- Store files in appropriate directories
+- Generate unique filenames
+description:
+globs:
+alwaysApply: false
+---

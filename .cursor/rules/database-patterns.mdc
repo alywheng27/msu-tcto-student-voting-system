@@ -1,0 +1,189 @@
+# Database Patterns & SQL Best Practices
+
+## 🗄️ Database Architecture
+
+### Connection Management
+- Use the connection pool from [lib/db.js](mdc:lib/db.js)
+- Always handle connection errors gracefully
+- Implement proper connection cleanup
+- Use environment variables for database credentials
+
+### SQL Query Patterns
+
+#### Basic SELECT Queries
+```javascript
+const result = await pool.request()
+  .query('SELECT * FROM Candidates WHERE CollegeID = @collegeId')
+
+return result.recordset
+```
+
+#### Parameterized Queries (Security)
+```javascript
+const result = await pool.request()
+  .input('collegeId', sql.Int, collegeId)
+  .input('positionId', sql.Int, positionId)
+  .query(`
+    SELECT c.*, p.PartyName 
+    FROM Candidates c 
+    JOIN Parties p ON c.PartyID = p.PartyID 
+    WHERE c.CollegeID = @collegeId AND c.PositionID = @positionId
+  `)
+```
+
+#### INSERT Operations
+```javascript
+const result = await pool.request()
+  .input('name', sql.VarChar, candidateName)
+  .input('collegeId', sql.Int, collegeId)
+  .input('positionId', sql.Int, positionId)
+  .input('partyId', sql.Int, partyId)
+  .query(`
+    INSERT INTO Candidates (Name, CollegeID, PositionID, PartyID) 
+    VALUES (@name, @collegeId, @positionId, @partyId);
+    SELECT SCOPE_IDENTITY() AS id;
+  `)
+
+return result.recordset[0].id
+```
+
+#### UPDATE Operations
+```javascript
+await pool.request()
+  .input('id', sql.Int, candidateId)
+  .input('name', sql.VarChar, newName)
+  .input('photo', sql.VarChar, photoPath)
+  .query(`
+    UPDATE Candidates 
+    SET Name = @name, PhotoPath = @photo 
+    WHERE CandidateID = @id
+  `)
+```
+
+#### DELETE Operations
+```javascript
+await pool.request()
+  .input('id', sql.Int, candidateId)
+  .query('DELETE FROM Candidates WHERE CandidateID = @id')
+```
+
+### Complex Queries
+
+#### Joins for Related Data
+```javascript
+const result = await pool.request()
+  .input('collegeId', sql.Int, collegeId)
+  .query(`
+    SELECT 
+      c.CandidateID,
+      c.Name,
+      c.PhotoPath,
+      p.PartyName,
+      p.PartyColor,
+      pos.PositionName
+    FROM Candidates c
+    JOIN Parties p ON c.PartyID = p.PartyID
+    JOIN Positions pos ON c.PositionID = pos.PositionID
+    WHERE c.CollegeID = @collegeId
+    ORDER BY pos.PositionOrder, c.Name
+  `)
+```
+
+#### Aggregation Queries
+```javascript
+const result = await pool.request()
+  .input('collegeId', sql.Int, collegeId)
+  .query(`
+    SELECT 
+      p.PartyName,
+      COUNT(*) as CandidateCount,
+      SUM(CASE WHEN v.VoteID IS NOT NULL THEN 1 ELSE 0 END) as VoteCount
+    FROM Candidates c
+    JOIN Parties p ON c.PartyID = p.PartyID
+    LEFT JOIN Votes v ON c.CandidateID = v.CandidateID
+    WHERE c.CollegeID = @collegeId
+    GROUP BY p.PartyID, p.PartyName
+    ORDER BY VoteCount DESC
+  `)
+```
+
+### Error Handling Patterns
+
+#### Connection Error Handling
+```javascript
+try {
+  const pool = await connectToDB()
+  const result = await pool.request()
+    .input('param', sql.VarChar, value)
+    .query('SELECT * FROM TableName WHERE Column = @param')
+  
+  return result.recordset
+} catch (error) {
+  console.error('Database error:', error)
+  throw new Error('Failed to fetch data from database')
+}
+```
+
+#### Transaction Handling
+```javascript
+const transaction = new sql.Transaction(pool)
+try {
+  await transaction.begin()
+  
+  // Multiple operations
+  await transaction.request()
+    .input('param1', sql.VarChar, value1)
+    .query('INSERT INTO Table1 (Column1) VALUES (@param1)')
+  
+  await transaction.request()
+    .input('param2', sql.VarChar, value2)
+    .query('INSERT INTO Table2 (Column2) VALUES (@param2)')
+  
+  await transaction.commit()
+} catch (error) {
+  await transaction.rollback()
+  throw error
+}
+```
+
+### Data Types & Validation
+
+#### SQL Data Types
+- `sql.Int` - For integer values (IDs, counts)
+- `sql.VarChar` - For variable-length strings
+- `sql.NVarChar` - For Unicode strings
+- `sql.DateTime` - For date/time values
+- `sql.Bit` - For boolean values
+- `sql.Decimal` - For precise decimal numbers
+
+#### Input Validation
+```javascript
+// Validate required fields
+if (!candidateName || !collegeId || !positionId) {
+  return Response.json({ error: 'Missing required fields' }, { status: 400 })
+}
+
+// Validate data types
+if (typeof collegeId !== 'number' || collegeId <= 0) {
+  return Response.json({ error: 'Invalid college ID' }, { status: 400 })
+}
+```
+
+### Performance Optimization
+
+#### Indexing Considerations
+- Index foreign key columns
+- Index frequently queried columns
+- Use composite indexes for multi-column queries
+- Avoid over-indexing (maintenance overhead)
+
+#### Query Optimization
+- Use specific column names instead of `SELECT *`
+- Limit result sets with `TOP` or `LIMIT`
+- Use appropriate WHERE clauses
+- Avoid nested subqueries when possible
+- Use stored procedures for complex operations
+description:
+globs:
+alwaysApply: false
+---

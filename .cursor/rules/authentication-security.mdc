@@ -1,0 +1,168 @@
+# Authentication & Security Patterns
+
+## 🔐 Authentication System
+
+### Cookie-Based Authentication
+The system uses cookie-based authentication as implemented in [middleware.js](mdc:middleware.js):
+
+```javascript
+// Check for UserID cookie
+if (!request.cookies.get('UserID')?.value) {
+  const loginUrl = new URL('/login', request.url)
+  loginUrl.searchParams.set('from', request.nextUrl.pathname)
+  return NextResponse.redirect(loginUrl)
+}
+```
+
+### Route Protection
+- **Admin Routes**: `/admin/*` - Requires admin authentication
+- **Voter Routes**: `/voter/*` - Requires voter authentication
+- **Public Routes**: `/`, `/login` - Accessible without authentication
+
+### Login Process
+1. User selects role (Admin/Voter) and college
+2. Credentials are validated against database
+3. UserID cookie is set upon successful authentication
+4. User is redirected to appropriate dashboard
+
+### Logout Process
+1. Clear authentication cookies
+2. Redirect to login page
+3. Invalidate session data
+
+## 🛡️ Security Best Practices
+
+### Input Validation
+```javascript
+// Validate user inputs
+const { username, password, collegeId, role } = await request.json()
+
+if (!username || !password || !collegeId || !role) {
+  return Response.json({ error: 'Missing required fields' }, { status: 400 })
+}
+
+// Sanitize inputs
+const sanitizedUsername = username.trim().toLowerCase()
+const sanitizedPassword = password.trim()
+```
+
+### SQL Injection Prevention
+```javascript
+// Use parameterized queries
+const result = await pool.request()
+  .input('username', sql.VarChar, username)
+  .input('password', sql.VarChar, password)
+  .input('collegeId', sql.Int, collegeId)
+  .query(`
+    SELECT * FROM Users 
+    WHERE Username = @username 
+    AND Password = @password 
+    AND CollegeID = @collegeId
+  `)
+```
+
+### Password Security
+- Store passwords securely (consider hashing)
+- Implement password complexity requirements
+- Use secure password comparison
+- Consider implementing password reset functionality
+
+### Session Management
+```javascript
+// Set secure cookies
+cookies().set('UserID', userId, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
+  maxAge: 60 * 60 * 24 // 24 hours
+})
+```
+
+### Authorization Patterns
+
+#### Role-Based Access Control
+```javascript
+// Check user role before allowing access
+const userRole = request.cookies.get('UserRole')?.value
+
+if (userRole !== 'admin' && pathname.startsWith('/admin')) {
+  return NextResponse.redirect(new URL('/login', request.url))
+}
+```
+
+#### Resource-Level Authorization
+```javascript
+// Verify user can access specific resource
+const userId = request.cookies.get('UserID')?.value
+const resourceId = params.id
+
+const result = await pool.request()
+  .input('userId', sql.Int, userId)
+  .input('resourceId', sql.Int, resourceId)
+  .query(`
+    SELECT * FROM Resources 
+    WHERE ResourceID = @resourceId 
+    AND UserID = @userId
+  `)
+
+if (result.recordset.length === 0) {
+  return Response.json({ error: 'Unauthorized' }, { status: 403 })
+}
+```
+
+### CSRF Protection
+- Use SameSite cookie attribute
+- Implement CSRF tokens for state-changing operations
+- Validate request origin headers
+
+### XSS Prevention
+- Sanitize user inputs before rendering
+- Use React's built-in XSS protection
+- Escape dynamic content properly
+- Use Content Security Policy headers
+
+### Rate Limiting
+```javascript
+// Implement rate limiting for login attempts
+const loginAttempts = await getLoginAttempts(ipAddress)
+
+if (loginAttempts > MAX_ATTEMPTS) {
+  return Response.json({ error: 'Too many login attempts' }, { status: 429 })
+}
+```
+
+### Audit Logging
+```javascript
+// Log authentication events
+await logAuthEvent({
+  userId: user.UserID,
+  action: 'login',
+  ipAddress: request.headers.get('x-forwarded-for'),
+  userAgent: request.headers.get('user-agent'),
+  timestamp: new Date()
+})
+```
+
+### Environment Variables
+- Store sensitive data in environment variables
+- Use different configurations for development/production
+- Never commit secrets to version control
+- Use secure secret management in production
+
+### HTTPS Enforcement
+```javascript
+// Redirect HTTP to HTTPS in production
+if (process.env.NODE_ENV === 'production' && !request.headers.get('x-forwarded-proto')?.includes('https')) {
+  return NextResponse.redirect(`https://${request.headers.get('host')}${request.nextUrl.pathname}`)
+}
+```
+
+### Error Handling
+- Don't expose sensitive information in error messages
+- Log security events for monitoring
+- Implement proper error boundaries
+- Use generic error messages for authentication failures
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,48 @@
+# MSU-TCTO Student Voting System - Project Overview
+
+## 🗳️ Project Description
+This is a Next.js 15.3.3 student voting system for Mindanao State University – Tawi-Tawi College of Technology and Oceanography. The system supports both SSC (Supreme Student Council) and College-level elections with secure, anonymous voting.
+
+## 🏗️ Architecture Overview
+
+### Core Technologies
+- **Framework**: Next.js 15.3.3 with App Router
+- **Database**: Microsoft SQL Server (MSSQL)
+- **Styling**: Tailwind CSS v4 with shadcn/ui components
+- **Authentication**: Cookie-based session management
+- **Charts**: Recharts for data visualization
+- **PDF Generation**: jsPDF for vote receipts
+
+### Key File Structure
+- **Main Layout**: [app/layout.js](mdc:app/layout.js) - Root layout with Geist fonts
+- **Database Connection**: [lib/db.js](mdc:lib/db.js) - MSSQL connection configuration
+- **Authentication Middleware**: [middleware.js](mdc:middleware.js) - Route protection for /admin and /voter
+- **Package Configuration**: [package.json](mdc:package.json) - Dependencies and scripts
+
+### Supported Colleges
+- CAS (College of Arts and Sciences)
+- CIAS (College of Islamic and Arabic Studies)
+- COED (College of Education)
+- COF (College of Fisheries)
+- IICT (Institute of Information and Communication Technology)
+- IOES (Institute of Oceanography and Environmental Sciences)
+- SSC (Supreme Student Council)
+
+## 🔐 Security Features
+- Cookie-based authentication
+- Route protection middleware
+- Anonymous voting system
+- Digital vote receipts for verification
+- Audit logging capabilities
+
+## 📊 Key Features
+- Real-time election results and statistics
+- Candidate profile management with photos
+- Party-based and individual voting options
+- Turnout tracking and analytics
+- Export functionality (PDF, Excel)
+- Live election status monitoring
+description:
+globs:
+alwaysApply: false
+---

@@ -1,0 +1,273 @@
+# UI Design System & Styling Patterns
+
+## 🎨 Design System Overview
+
+### shadcn/ui Components
+The project uses shadcn/ui components located in `components/ui/` for consistent design:
+
+- **Buttons**: [button.jsx](mdc:components/ui/button.jsx) - Primary, secondary, and variant buttons
+- **Cards**: [card.jsx](mdc:components/ui/card.jsx) - Content containers with consistent styling
+- **Dialogs**: [dialog.jsx](mdc:components/ui/dialog.jsx) - Modal dialogs and overlays
+- **Forms**: [input.jsx](mdc:components/ui/input.jsx), [label.jsx](mdc:components/ui/label.jsx) - Form elements
+- **Tables**: [table.jsx](mdc:components/ui/table.jsx) - Data display tables
+- **Charts**: [chart.jsx](mdc:components/ui/chart.jsx) - Data visualization components
+
+### Tailwind CSS Configuration
+- **Version**: Tailwind CSS v4
+- **Configuration**: [postcss.config.mjs](mdc:postcss.config.mjs)
+- **Custom Classes**: Defined in [app/globals.css](mdc:app/globals.css)
+
+## 🎯 Component Styling Patterns
+
+### Button Variants
+```javascript
+// Primary button
+<Button variant="default" size="default">
+  Submit Vote
+</Button>
+
+// Secondary button
+<Button variant="secondary" size="sm">
+  Cancel
+</Button>
+
+// Destructive button
+<Button variant="destructive">
+  Delete Candidate
+</Button>
+
+// Outline button
+<Button variant="outline">
+  Edit Details
+</Button>
+```
+
+### Card Layouts
+```javascript
+// Basic card
+<Card>
+  <CardHeader>
+    <CardTitle>Candidate Information</CardTitle>
+    <CardDescription>View candidate details</CardDescription>
+  </CardHeader>
+  <CardContent>
+    {/* Content */}
+  </CardContent>
+  <CardFooter>
+    {/* Actions */}
+  </CardFooter>
+</Card>
+
+// Interactive card
+<Card className="hover:shadow-lg transition-shadow cursor-pointer">
+  <CardContent className="p-6">
+    {/* Content */}
+  </CardContent>
+</Card>
+```
+
+### Form Patterns
+```javascript
+// Form with validation
+<form onSubmit={handleSubmit} className="space-y-4">
+  <div className="space-y-2">
+    <Label htmlFor="name">Candidate Name</Label>
+    <Input
+      id="name"
+      name="name"
+      value={formData.name}
+      onChange={handleInputChange}
+      placeholder="Enter candidate name"
+      required
+    />
+  </div>
+  
+  <Button type="submit" disabled={isLoading}>
+    {isLoading ? 'Saving...' : 'Save Candidate'}
+  </Button>
+</form>
+```
+
+### Modal/Dialog Patterns
+```javascript
+// Confirmation dialog
+<Dialog open={isOpen} onOpenChange={setIsOpen}>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Confirm Action</DialogTitle>
+      <DialogDescription>
+        Are you sure you want to delete this candidate?
+      </DialogDescription>
+    </DialogHeader>
+    <DialogFooter>
+      <Button variant="outline" onClick={() => setIsOpen(false)}>
+        Cancel
+      </Button>
+      <Button variant="destructive" onClick={handleDelete}>
+        Delete
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+```
+
+## 📱 Responsive Design
+
+### Breakpoint System
+```javascript
+// Mobile-first approach
+<div className="w-full md:w-1/2 lg:w-1/3">
+  {/* Content */}
+</div>
+
+// Responsive grid
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  {/* Grid items */}
+</div>
+
+// Responsive text
+<h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">
+  Election Results
+</h1>
+```
+
+### Mobile Navigation
+```javascript
+// Collapsible sidebar for mobile
+<div className="lg:hidden">
+  <Button variant="ghost" size="sm" onClick={toggleSidebar}>
+    <Menu className="h-4 w-4" />
+  </Button>
+</div>
+
+// Desktop sidebar
+<div className="hidden lg:block">
+  {/* Sidebar content */}
+</div>
+```
+
+## 🎨 Color System
+
+### Primary Colors
+- **Primary**: Blue shades for main actions
+- **Secondary**: Gray shades for secondary elements
+- **Accent**: Highlight colors for important information
+- **Destructive**: Red shades for dangerous actions
+
+### Semantic Colors
+```javascript
+// Success states
+<div className="text-green-600 bg-green-50 border-green-200">
+  Vote submitted successfully!
+</div>
+
+// Error states
+<div className="text-red-600 bg-red-50 border-red-200">
+  Error: Please try again
+</div>
+
+// Warning states
+<div className="text-yellow-600 bg-yellow-50 border-yellow-200">
+  Warning: Election ends soon
+</div>
+
+// Info states
+<div className="text-blue-600 bg-blue-50 border-blue-200">
+  Info: New candidates added
+</div>
+```
+
+## 📊 Data Visualization
+
+### Chart Components
+```javascript
+// Bar chart for election results
+<BarChart data={results} className="w-full h-64">
+  <Bar dataKey="votes" fill="#3b82f6" />
+  <XAxis dataKey="candidate" />
+  <YAxis />
+  <Tooltip />
+</BarChart>
+
+// Pie chart for party distribution
+<PieChart data={partyData} className="w-full h-64">
+  <Pie dataKey="value" data={partyData} />
+  <Tooltip />
+</PieChart>
+```
+
+### Progress Indicators
+```javascript
+// Voting progress
+<Progress value={votingProgress} className="w-full" />
+
+// Loading states
+<div className="flex items-center space-x-2">
+  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
+  <span>Loading...</span>
+</div>
+```
+
+## 🎭 Animation & Transitions
+
+### Hover Effects
+```javascript
+// Card hover effects
+<Card className="transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
+  {/* Content */}
+</Card>
+
+// Button hover effects
+<Button className="transition-colors duration-200 hover:bg-primary/90">
+  Click me
+</Button>
+```
+
+### Loading Animations
+```javascript
+// Skeleton loading
+<div className="animate-pulse">
+  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+  <div className="h-4 bg-gray-200 rounded w-1/2 mt-2"></div>
+</div>
+
+// Spinner animation
+<div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+```
+
+## 🔧 Custom Utilities
+
+### Layout Utilities
+```javascript
+// Centered content
+<div className="flex items-center justify-center min-h-screen">
+  {/* Content */}
+</div>
+
+// Sticky header
+<header className="sticky top-0 z-50 bg-white border-b">
+  {/* Header content */}
+</header>
+
+// Full-height sidebar
+<aside className="h-screen sticky top-0 overflow-y-auto">
+  {/* Sidebar content */}
+</aside>
+```
+
+### Typography Scale
+```javascript
+// Heading hierarchy
+<h1 className="text-4xl font-bold">Main Title</h1>
+<h2 className="text-2xl font-semibold">Section Title</h2>
+<h3 className="text-xl font-medium">Subsection</h3>
+<h4 className="text-lg font-medium">Card Title</h4>
+
+// Body text
+<p className="text-base">Regular paragraph text</p>
+<p className="text-sm text-gray-600">Small descriptive text</p>
+```
+description:
+globs:
+alwaysApply: false
+---
