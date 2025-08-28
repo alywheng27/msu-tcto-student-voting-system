@@ -170,7 +170,7 @@ export default async function ResultsPage() {
                       <div className="text-center mb-6">
                         <div className="flex items-center justify-center gap-3 mb-2">
                           <Image
-                            src={college.Logo || "/candidates/no-photo.png"}
+                            src={college.CollegeOfficeLogo || "/parties/no-logo.png"}
                             alt={`${college.CollegeOffice} logo`}
                             className="w-12 h-12 object-contain"
                             width={250}
