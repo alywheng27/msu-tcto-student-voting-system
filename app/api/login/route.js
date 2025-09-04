@@ -113,8 +113,8 @@ export async function POST(req) {
         // Set voter information if user is a voter
         if (result.recordset[0].VoterID) {
             cookieStore.set("VoterID", result.recordset[0].VoterID)
-            cookieStore.set("HasVotedSSC", result.recordset[0].HasVotedSSC || "False")
-            cookieStore.set("HasVotedCollege", result.recordset[0].HasVotedCollege || "False")
+            cookieStore.set("HasVotedSSC", result.recordset[0].HasVotedSSC)
+            cookieStore.set("HasVotedCollege", result.recordset[0].HasVotedCollege)
         }
         
         // Set candidate information if user is a candidate

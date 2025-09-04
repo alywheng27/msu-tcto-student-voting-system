@@ -13,7 +13,7 @@ export async function POST(request) {
         // --- VOTE SUBMISSION LOGIC ---
         try {
             const { selections } = body;
-            const { president, vicePresident, senators } = selections;
+            const { president, vicePresident, auditor, senators } = selections;
             const voterId = cookieStore.get('UserID').value
 
             const dateNow = new Date().toISOString()
@@ -32,6 +32,14 @@ export async function POST(request) {
                 await pool.request()
                     .input('voterId', voterId)
                     .input('candidateId', vicePresident)
+                    .input('voteTimeSubmitted', dateNow)
+                    .query(`INSERT INTO Vote (VoterID, CandidateID, VoteTimeSubmitted) VALUES (@voterId, @candidateId, @voteTimeSubmitted)`);
+            }
+            // Insert vote for auditor if selected
+            if (auditor) {
+                await pool.request()
+                    .input('voterId', voterId)
+                    .input('candidateId', auditor)
                     .input('voteTimeSubmitted', dateNow)
                     .query(`INSERT INTO Vote (VoterID, CandidateID, VoteTimeSubmitted) VALUES (@voterId, @candidateId, @voteTimeSubmitted)`);
             }

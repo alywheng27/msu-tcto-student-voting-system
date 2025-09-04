@@ -26,12 +26,14 @@ export default function SSCVotingPage() {
   const [selections, setSelections] = useState({
     president: "",
     vicePresident: "",
+    auditor: "",
     senators: [],
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [candidates, setCandidates] = useState({
     president: [],
     vicePresident: [],
+    auditor: [],
     senators: [],
   })
   const [loadingCandidates, setLoadingCandidates] = useState(true)
@@ -71,6 +73,7 @@ export default function SSCVotingPage() {
       const mapped = {
         president: [],
         vicePresident: [],
+        auditor: [],
         senators: [],
       }
       data.forEach((c) => {
@@ -83,6 +86,13 @@ export default function SSCVotingPage() {
           })
         } else if (c.Position?.toLowerCase() === "vice president") {
           mapped.vicePresident.push({
+            id: c.CandidateID,
+            name: `${c.FirstName} ${c.Surname}`,
+            party: c.PartyID?.toString() || c.Party,
+            photo: c.Photo || "/candidates/no-photo.png",
+          })
+        } else if (c.Position?.toLowerCase() === "auditor") {
+          mapped.auditor.push({
             id: c.CandidateID,
             name: `${c.FirstName} ${c.Surname}`,
             party: c.PartyID?.toString() || c.Party,
@@ -131,11 +141,13 @@ export default function SSCVotingPage() {
 
     const presidentCandidate = candidates.president.find((c) => c.party === partyId)
     const vicePresidentCandidate = candidates.vicePresident.find((c) => c.party === partyId)
+    const auditorCandidate = candidates.auditor.find((c) => c.party === partyId)
     const senatorCandidates = candidates.senators.filter((c) => c.party === partyId).slice(0, 10)
 
     setSelections({
       president: presidentCandidate?.id || "",
       vicePresident: vicePresidentCandidate?.id || "",
+      auditor: auditorCandidate?.id || "",
       senators: senatorCandidates.map((c) => c.id),
     })
   }
@@ -172,6 +184,7 @@ export default function SSCVotingPage() {
     const stepMap = {
       president: "president",
       vicePresident: "vicePresident",
+      auditor: "auditor",
       senators: "senators",
     }
     setStep(stepMap[position])
@@ -191,6 +204,8 @@ export default function SSCVotingPage() {
     } else if (step === "president") {
       setStep("vicePresident")
     } else if (step === "vicePresident") {
+      setStep("auditor")
+    } else if (step === "auditor") {
       setStep("senators")
     } else if (step === "senators") {
       setStep("review")
@@ -202,8 +217,10 @@ export default function SSCVotingPage() {
       setStep("mode")
     } else if (step === "vicePresident") {
       setStep("president")
-    } else if (step === "senators") {
+    } else if (step === "auditor") {
       setStep("vicePresident")
+    } else if (step === "senators") {
+      setStep("auditor")
     } else if (step === "review") {
       setStep("senators")
     }
@@ -254,12 +271,13 @@ export default function SSCVotingPage() {
     let count = 0
     if (selections.president) count++
     if (selections.vicePresident) count++
+    if (selections.auditor) count++
     count += selections.senators.length
     return count
   }
 
   const getMaxPossibleSelections = () => {
-    return 2 + 10
+    return 3 + 10
   }
 
   return (
@@ -278,6 +296,8 @@ export default function SSCVotingPage() {
           <Badge variant={step === "president" ? "default" : "outline"}>President</Badge>
           <ChevronRight className="h-4 w-4" />
           <Badge variant={step === "vicePresident" ? "default" : "outline"}>Vice President</Badge>
+          <ChevronRight className="h-4 w-4" />
+          <Badge variant={step === "auditor" ? "default" : "outline"}>Auditor</Badge>
           <ChevronRight className="h-4 w-4" />
           <Badge variant={step === "senators" ? "default" : "outline"}>Senators</Badge>
           <ChevronRight className="h-4 w-4" />
@@ -446,6 +466,50 @@ export default function SSCVotingPage() {
           </>
         )}
 
+        {step === "auditor" && (
+          <>
+            <CardHeader>
+              <CardTitle>Select Auditor</CardTitle>
+              <CardDescription>Choose one candidate for SSC Auditor or skip this position</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loadingCandidates ? (
+                <div className="flex items-center justify-center py-12">
+                  <div className="text-center space-y-3">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="text-muted-foreground">Loading candidates...</p>
+                  </div>
+                </div>
+              ) : fetchError ? (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error Loading Candidates</AlertTitle>
+                  <AlertDescription>
+                    {fetchError}. Please try refreshing the page or contact support if the problem persists.
+                  </AlertDescription>
+                </Alert>
+              ) : candidates.auditor.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">No candidates available for Auditor position.</p>
+                </div>
+              ) : (
+                <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+                  {candidates.auditor.map((candidate) => (
+                    <CandidateCard
+                      key={candidate.id}
+                      candidate={candidate}
+                      party={getPartyById(candidate.party)}
+                      isSelected={selections.auditor === candidate.id}
+                      onSelect={() => handleSelectCandidate("auditor", candidate.id)}
+                      selectionMode="single"
+                    />
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </>
+        )}
+
         {step === "senators" && (
           <>
             <CardHeader>
@@ -586,6 +650,22 @@ export default function SSCVotingPage() {
                   onRemove={() => handleRemoveSelection("vicePresident")}
                   isSkipped={!selections.vicePresident}
                 />
+
+                <ReviewSelectionCard
+                  position="Auditor"
+                  candidate={
+                    selections.auditor ? getSelectedCandidate("auditor", selections.auditor) : null
+                  }
+                  party={
+                    selections.auditor
+                      ? getPartyById(getSelectedCandidate("auditor", selections.auditor)?.party)
+                      : null
+                  }
+                  college={ssc}
+                  onEdit={() => handleEditPosition("auditor")}
+                  onRemove={() => handleRemoveSelection("auditor")}
+                  isSkipped={!selections.auditor}
+                />
               </div>
 
               <div>
@@ -666,7 +746,7 @@ export default function SSCVotingPage() {
                   </div>
                   <div>
                     <div className="text-2xl font-bold text-orange-600">
-                      {3 - Object.values(selections).filter((s) => (Array.isArray(s) ? s.length > 0 : s !== "")).length}
+                      {4 - Object.values(selections).filter((s) => (Array.isArray(s) ? s.length > 0 : s !== "")).length}
                     </div>
                     <div className="text-xs text-orange-700">Positions Skipped</div>
                   </div>

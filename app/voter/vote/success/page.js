@@ -138,7 +138,8 @@ export default function VoteSuccessPage() {
             >
               <h1 className="text-2xl font-bold text-gray-800 mb-2">Vote Submitted Successfully!</h1>
               <p className="text-gray-600 mb-6">
-                Thank you for participating in the {formattedType} election. Your vote has been recorded.
+                {/* Thank you for participating in the {formattedType} election. Your vote has been recorded. */}
+                Thank you for participating in the election. Your vote has been recorded.
               </p>
 
               <div className="flex flex-col gap-3">

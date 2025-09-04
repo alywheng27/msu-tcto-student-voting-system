@@ -3,10 +3,15 @@ import { AlertCircle, CheckCircle2, Vote } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { getCookies } from "@/lib/voters"
+import { cookies } from "next/headers"
+import { getCookies, getColleges } from "@/lib/voters"
+
 
 export default async function Voting() {
-    const cookieValue = await getCookies()
+    const cookieStore = await cookies()
+    const [colleges, cookieValue] = await Promise.all([getColleges(), getCookies()])
+
+    const collegeFound = colleges.find((college) => college.CollegeOfficeID === cookieValue.collegeOfficeID)
     
     return (
         <div className="grid gap-6 md:grid-cols-2">
@@ -15,9 +20,9 @@ export default async function Voting() {
                 <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                     <Vote className="h-5 w-5" />
-                    SSC Voting {cookieValue.HasVotedSSC}
+                    SSC Voting
                 </CardTitle>
-                {cookieValue.HasVotedSSC ? (
+                {cookieStore.get("HasVotedSSC").value == "true" ? (
                     <Badge className="bg-green-100 text-green-800">
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     Completed
@@ -39,7 +44,7 @@ export default async function Voting() {
                 <p>• SSC Treasurer</p>
                 </div>
 
-                {cookieValue.HasVotedSSC ? (
+                {cookieStore.get("HasVotedSSC").value == "true" ? (
                 <Button disabled className="w-full">
                     <CheckCircle2 className="h-4 w-4 mr-2" />
                     Vote Submitted
@@ -62,7 +67,7 @@ export default async function Voting() {
                     <Vote className="h-5 w-5" />
                     College Voting
                 </CardTitle>
-                {cookieValue.HasVotedCollege ? (
+                {cookieStore.get("HasVotedCollege").value == "true" ? (
                     <Badge className="bg-green-100 text-green-800">
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     Completed
@@ -74,7 +79,7 @@ export default async function Voting() {
                     </Badge>
                 )}
                 </div>
-                <CardDescription>Vote for {cookieValue.CollegeOffice} positions</CardDescription>
+                <CardDescription>Vote for {collegeFound.CollegeOfficeCode} positions</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="text-sm text-gray-600">
@@ -84,13 +89,13 @@ export default async function Voting() {
                 <p>• College Treasurer</p>
                 </div>
 
-                {cookieValue.HasVotedCollege ? (
+                {cookieStore.get("HasVotedCollege").value == "true" ? (
                 <Button disabled className="w-full">
                     <CheckCircle2 className="h-4 w-4 mr-2" />
                     Vote Submitted
                 </Button>
                 ) : (
-                <Button asChild className="w-full" style={{ backgroundColor: cookieValue.CollegeOfficeColor }}>
+                <Button asChild className="w-full" style={{ backgroundColor: collegeFound.CollegeOfficeColor}}>
                     <Link href="/voter/vote/college">
                     <Vote className="h-4 w-4 mr-2" />
                     Start College Voting

@@ -101,36 +101,38 @@ export default function CollegeVotingPage() {
       }
       data.forEach((c) => {
         const pos = c.Position?.toLowerCase()
-        if (pos === "governor") mapped.governor.push({
-          id: c.CandidateID,
-          name: `${c.FirstName} ${c.Surname}`,
-          party: c.PartyID?.toString() || c.Party,
-          photo: c.Photo || "/candidates/no-photo.png",
-        })
-        else if (pos === "vice governor" || pos === "vice-governor") mapped.viceGovernor.push({
-          id: c.CandidateID,
-          name: `${c.FirstName} ${c.Surname}`,
-          party: c.PartyID?.toString() || c.Party,
-          photo: c.Photo || "/candidates/no-photo.png",
-        })
-        // else if (pos === "mayor") mapped.mayor.push({
-        //   id: c.CandidateID,
-        //   name: `${c.FirstName} ${c.Surname}`,
-        //   party: c.PartyID?.toString() || c.Party,
-        //   photo: c.Photo || "/candidates/no-photo.png",
-        // })
-        // else if (pos === "vice mayor" || pos === "vice-mayor") mapped.viceMayor.push({
-        //   id: c.CandidateID,
-        //   name: `${c.FirstName} ${c.Surname}`,
-        //   party: c.PartyID?.toString() || c.Party,
-        //   photo: c.Photo || "/candidates/no-photo.png",
-        // })
-        else if (pos === "board member" || pos === "board-member") mapped.boardMembers.push({
-          id: c.CandidateID,
-          name: `${c.FirstName} ${c.Surname}`,
-          party: c.PartyID?.toString() || c.Party,
-          photo: c.Photo || "/candidates/no-photo.png",
-        })
+        if (Cookies.get("CollegeOfficeID") === c.CollegeOfficeID) {
+          if (pos === "governor") mapped.governor.push({
+            id: c.CandidateID,
+            name: `${c.FirstName} ${c.Surname}`,
+            party: c.PartyID?.toString() || c.Party,
+            photo: c.Photo || "/candidates/no-photo.png",
+          })
+          else if (pos === "vice governor" || pos === "vice-governor") mapped.viceGovernor.push({
+            id: c.CandidateID,
+            name: `${c.FirstName} ${c.Surname}`,
+            party: c.PartyID?.toString() || c.Party,
+            photo: c.Photo || "/candidates/no-photo.png",
+          })
+          // else if (pos === "mayor") mapped.mayor.push({
+          //   id: c.CandidateID,
+          //   name: `${c.FirstName} ${c.Surname}`,
+          //   party: c.PartyID?.toString() || c.Party,
+          //   photo: c.Photo || "/candidates/no-photo.png",
+          // })
+          // else if (pos === "vice mayor" || pos === "vice-mayor") mapped.viceMayor.push({
+          //   id: c.CandidateID,
+          //   name: `${c.FirstName} ${c.Surname}`,
+          //   party: c.PartyID?.toString() || c.Party,
+          //   photo: c.Photo || "/candidates/no-photo.png",
+          // })
+          else if (pos === "board member" || pos === "board-member") mapped.boardMembers.push({
+            id: c.CandidateID,
+            name: `${c.FirstName} ${c.Surname}`,
+            party: c.PartyID?.toString() || c.Party,
+            photo: c.Photo || "/candidates/no-photo.png",
+          })
+        }
       })
       
       setCandidates(mapped)

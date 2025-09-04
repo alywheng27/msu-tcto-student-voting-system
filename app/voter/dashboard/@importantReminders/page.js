@@ -16,7 +16,7 @@ export default function ImportantReminders() {
             <div>
                 <p className="font-medium text-blue-900">Voting Deadline</p>
                 <p className="text-sm text-blue-700">
-                Make sure to complete your voting before March 17, 2024 at 11:59 PM
+                Make sure to complete your voting before September 15, 2025 at 7:00 PM
                 </p>
             </div>
             </div>
@@ -25,7 +25,7 @@ export default function ImportantReminders() {
             <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
             <div>
                 <p className="font-medium text-amber-900">One Vote Per Position</p>
-                <p className="text-sm text-amber-700">You can only vote once for other positions. Choose carefully!</p>
+                <p className="text-sm text-amber-700">You can only vote once on some positions. Choose carefully!</p>
             </div>
             </div>
 

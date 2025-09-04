@@ -32,12 +32,12 @@ export function VoterSidebar() {
   let menuItems = [
     { href: "/voter/dashboard", icon: Home, label: "Dashboard" },
   ]
-
-  if (cookieValue.hasVotedSSC == "False") {
+  console.log(cookieValue.hasVotedSSC)
+  if (cookieValue.hasVotedSSC == "false") {
     menuItems.push({ href: "/voter/vote/ssc", icon: Vote, label: "SSC Voting" })
   }
 
-  if (cookieValue.hasVotedCollege == "False") {
+  if (cookieValue.hasVotedCollege == "false") {
     menuItems.push({ href: "/voter/vote/college", icon: Vote, label: "College Voting" })
   }
   
