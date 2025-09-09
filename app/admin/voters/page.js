@@ -24,7 +24,7 @@ export default function VotersPage() {
   // const [colleges, setColleges] = useState([])
   // const [collegesLoading, setCollegesLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 8
+  const itemsPerPage = 10
   const [fetchError, setFetchError] = useState("")
 
   const fetchVoters = async () => {

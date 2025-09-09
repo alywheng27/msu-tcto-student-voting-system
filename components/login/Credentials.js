@@ -12,13 +12,13 @@ export default function Credentials() {
     return (
         <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username">ID Number</Label>
                 <Input
                 id="username"
                 type="text"
                 ref={usernameRef}
                 required
-                placeholder="Enter your username"
+                placeholder="Enter your ID Number"
                 onKeyDown={(e) => handleKeyDown(e)} autoFocus
                 />
             </div>

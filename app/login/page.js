@@ -164,11 +164,11 @@ export default function LoginPage() {
             <div className="text-center text-sm text-gray-500">
               <div className="mb-2">Demo Credentials:</div>
               <div className="space-y-1">
-                <div>
+                {/* <div>
                   <strong>Admin:</strong> admin / admin123
-                </div>
+                </div> */}
                 <div>
-                  <strong>Voter:</strong> john.doe / voter123
+                  <strong>Voter:</strong> 25-12345 / FAMILY_NAME-25-12345
                 </div>
               </div>
             </div>

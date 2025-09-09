@@ -219,7 +219,7 @@ export default async function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                All students can vote for the SSC positions including President, Vice President, and Senators.
+                All students can vote for the SSC positions including President, Vice President, Auditor, and Senators.
               </p>
             </CardContent>
             <CardFooter>
@@ -241,7 +241,7 @@ export default async function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-gray-600">
-                Vote for your college-specific officers including Governor, Vice Governor, Mayor, Vice Mayor, and Board
+                Vote for your college-specific officers including Governor, Vice Governor, and Board
                 Members.
               </p>
             </CardContent>

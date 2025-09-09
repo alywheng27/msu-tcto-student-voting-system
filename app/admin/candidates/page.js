@@ -23,7 +23,7 @@ export default function CandidatesPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
-  const itemsPerPage = 8
+  const itemsPerPage = 10
   const [fetchError, setFetchError] = useState("")
   const [parties, setParties] = useState([])
   const [positions, setPositions] = useState([])
