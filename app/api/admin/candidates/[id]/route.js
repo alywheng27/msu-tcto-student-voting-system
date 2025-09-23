@@ -50,7 +50,7 @@ export async function PUT(request, { params }) {
         }
         const userUpdateResult = await userRequest.query(userUpdateQuery);
         console.log("[CANDIDATES-ID] User update result:");
-        console.table(userUpdateResult);
+        // console.table(userUpdateResult);
 
         // Update Candidate table
         const result = await pool.request()
@@ -66,7 +66,7 @@ export async function PUT(request, { params }) {
                 WHERE CandidateID = @candidateID
             `);
         console.log("[CANDIDATES-ID] Candidate update result:");
-        console.table(result);
+        // console.table(result);
 
         if (result.rowsAffected < 1) {
             console.error("[CANDIDATES-ID] Candidate not found or no changes made.");
@@ -101,14 +101,14 @@ export async function DELETE(request, { params }) {
             .input('candidateID', id)
             .query('DELETE FROM Candidate WHERE CandidateID = @candidateID');
         console.log("[CANDIDATES-ID] Candidate delete result:");
-        console.table(candidateResult);
+        // console.table(candidateResult);
 
         // Optionally, delete from Users table as well
         const userResult = await pool.request()
             .input('userID', userID)
             .query('DELETE FROM Users WHERE UserID = @userID');
         console.log("[CANDIDATES-ID] User delete result:");
-        console.table(userResult);
+        // console.table(userResult);
 
         if (candidateResult.rowsAffected < 1) {
             console.error("[CANDIDATES-ID] Candidate not found or already deleted.");

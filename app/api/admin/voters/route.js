@@ -23,7 +23,7 @@ export async function GET() {
                 UserType AS UT ON UT.UserTypeID = U.UserTypeID
         `)
         if (result.recordset && result.recordset.length > 0) {
-            console.table(result.recordset);
+            // console.table(result.recordset);
         }
 
         if (result.rowsAffected < 1) {
@@ -72,7 +72,7 @@ export async function POST(request) {
             .input('college', college)
             .query("SELECT CollegeOfficeID FROM CollegeOffice WHERE CollegeOffice = @college")
         if (typeResult.recordset && typeResult.recordset.length > 0) {
-            console.table(typeResult.recordset);
+            // console.table(typeResult.recordset);
         }
 
         if (typeResult.rowsAffected < 1) {
@@ -91,7 +91,7 @@ export async function POST(request) {
             .input('role', role)
             .query("SELECT UserTypeID FROM UserType WHERE UserType = @role")
         if (userResult.recordset && userResult.recordset.length > 0) {
-            console.table(userResult.recordset);
+            // console.table(userResult.recordset);
         }
 
         if (userResult.rowsAffected < 1) {
@@ -120,7 +120,7 @@ export async function POST(request) {
                 VALUES (@firstName, @middleName, @surname, @extensionName, @collegeOfficeID, @username, @userTypeID, @password)
             `)
         if (result.recordset && result.recordset.length > 0) {
-            console.table(result.recordset);
+            // console.table(result.recordset);
         }
 
         if (result.rowsAffected < 1) {
@@ -145,7 +145,7 @@ export async function POST(request) {
             .input('password', password)
             .query("SELECT UserID FROM Users WHERE FirstName = @firstName AND MiddleName = @middleName AND Surname = @surname AND CollegeOfficeID = @collegeOfficeID AND Username = @username AND UserTypeID = @userTypeID AND password = @password AND ExtensionName = @extensionName")
         if (user.recordset && user.recordset.length > 0) {
-            console.table(user.recordset);
+            // console.table(user.recordset);
         }
 
         if (user.rowsAffected < 1) {
@@ -167,7 +167,7 @@ export async function POST(request) {
                 VALUES (@userID)
             `)
         if (resultUser.recordset && resultUser.recordset.length > 0) {
-            console.table(resultUser.recordset);
+            // console.table(resultUser.recordset);
         }
 
         if (resultUser.rowsAffected < 1) {

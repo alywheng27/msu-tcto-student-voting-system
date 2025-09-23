@@ -19,7 +19,7 @@ export async function GET() {
             JOIN PositionType ON Position.PositionTypeID = PositionType.PositionTypeID
         `)
         if (result.recordset && result.recordset.length > 0) {
-            console.table(result.recordset);
+            // console.table(result.recordset);
         }
 
         if (result.rowsAffected < 1) {
@@ -68,7 +68,7 @@ export async function POST(request) {
             .input('type', type)
             .query("SELECT PositionTypeID FROM PositionType WHERE PositionType = @type")
         if (typeResult.recordset && typeResult.recordset.length > 0) {
-            console.table(typeResult.recordset);
+            // console.table(typeResult.recordset);
         }
 
         if (typeResult.rowsAffected < 1) {
@@ -93,7 +93,7 @@ export async function POST(request) {
                 VALUES (@name, @positionTypeID, @maxSelections, @orderNumber)
             `)
         if (result.recordset && result.recordset.length > 0) {
-            console.table(result.recordset);
+            // console.table(result.recordset);
         }
 
         if (result.rowsAffected < 1) {

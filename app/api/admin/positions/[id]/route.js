@@ -27,7 +27,7 @@ export async function PUT(request, { params }) {
             .input('type', type)
             .query("SELECT PositionTypeID FROM PositionType WHERE PositionType = @type")
         if (typeResult.recordset && typeResult.recordset.length > 0) {
-            console.table(typeResult.recordset);
+            // console.table(typeResult.recordset);
         }
 
         if (typeResult.rowsAffected < 1) {
@@ -57,7 +57,7 @@ export async function PUT(request, { params }) {
                 WHERE PositionID = @id
             `)
         if (result.recordset && result.recordset.length > 0) {
-            console.table(result.recordset);
+            // console.table(result.recordset);
         }
 
         if (result.rowsAffected < 1) {
@@ -99,7 +99,7 @@ export async function DELETE(request, { params }) {
             .input('id', id)
             .query('DELETE FROM Position WHERE PositionID = @id')
         if (result.recordset && result.recordset.length > 0) {
-            console.table(result.recordset);
+            // console.table(result.recordset);
         }
 
         if (result.rowsAffected < 1) {

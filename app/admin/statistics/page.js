@@ -201,7 +201,7 @@ export default function StatisticsPage() {
       "Vote ID": vote.VoteID,
       "Voter's Name": voterName,
       "Candidate's Name": candidateName,
-      "Vote Time Submitted": vote.VoteTimeSubmitted,
+      "Vote Time Submitted": dayjs(vote.VoteTimeSubmitted).format("YYYY-MM-DD hh:mm:ss A"),
     };
   });
 

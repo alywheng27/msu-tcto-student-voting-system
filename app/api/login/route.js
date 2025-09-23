@@ -84,7 +84,7 @@ export async function POST(req) {
         console.log("[LOGIN] Querying user in DB...");
         const result = await userRequest.query(userQuery)
         console.log("[LOGIN] Query result:");
-        console.table(result.recordset)
+        // console.table(result.recordset)
 
         if (
             result.rowsAffected < 1 ||

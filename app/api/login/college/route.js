@@ -9,7 +9,7 @@ export async function GET() {
         console.log("[COLLEGE-LOGIN] Querying CollegeOffice...");
         const result = await pool.request().query("SELECT TOP 6 * FROM CollegeOffice")
         console.log("[COLLEGE-LOGIN] Query result:");
-        console.table(result.recordset)
+        // console.table(result.recordset)
 
         if (result.rowsAffected < 1) {
             console.error("[COLLEGE-LOGIN] No colleges found.");

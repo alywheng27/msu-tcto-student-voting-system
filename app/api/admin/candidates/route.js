@@ -97,7 +97,7 @@ export async function POST(request) {
                 VALUES (@firstName, @middleName, @surname, @extensionName, @username, @password, @roleID, @collegeOfficeID)
             `);
         console.log("[CANDIDATES] User insert result:");
-        console.table(userResult.recordset);
+        // console.table(userResult.recordset);
         
         const userID = userResult.recordset[0].UserID;
 
@@ -110,7 +110,7 @@ export async function POST(request) {
                 VALUES (@userID)
             `)
         if (resultUser.recordset && resultUser.recordset.length > 0) {
-            console.table(resultUser.recordset);
+            // console.table(resultUser.recordset);
         }
 
         if (resultUser.rowsAffected < 1) {

@@ -27,7 +27,7 @@ export async function PUT(request, { params }) {
             .input('college', college)
             .query("SELECT CollegeOfficeID FROM CollegeOffice WHERE CollegeOffice = @college")
         if (collegeResult.recordset && collegeResult.recordset.length > 0) {
-            console.table(collegeResult.recordset);
+            // console.table(collegeResult.recordset);
         }
 
         if (collegeResult.rowsAffected < 1) {
@@ -46,7 +46,7 @@ export async function PUT(request, { params }) {
             .input('role', role)
             .query("SELECT UserTypeID FROM UserType WHERE UserType = @role")
         if (userTypeResult.recordset && userTypeResult.recordset.length > 0) {
-            console.table(userTypeResult.recordset);
+            // console.table(userTypeResult.recordset);
         }
 
         if (userTypeResult.rowsAffected < 1) {
@@ -95,7 +95,7 @@ export async function PUT(request, { params }) {
         console.log("[VOTERS-ID] Updating user...");
         const result = await dbRequest.query(updateQuery)
         if (result.recordset && result.recordset.length > 0) {
-            console.table(result.recordset);
+            // console.table(result.recordset);
         }
 
         if (result.rowsAffected < 1) {
@@ -139,7 +139,7 @@ export async function DELETE(request, { params }) {
             .input('id', id)
             .query('DELETE FROM Voter WHERE UserID = @id')
         if (voterResult.recordset && voterResult.recordset.length > 0) {
-            console.table(voterResult.recordset);
+            // console.table(voterResult.recordset);
         }
         // Then delete from Users table
         console.log("[VOTERS-ID] Deleting from Users table...");
@@ -147,7 +147,7 @@ export async function DELETE(request, { params }) {
             .input('id', id)
             .query('DELETE FROM Users WHERE UserID = @id')
         if (userResult.recordset && userResult.recordset.length > 0) {
-            console.table(userResult.recordset);
+            // console.table(userResult.recordset);
         }
 
         if (userResult.rowsAffected < 1) {

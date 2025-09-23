@@ -5,23 +5,61 @@ export async function GET() {
   try {
     const pool = await connectToDB()
 
+    // const query = `
+    //   SELECT 
+    //     v.VoteID,
+    //     v.VoterID,
+    //     v.CandidateID,
+    //     v.VoteTimeSubmitted,
+    //     u.FirstName,
+    //     u.Surname,
+    //     c.Photo,
+    //     p.Party,
+    //     p.PartyColor,
+    //     p.Logo,
+    //     pos.Position,
+    //     posType.PositionType,
+    //     col.CollegeOffice,
+    //     col.CollegeOfficeCode,
+    //     col.CollegeOfficeColor
+    //   FROM Vote v
+    //   JOIN Candidate c ON v.CandidateID = c.CandidateID
+    //   JOIN Users u ON c.UserID = u.UserID
+    //   JOIN Party p ON c.PartyID = p.PartyID
+    //   JOIN Position pos ON c.PositionID = pos.PositionID
+    //   JOIN PositionType posType ON pos.PositionTypeID = posType.PositionTypeID
+    //   JOIN CollegeOffice col ON u.CollegeOfficeID = col.CollegeOfficeID
+    // `
+
+    // const query = `
+    //   SELECT 
+    //     v.VoteID,
+    //     v.VoterID,
+    //     v.CandidateID,
+    //     v.VoteTimeSubmitted,
+    //     u.FirstName,
+    //     u.Surname,
+    //     p.Party,
+    //     pos.Position,
+    //     posType.PositionType,
+    //     col.CollegeOffice,
+    //     col.CollegeOfficeCode,
+    //     col.CollegeOfficeColor
+    //   FROM Vote v
+    //   JOIN Candidate c ON v.CandidateID = c.CandidateID
+    //   JOIN Users u ON c.UserID = u.UserID
+    //   JOIN Party p ON c.PartyID = p.PartyID
+    //   JOIN Position pos ON c.PositionID = pos.PositionID
+    //   JOIN PositionType posType ON pos.PositionTypeID = posType.PositionTypeID
+    //   JOIN CollegeOffice col ON u.CollegeOfficeID = col.CollegeOfficeID
+    // `
+
     const query = `
       SELECT 
         v.VoteID,
         v.VoterID,
         v.CandidateID,
-        v.VoteTimeSubmitted,
-        u.FirstName,
-        u.Surname,
-        c.Photo,
-        p.Party,
-        p.PartyColor,
-        p.Logo,
-        pos.Position,
-        posType.PositionType,
-        col.CollegeOffice,
-        col.CollegeOfficeCode,
-        col.CollegeOfficeColor
+        v.VoteTimeSubmitted
       FROM Vote v
       JOIN Candidate c ON v.CandidateID = c.CandidateID
       JOIN Users u ON c.UserID = u.UserID

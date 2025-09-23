@@ -16,7 +16,13 @@ export async function POST(request) {
             const { governor, viceGovernor, mayor, viceMayor, boardMembers } = selections;
             const voterId = cookieStore.get('UserID').value
 
-            const dateNow = new Date().toISOString()
+            // const dateNow = new Date().toISOString()
+            const now = new Date();
+            const kualaLumpurTime = new Date(now.toLocaleString("en-US", {timeZone: "Asia/Kuala_Lumpur"}));
+            // Add 8 hours
+            kualaLumpurTime.setHours(kualaLumpurTime.getHours() + 8);
+            const dateNow = kualaLumpurTime.toISOString();
+            console.log(dateNow)
 
             const pool = await connectToDB();
             // Insert vote for governor if selected
@@ -75,4 +81,6 @@ export async function POST(request) {
         }
     }
 
-} 
+    // If no selections provided, return error
+    return Response.json({ message: 'No vote selections provided.' }, { status: 400 });
+}
