@@ -41,6 +41,29 @@ import autoTable from "jspdf-autotable";
 import { saveAs } from "file-saver";
 import { getAllVotes } from "@/lib/results";
 
+// Function to convert ISO datetime to readable format
+const formatDateTime = (isoString) => {
+  const date = new Date(isoString);
+  
+  // Extract date components
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  
+  // Extract time components
+  let hours = date.getUTCHours();
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+  const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+  
+  // Convert to 12-hour format
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // 0 should be 12
+  hours = String(hours).padStart(2, '0');
+  
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds} ${ampm}`;
+};
+
 export default function StatisticsPage() {
   const [college, setCollege] = useState("all");
   const [position, setPosition] = useState("all");
@@ -201,7 +224,7 @@ export default function StatisticsPage() {
       "Vote ID": vote.VoteID,
       "Voter's Name": voterName,
       "Candidate's Name": candidateName,
-      "Vote Time Submitted": dayjs(vote.VoteTimeSubmitted).format("YYYY-MM-DD hh:mm:ss A"),
+      "Vote Time Submitted": formatDateTime(vote.VoteTimeSubmitted),
     };
   });
 
