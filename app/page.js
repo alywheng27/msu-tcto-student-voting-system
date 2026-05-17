@@ -91,7 +91,7 @@ export default async function Home() {
             <h3 className="text-3xl font-bold mb-4 text-gray-900">College Participation</h3>
             <p className="text-gray-600 text-lg">Track voting progress across all colleges</p>
           </div>
-          <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-8">
             {stats.collegeStats.map((collegeStat) => {
               const college = colleges.find((c) => c.CollegeOfficeCode === collegeStat.name)
               const turnoutPercentage = collegeStat.totalStudents > 0
@@ -203,10 +203,35 @@ export default async function Home() {
                 </Card>
               )
             })}
+            
+            <Card className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg hover:-translate-y-1 bg-white overflow-hidden">
+              <div className="h-3 bg-gradient-to-r bg-[linear-gradient(135deg,rgb(97,6,59),rgba(97,6,76,59.867))]"></div>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="w-4 h-4 text-purple-600" />
+                  </div>
+                  Election Results
+                </CardTitle>
+                <CardDescription>View the current election results</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">
+                  Results will be available after the voting period has ended. Check back later to see who won!
+                </p>
+              </CardContent>
+              <CardFooter>
+                <Link href="/login" className="w-full">
+                  <Button variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50">
+                    Login to View
+                  </Button>
+                </Link>
+              </CardFooter>
+            </Card>
           </div>
         </section>
 
-        <section className="grid md:grid-cols-3 gap-6 mb-16">
+        <section className="grid md:grid-cols-2 gap-6 mb-16">
           <Card className="hover:shadow-lg transition-shadow duration-300">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -248,30 +273,6 @@ export default async function Home() {
             <CardFooter>
               <Link href="/login" className="w-full">
                 <Button className="w-full bg-green-600 hover:bg-green-700">Login to Vote</Button>
-              </Link>
-            </CardFooter>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow duration-300">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <TrendingUp className="w-4 h-4 text-purple-600" />
-                </div>
-                Election Results
-              </CardTitle>
-              <CardDescription>View the current election results</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-gray-600">
-                Results will be available after the voting period has ended. Check back later to see who won!
-              </p>
-            </CardContent>
-            <CardFooter>
-              <Link href="/login" className="w-full">
-                <Button variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50">
-                  Login to View
-                </Button>
               </Link>
             </CardFooter>
           </Card>

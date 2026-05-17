@@ -7,7 +7,7 @@ export async function GET() {
         const pool = await connectToDB()
         console.log("[COLLEGE-LOGIN] Connected to DB");
         console.log("[COLLEGE-LOGIN] Querying CollegeOffice...");
-        const result = await pool.request().query("SELECT TOP 6 * FROM CollegeOffice")
+        const result = await pool.request().query("SELECT TOP 7 * FROM CollegeOffice")
         console.log("[COLLEGE-LOGIN] Query result:");
         // console.table(result.recordset)
 
