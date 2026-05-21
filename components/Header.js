@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Header() {
   return (
-    <header className="bg-white shadow-sm border-b">
+    <header className="bg-[#61063B] shadow-sm border-b text-white">
         <div className="container mx-auto px-4 py-6 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Image
@@ -13,15 +13,15 @@ export default function Header() {
               alt="MSU-TCTO Logo"
               width={48}
               height={48}
-              className="h-12 w-12 object-contain shadow-lg rounded-full"
+              className="h-12 w-15 px-1 object-contain shadow-lg bg-white"
             />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">MSU-TCTO Voting System</h1>
-              <p className="text-sm text-gray-600">Student Election Portal</p>
+              <h1 className="text-xl font-bold">MSU-TCTO Voting System</h1>
+              <p className="text-sm">Student Election Portal</p>
             </div>
           </div>
           <Link href="/login">
-            <Button className="bg-[#1E90FF] hover:bg-blue-600 flex items-center gap-2">
+            <Button className="bg-[#61063B] border border-white hover:bg-white hover:text-[#61063B] flex items-center gap-2">
               <LogIn className="w-4 h-4" />
               Login
             </Button>

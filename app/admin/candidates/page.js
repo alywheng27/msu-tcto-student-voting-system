@@ -153,29 +153,29 @@ export default function CandidatesPage() {
   const collegeCandidates = candidates.filter((candidate) => candidate.PositionType === "College")
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-[#61063B]">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold mb-2">Manage Candidates</h1>
-          <p className="text-muted-foreground">Add, edit, or remove candidates for the election.</p>
+          <p className="text-[#61063B]">Add, edit, or remove candidates for the election.</p>
         </div>
-        <Button onClick={openAddModal} variant="outline">
+        <Button onClick={openAddModal} variant="outline" className="bg-[#61063B] text-white hover:text-[#61063B] border hover:border-[#61063B]">
           <Camera className="mr-2 h-4 w-4" /> Add Candidate
         </Button>
       </div>
 
       <Tabs defaultValue="ssc" className="w-full">
-        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-          <TabsTrigger value="ssc">SSC Candidates</TabsTrigger>
-          <TabsTrigger value="college">College Candidates</TabsTrigger>
+        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-[#61063B]">
+          <TabsTrigger value="ssc" className="text-[#CA8A04]">SSC Candidates</TabsTrigger>
+          <TabsTrigger value="college" className="text-[#CA8A04]">College Candidates</TabsTrigger>
         </TabsList>
 
         <TabsContent value="ssc" className="mt-6">
-          <Card>
+          <Card className="bg-[#61063B] text-white">
             <CardHeader className="flex justify-between items-center">
               <div>
                 <CardTitle>Supreme Student Council Candidates</CardTitle>
-                <CardDescription>Manage candidates for SSC positions</CardDescription>
+                <CardDescription className="text-white">Manage candidates for SSC positions</CardDescription>
               </div>
               <div className="flex items-center gap-4">
                 <div className="relative">
@@ -187,7 +187,7 @@ export default function CandidatesPage() {
                       setSearchQuery(e.target.value)
                       setCurrentPage(1)
                     }}
-                    className="w-[300px] px-4 py-2 rounded-md border border-input bg-background"
+                    className="w-[300px] px-4 py-2 rounded-md border border-input bg-[#61063B]"
                   />
                   {searchQuery && (
                     <button
@@ -204,11 +204,11 @@ export default function CandidatesPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Photo</TableHead>
-                    <TableHead>Position</TableHead>
-                    <TableHead>Party</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="text-white">Name</TableHead>
+                    <TableHead className="text-white">Photo</TableHead>
+                    <TableHead className="text-white">Position</TableHead>
+                    <TableHead className="text-white">Party</TableHead>
+                    <TableHead className="text-right text-white">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className={fetchError ? "min-h-[300px] h-[300px]" : ""}>
@@ -262,20 +262,20 @@ export default function CandidatesPage() {
                   )}
                 </TableBody>
               </Table>
-              <div className="flex items-center justify-end space-x-2 mt-4">
+              <div className="flex items-center justify-end space-x-2 mt-4 ">
                 <Button
-                  variant="outline"
+                  className="bg-[#61063B] text-white hover:bg-white hover:text-[#61063B]"
                   size="sm"
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
                 >
                   Previous
                 </Button>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-white">
                   Page {currentPage} of {totalPages(filterCandidates(sscCandidates))}
                 </span>
                 <Button
-                  variant="outline"
+                  className="bg-[#61063B] text-white hover:bg-white hover:text-[#61063B]"
                   size="sm"
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages(filterCandidates(sscCandidates))}

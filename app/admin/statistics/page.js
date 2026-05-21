@@ -204,8 +204,8 @@ export default function StatisticsPage() {
     (v) => v.HasVotedSSC === false && v.HasVotedCollege === false
   ).length;
   const turnoutData = [
-    { name: "Voted", value: votedCount, fill: "#4F46E5" },
-    { name: "Not Voted", value: notVotedCount, fill: "#EF4444" },
+    { name: "Voted", value: votedCount, fill: "#CA8A04" },
+    { name: "Not Voted", value: notVotedCount, fill: "#61063B" },
   ];
 
   const voteListReport = filteredVotes.map((vote) => {
@@ -361,7 +361,7 @@ export default function StatisticsPage() {
 
   return (
     <div className="space-y-8">
-      <Card>
+      <Card className="text-[#61063B]">
         <CardHeader>
           <CardTitle>Election Statistics</CardTitle>
         </CardHeader>
@@ -425,25 +425,28 @@ export default function StatisticsPage() {
             </div>
           </div>
 
-          <Card className="mb-8 p-6">
+          <Card className="mb-8 p-6 text-[#61063B]">
             <div className="flex flex-wrap gap-4 items-end">
               <div className="flex flex-row gap-2 items-end">
                 <span className="font-semibold mr-2 self-center">
                   Candidate Report:
                 </span>
                 <Button
+                  className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]"
                   onClick={exportCSV}
                   disabled={candidateReport.length === 0}
                 >
                   Export CSV
                 </Button>
                 <Button
+                  className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]"
                   onClick={exportExcel}
                   disabled={candidateReport.length === 0}
                 >
                   Export Excel
                 </Button>
                 <Button
+                  className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]"
                   onClick={exportPDF}
                   disabled={candidateReport.length === 0}
                 >
@@ -456,18 +459,21 @@ export default function StatisticsPage() {
                 Vote List Report:
               </span>
               <Button
+                className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]"
                 onClick={exportVoteListCSV}
                 disabled={voteListReport.length === 0}
               >
                 Export CSV
               </Button>
               <Button
+                className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]"
                 onClick={exportVoteListExcel}
                 disabled={voteListReport.length === 0}
               >
                 Export Excel
               </Button>
               <Button
+                className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]"
                 onClick={exportVoteListPDF}
                 disabled={voteListReport.length === 0}
               >
@@ -476,10 +482,10 @@ export default function StatisticsPage() {
             </div>
           </Card>
 
-          <Card className="mb-8 p-6">
+          <Card className="mb-8 p-6 text-[#61063B]">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <div>
-                <h3 className="font-semibold mb-2">Votes per Candidate</h3>
+                <h3 className="font-semibold mb-5">Votes per Candidate</h3>
                 <ChartContainer config={{}}>
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={candidateChartData} barSize={40}>
@@ -498,7 +504,7 @@ export default function StatisticsPage() {
                       <ChartTooltip
                         content={<ChartTooltipContent hideLabel />}
                       />
-                      <Bar dataKey="votes" fill="#4F46E5" radius={8} />
+                      <Bar dataKey="votes" fill="#61063B" radius={8} />
                     </BarChart>
                   </ResponsiveContainer>
                 </ChartContainer>
@@ -530,7 +536,7 @@ export default function StatisticsPage() {
             </div>
           </Card>
 
-          <Card className="mb-8 p-6">
+          <Card className="mb-8 p-6 text-[#61063B]">
             <div className="overflow-x-auto">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-4">
                 <input
@@ -538,7 +544,7 @@ export default function StatisticsPage() {
                   placeholder="Search..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="border rounded px-2 py-1 w-full md:w-64"
+                  className="border rounded px-2 py-1 w-full md:w-64 text-[#61063B]"
                 />
                 <div className="flex items-center gap-2">
                   <label>Rows per page:</label>
@@ -558,12 +564,12 @@ export default function StatisticsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>First Name</TableHead>
-                    <TableHead>Surname</TableHead>
-                    <TableHead>Position</TableHead>
-                    <TableHead>Party</TableHead>
-                    <TableHead>College</TableHead>
-                    <TableHead>Total Votes</TableHead>
+                    <TableHead className="text-[#61063B]">First Name</TableHead>
+                    <TableHead className="text-[#61063B]">Surname</TableHead>
+                    <TableHead className="text-[#61063B]">Position</TableHead>
+                    <TableHead className="text-[#61063B]">Party</TableHead>
+                    <TableHead className="text-[#61063B]">College</TableHead>
+                    <TableHead className="text-[#61063B]">Total Votes</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -584,22 +590,25 @@ export default function StatisticsPage() {
                   Page {page} of {totalPages}
                 </div>
                 <div className="flex gap-2">
-                  <Button onClick={() => setPage(1)} disabled={page === 1}>
+                  <Button onClick={() => setPage(1)} disabled={page === 1} className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]">
                     First
                   </Button>
                   <Button
+                    className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]"
                     onClick={() => setPage(page - 1)}
                     disabled={page === 1}
                   >
                     Prev
                   </Button>
                   <Button
+                    className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]"
                     onClick={() => setPage(page + 1)}
                     disabled={page === totalPages}
                   >
                     Next
                   </Button>
                   <Button
+                    className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]"
                     onClick={() => setPage(totalPages)}
                     disabled={page === totalPages}
                   >

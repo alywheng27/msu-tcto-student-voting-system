@@ -43,26 +43,26 @@ export default async function Home() {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <Header />
 
-      <main className="container mx-auto px-4 pt-12">
-        <div className="min-h-[80dvh]">
+      <main className="pt-12">
+        <div className="min-h-[80dvh] container mx-auto">
           <section className="max-w-4xl mx-auto text-center md:mb-16 mb-5">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-[#1E90FF] to-[#0066CC] bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-[#61063B] to-[#610] bg-clip-text text-transparent">
               {electionInfo.title}
             </h2>
             <p className="text-gray-600 mb-8 text-lg leading-relaxed">{electionInfo.description}</p>
             {electionInfo.maintenanceMode === true && (
               <div className="mb-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <p className="text-blue-800 text-center font-medium">{electionInfo.systemMessage}</p>
+                <p className="text-[#61063B] text-center font-medium">{electionInfo.systemMessage}</p>
               </div>
             )}
             <div className="flex justify-center gap-4 flex-wrap">
               <Link href="/login">
-                <Button size="lg" className="bg-[#1E90FF] hover:bg-blue-600 shadow-lg">
+                <Button size="lg" className="bg-[#61063B] hover:bg-white hover:text-[#61063B] hover:border hover:border-[#61063B] shadow-lg">
                   Get Started
                 </Button>
               </Link>
               <Link href="#statistics">
-                <Button size="lg" variant="outline" className="border-[#1E90FF] text-[#1E90FF] hover:bg-blue-50">
+                <Button size="lg" variant="outline" className="border-[#61063B] text-[#61063B] hover:bg-[#61063B] hover:text-white">
                   View Statistics
                 </Button>
               </Link>
@@ -81,15 +81,15 @@ export default async function Home() {
         </div>
         
 
-        <section id="statistics" className="mb-16 pt-16">
-          <h3 className="text-3xl font-bold text-center mb-8 text-gray-900">Election Statistics</h3>
+        <section id="statistics" className="px-16 my-16 py-16 bg-[#61063B]">
+          <h3 className="text-3xl font-bold text-center mb-8 text-white">Election Statistics</h3>
           <PublicStats />
         </section>
 
-        <section id="college-participation" className="mb-16">
+        <section id="college-participation" className="px-16 mb-16">
           <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold mb-4 text-gray-900">College Participation</h3>
-            <p className="text-gray-600 text-lg">Track voting progress across all colleges</p>
+            <h3 className="text-3xl font-bold mb-4 text-[#61063B]">College Participation</h3>
+            <p className="text-[#61063B] text-lg">Track voting progress across all colleges</p>
           </div>
           <div className="grid lg:grid-cols-2 xl:grid-cols-4 gap-8">
             {stats.collegeStats.map((collegeStat) => {
@@ -155,31 +155,31 @@ export default async function Home() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center justify-center mb-1">
-                          <Users className="w-4 h-4 text-gray-600 mr-1" />
+                          <Users className="w-4 h-4 text-[#61063B] mr-1" />
                         </div>
-                        <div className="text-2xl font-bold text-gray-900">{collegeStat.totalStudents}</div>
-                        <div className="text-xs text-gray-600">Total Students</div>
+                        <div className="text-2xl font-bold text-[#61063B]">{collegeStat.totalStudents}</div>
+                        <div className="text-xs text-[#61063B]">Total Students</div>
                       </div>
-                      <div className="text-center p-3 bg-green-50 rounded-lg">
+                      <div className="text-center p-3 bg-red-100 rounded-lg">
                         <div className="flex items-center justify-center mb-1">
-                          <Vote className="w-4 h-4 text-green-600 mr-1" />
+                          <Vote className="w-4 h-4 text-[#61063B] mr-1" />
                         </div>
-                        <div className="text-2xl font-bold text-green-700">{collegeStat.votersCount}</div>
-                        <div className="text-xs text-gray-600">Voted</div>
+                        <div className="text-2xl font-bold text-[#61063B]">{collegeStat.votersCount}</div>
+                        <div className="text-xs text-[#61063B]">Voted</div>
                       </div>
                     </div>
 
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <TrendingUp className="w-4 h-4 text-gray-600" />
-                          <span className="text-sm font-medium text-gray-700">Voter Turnout</span>
+                          <TrendingUp className="w-4 h-4 text-[#61063B]" />
+                          <span className="text-sm font-medium text-[#61063B]">Voter Turnout</span>
                         </div>
                         <Badge
                           variant={
                             turnoutPercentage >= 70 ? "default" : turnoutPercentage >= 50 ? "secondary" : "outline"
                           }
-                          className="font-bold"
+                          className="font-bold text-[#61063B]"
                         >
                           {turnoutPercentage.toFixed(1)}%
                         </Badge>
@@ -192,7 +192,7 @@ export default async function Home() {
                             "--progress-foreground": college?.CollegeOfficeColor || "#888",
                           }}
                         />
-                        <div className="flex justify-between text-xs text-gray-500">
+                        <div className="flex justify-between text-xs text-[#61063B]">
                           <span>0%</span>
                           <span>50%</span>
                           <span>100%</span>

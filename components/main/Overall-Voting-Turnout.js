@@ -11,7 +11,7 @@ export default function OverallVotingTurnout({ pieConfig, pieData }) {
         return (
             <Card>
                 <CardHeader>
-                    <CardTitle>Overall Voter Turnout</CardTitle>
+                    <CardTitle className="text-[#61063B]">Overall Voter Turnout</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="flex items-center justify-center h-[430px]">
@@ -32,13 +32,13 @@ export default function OverallVotingTurnout({ pieConfig, pieData }) {
         ).isRequired,
     }    
     
-    const COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"]
+    const COLORS = ["#61063B", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"]
 
     return (
         <>
             <Card>
                 <CardHeader>
-                <CardTitle>Overall Voter Turnout</CardTitle>
+                <CardTitle className="text-[#61063B]">Overall Voter Turnout</CardTitle>
                 </CardHeader>
                 <CardContent>
                 <div className="max-h-[430px] w-full">

@@ -26,7 +26,7 @@ export default function VotingStatistics({ collegeConfig, collegeData }) {
     <>
         <Card>
             <CardHeader>
-              <CardTitle>Voting Statistics by College</CardTitle>
+              <CardTitle className="text-[#61063B]">Voting Statistics by College</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="max-h-[430px] w-full">
@@ -56,7 +56,7 @@ export default function VotingStatistics({ collegeConfig, collegeData }) {
                             content={<ChartTooltipContent hideLabel />}
                         />
                         <ChartLegend content={<ChartLegendContent />} />
-                        <Bar dataKey="voters" fill="var(--color-voters)" radius={8} >
+                        <Bar dataKey="voters" fill="#61063B" radius={8} >
                             <LabelList
                                 position="top"
                                 offset={12}

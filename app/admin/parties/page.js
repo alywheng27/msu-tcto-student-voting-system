@@ -54,13 +54,13 @@ export default function PartiesPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-[#61063B]">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold mb-2">Manage Parties</h1>
-          <p className="text-muted-foreground">Add, edit, or remove political parties for the election.</p>
+          <p>Add, edit, or remove political parties for the election.</p>
         </div>
-        <Button onClick={() => setOpen(true)}>
+        <Button onClick={() => setOpen(true)} className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]">
           <Plus className="mr-2 h-4 w-4" /> Add Party
         </Button>
       </div>
@@ -96,7 +96,7 @@ export default function PartiesPage() {
             </div>
           </div>
         ) : parties.length > 0 ? parties.map((party) => (
-          <Card key={party.PartyID} className="overflow-hidden">
+          <Card key={party.PartyID} className="overflow-hidden bg-[#61063B] text-white">
             <div
               className="h-3"
               style={{
@@ -105,7 +105,7 @@ export default function PartiesPage() {
             />
             <CardHeader className="pb-2">
               <CardTitle>{party.Party}</CardTitle>
-              <CardDescription>Party ID: {party.PartyID}</CardDescription>
+              <CardDescription className="text-white">Party ID: {party.PartyID}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center gap-4">
@@ -127,12 +127,12 @@ export default function PartiesPage() {
                     style={{ backgroundColor: party.PartyColor }}
                     title={`Party color: ${party.PartyColor}`}
                   />
-                  <div className="text-xs text-muted-foreground mt-1">{party.PartyColor}</div>
+                  <div className="text-xs mt-1">{party.PartyColor}</div>
                 </div>
               </div>
 
               <div className="flex justify-between pt-4">
-                <Button variant="outline" size="sm" onClick={() => {
+                <Button variant="outline" size="sm" className="text-[#61063B]" onClick={() => {
                   setSelectedParty({
                     id: party.PartyID,
                     name: party.Party,

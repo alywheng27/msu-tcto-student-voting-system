@@ -140,24 +140,24 @@ export function AdminSidebar() {
         />
       )}
 
-      <aside className="hidden md:flex md:flex-col md:w-64 md:bg-white md:border-r md:border-gray-200 md:shadow-sm">
+      <aside className="hidden md:flex md:flex-col md:w-64 md:bg-[#61063B] md:border-r md:border-gray-200 md:shadow-sm">
         <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <Image
+            {/* <Image
               src="/MSU-TCTO.png"
               alt="MSU-TCTO Logo"
               width={32}
               height={32}
-              className="h-8 w-8 rounded-full object-cover"
-            />
-            <div className="font-semibold text-lg text-gray-900 dark:text-gray-100">MSU-TCTO</div>
+              className="w-10 object-cover"
+            /> */}
+            <div className="font-semibold text-lg text-white dark:text-gray-100">MSU-TCTO</div>
           </div>
         </div>
 
         <nav className="flex-1 px-4 py-6 overflow-y-auto">
           <div className="space-y-1">
             <div className="px-3 py-2">
-              <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider">Main Navigation</h3>
+              <h3 className="text-xs font-medium text-white uppercase tracking-wider">Main Navigation</h3>
             </div>
 
             {menuItems.map((item) => {
@@ -168,8 +168,8 @@ export function AdminSidebar() {
                   href={item.href}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200",
-                    "hover:bg-gray-100 hover:text-gray-900",
-                    isActive(item.href) ? "bg-[#1E90FF] text-white hover:bg-[#1E90FF]/90" : "text-gray-700",
+                    "hover:bg-gray-100 hover:text-[#61063B]",
+                    isActive(item.href) ? "bg-white text-[#61063B]" : "text-white",
                   )}
                 >
                   <Icon className="h-4 w-4 flex-shrink-0" />
@@ -219,21 +219,21 @@ export function AdminSidebar() {
       <aside
         id="mobile-admin-sidebar"
         className={cn(
-          "md:hidden fixed top-0 left-0 h-full w-80 bg-white border-r border-gray-200 shadow-xl z-50 transform transition-transform duration-300 ease-in-out",
+          "md:hidden fixed top-0 left-0 h-full w-80 bg-[#61063B] border-r border-gray-200 shadow-xl z-50 transform transition-transform duration-300 ease-in-out",
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full",
         )}
         aria-hidden={!isMobileMenuOpen}
       >
         <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <Image
+            {/* <Image
               src="/MSU-TCTO.png"
               alt="MSU-TCTO Logo"
               width={32}
               height={32}
               className="h-8 w-8 rounded-full object-cover"
-            />
-            <div className="font-semibold text-lg text-gray-900 dark:text-gray-100">MSU-TCTO</div>
+            /> */}
+            <div className="font-semibold text-lg text-white dark:text-gray-100">MSU-TCTO</div>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -241,9 +241,9 @@ export function AdminSidebar() {
               size="sm"
               onClick={() => setIsMobileMenuOpen(false)}
               aria-label="Close navigation menu"
-              className="hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="text-white hover:bg-gray-100 hover:text-[#61063B] dark:hover:bg-gray-800"
             >
-              <X className="h-5 w-5 text-gray-700 dark:text-gray-300" />
+              <X className="h-5 w-5 dark:text-gray-300" />
             </Button>
           </div>
         </div>
@@ -251,7 +251,7 @@ export function AdminSidebar() {
         <nav className="flex-1 px-4 py-6 overflow-y-auto">
           <div className="space-y-1">
             <div className="px-3 py-2">
-              <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider">Main Navigation</h3>
+              <h3 className="text-xs font-medium text-white uppercase tracking-wider">Main Navigation</h3>
             </div>
 
             {menuItems.map((item) => {
@@ -262,8 +262,8 @@ export function AdminSidebar() {
                   href={item.href}
                   className={cn(
                     "flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200",
-                    "hover:bg-gray-100 hover:text-gray-900 touch-manipulation",
-                    isActive(item.href) ? "bg-[#1E90FF] text-white hover:bg-[#1E90FF]/90" : "text-gray-700",
+                    "hover:bg-gray-100 hover:text-[#61063B] touch-manipulation",
+                    isActive(item.href) ? "bg-white text-[text-white]" : "text-white",
                   )}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >

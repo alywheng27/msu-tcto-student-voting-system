@@ -37,30 +37,30 @@ export default async function ResultsPage() {
   })
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-[#61063B]">
       <div>
         <h1 className="text-3xl font-bold mb-2">Election Results</h1>
-        <p className="text-muted-foreground">View and analyze the current election results.</p>
+        <p className="">View and analyze the current election results.</p>
       </div>
 
       <Tabs defaultValue="college" className="w-full">
-        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-          <TabsTrigger value="college">College Results</TabsTrigger>
-          <TabsTrigger value="ssc">SSC Results</TabsTrigger>
+        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-[#61063B]">
+          <TabsTrigger value="college" className="text-[#CA8A04]">College Results</TabsTrigger>
+          <TabsTrigger value="ssc" className="text-[#CA8A04]">SSC Results</TabsTrigger>
         </TabsList>
 
         <TabsContent value="ssc" className="mt-6 space-y-6">
-          <Card>
+          <Card className="bg-[#61063B] text-white">
             <CardHeader>
               <CardTitle>SSC Position Results</CardTitle>
-              <CardDescription>Detailed results for each SSC position</CardDescription>
+              <CardDescription className="text-white">Detailed results for each SSC position</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="flex flex-wrap gap-1 h-auto p-1">
+                <TabsList className="flex flex-wrap gap-1 h-auto p-1 bg-[#61063B]">
                   <TabsTrigger
                     value="overview"
-                    className="flex-shrink-0 text-xs px-3 py-2"
+                    className="flex-shrink-0 text-xs px-3 py-2 text-[#CA8A04]"
                   >
                     Selection
                   </TabsTrigger>
@@ -68,7 +68,7 @@ export default async function ResultsPage() {
                     <TabsTrigger
                       key={positionResult.positionId}
                       value={positionResult.positionId}
-                      className="flex-shrink-0 text-xs px-3 py-2"
+                      className="flex-shrink-0 text-xs px-3 py-2 text-[#CA8A04]"
                     >
                       {positionResult.position}
                     </TabsTrigger>
@@ -137,14 +137,14 @@ export default async function ResultsPage() {
         </TabsContent>
 
         <TabsContent value="college" className="mt-6">
-          <Card>
+          <Card className="bg-[#61063B] text-white">
             <CardHeader>
               <CardTitle>College Election Results</CardTitle>
-              <CardDescription>View detailed results for each college&apos;s elections</CardDescription>
+              <CardDescription className="text-white">View detailed results for each college&apos;s elections</CardDescription>
             </CardHeader>
             <CardContent>
               <Tabs defaultValue={colleges[0].CollegeOfficeID} className="w-full">
-                <TabsList className="flex flex-wrap gap-1 h-auto p-1">
+                <TabsList className="flex flex-wrap gap-1 h-auto p-1 bg-[#61063B]">
                   {colleges.map((college) => (
                     <TabsTrigger
                       key={college.CollegeOfficeID}
@@ -182,14 +182,14 @@ export default async function ResultsPage() {
                         </div>
                       </div>
 
-                      <Card>
+                      <Card className="bg-[#7A0A4F] text-white">
                         <CardHeader>
                           <CardTitle style={{ color: college.CollegeOfficeColor }}>{college.CollegeOfficeCode} Position Results</CardTitle>
-                          <CardDescription>Detailed results for each {college.CollegeOfficeCode} position</CardDescription>
+                          <CardDescription className="text-white">Detailed results for each {college.CollegeOfficeCode} position</CardDescription>
                         </CardHeader>
                         <CardContent>
                           <Tabs defaultValue="overview" className="w-full">
-                            <TabsList className="flex flex-wrap gap-1 h-auto p-1">
+                            <TabsList className="flex flex-wrap gap-1 h-auto p-1 bg-[#7A0A4F]">
                               <TabsTrigger
                                 value="overview"
                                 className="flex-shrink-0 text-xs px-3 py-2"

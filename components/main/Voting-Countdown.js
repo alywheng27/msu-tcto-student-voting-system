@@ -102,11 +102,11 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                         : "text-green-500"
               }`}
             />
-            <CardTitle className="text-lg font-bold">Voting Countdown</CardTitle>
+            <CardTitle className="text-lg font-bold text-[#61063B]">Voting Countdown</CardTitle>
           </div>
-          <Badge className={`${getStatusColor()} text-white font-medium px-3 py-1`}>{getStatusText()}</Badge>
+          <Badge className={`${getStatusColor()} text-[#61063B] font-medium px-3 py-1`}>{getStatusText()}</Badge>
         </div>
-        <p className="text-sm text-gray-600 mt-1">{electionName}</p>
+        <p className="text-sm text-[#61063B] mt-1">{electionName}</p>
       </CardHeader>
 
       <CardContent className="relative">
@@ -127,7 +127,7 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                 >
                   {timeLeft.days.toString().padStart(2, "0")}
                 </div>
-                <div className="text-sm md:text-lg text-gray-500 font-medium">DAYS</div>
+                <div className="text-sm md:text-lg text-[#61063B] font-medium">DAYS</div>
               </div>
               <div className="text-center">
                 <div
@@ -143,7 +143,7 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                 >
                   {timeLeft.hours.toString().padStart(2, "0")}
                 </div>
-                <div className="text-sm md:text-lg text-gray-500 font-medium">HOURS</div>
+                <div className="text-sm md:text-lg text-[#61063B] font-medium">HOURS</div>
               </div>
               <div className="text-center">
                 <div
@@ -159,7 +159,7 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                 >
                   {timeLeft.minutes.toString().padStart(2, "0")}
                 </div>
-                <div className="text-sm md:text-lg text-gray-500 font-medium">MINUTES</div>
+                <div className="text-sm md:text-lg text-[#61063B] font-medium">MINUTES</div>
               </div>
               <div className="text-center">
                 <div
@@ -175,7 +175,7 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
                 >
                   {timeLeft.seconds.toString().padStart(2, "0")}
                 </div>
-                <div className="text-sm md:text-lg text-gray-500 font-medium">SECONDS</div>
+                <div className="text-sm md:text-lg text-[#61063B] font-medium">SECONDS</div>
               </div>
             </div>
 
@@ -217,16 +217,16 @@ export function VotingCountdown({ electionEndDate, electionName, electionStatus 
           <div className="text-center py-8">
             <div className="text-4xl font-bold text-gray-500 mb-2">00:00:00:00</div>
             <div className="flex items-center justify-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-gray-500" />
-              <span className="text-gray-600 font-medium">Voting period has ended. Thank you for participating!</span>
+              <CheckCircle className="w-5 h-5 text-[#61063B]" />
+              <span className="text-[#61063B] font-medium">Voting period has ended. Thank you for participating!</span>
             </div>
           </div>
         )}
 
         <div className="mt-4 pt-3 border-t border-gray-200">
           <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
-            <Calendar className="w-4 h-4" />
-            <span>
+            <Calendar className="w-4 h-4 text-[#61063B]" />
+            <span className="text-[#61063B]">
               Voting ends:{" "}
               {new Date(electionEndDate).toLocaleDateString("en-US", {
                 weekday: "long",

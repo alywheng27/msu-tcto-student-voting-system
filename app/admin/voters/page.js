@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toast"
 import { Loader2 } from "lucide-react"
 import { AlertTriangle } from "lucide-react"
+import { color } from "motion"
 
 export default function VotersPage() {
   const { toast, dismiss, toasts } = useToast()
@@ -121,30 +122,30 @@ export default function VotersPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-[#61063B]">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold mb-2">Manage Voters</h1>
-          <p className="text-muted-foreground">Add, edit, or remove voters for the election.</p>
+          <p>Add, edit, or remove voters for the election.</p>
         </div>
-        <Button onClick={handleAddVoter}>
+        <Button className="bg-[#61063B] text-white hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]" onClick={handleAddVoter}>
           <Plus className="mr-2 h-4 w-4" /> Add Voter
         </Button>
       </div>
 
-      <Card>
+      <Card className="bg-[#61063B] text-white">
         <CardHeader className="flex justify-between items-center">
           <div>
             <CardTitle>Voters</CardTitle>
-            <CardDescription>List of all registered voters in the system</CardDescription>
+            <CardDescription className="text-white">List of all registered voters in the system</CardDescription>
           </div>
           <div className="flex items-center gap-4">
             <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4" />
               <Input
                 type="search"
                 placeholder="Search voters..."
-                className="w-full pl-8"
+                className="w-full pl-8 text-white"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
@@ -163,12 +164,12 @@ export default function VotersPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Username</TableHead>
-                  <TableHead>College</TableHead>
-                  <TableHead>SSC Vote</TableHead>
-                  <TableHead>College Vote</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead className="text-white">Name</TableHead>
+                  <TableHead className="text-white">Username</TableHead>
+                  <TableHead className="text-white">College</TableHead>
+                  <TableHead className="text-white">SSC Vote</TableHead>
+                  <TableHead className="text-white">College Vote</TableHead>
+                  <TableHead className="text-right text-white">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -179,7 +180,7 @@ export default function VotersPage() {
                           <TableCell className="font-medium">{voter.FirstName} {voter.Surname}</TableCell>
                           <TableCell>{voter.Username}</TableCell>
                           <TableCell>
-                              <Badge variant="outline" style={{ borderColor: voter.CollegeOfficeColor || '#ccc' }}>
+                              <Badge variant="outline" style={{ borderColor: voter.CollegeOfficeColor || '#ccc', color: 'white' }}>
                                 {voter.CollegeOfficeCode}
                               </Badge>
                           </TableCell>
@@ -189,7 +190,7 @@ export default function VotersPage() {
                                 Voted
                               </Badge>
                             ) : (
-                              <Badge variant="outline">Not Voted</Badge>
+                              <Badge variant="outline" className="text-white">Not Voted</Badge>
                             )}
                           </TableCell>
                           <TableCell>
@@ -198,7 +199,7 @@ export default function VotersPage() {
                                 Voted
                               </Badge>
                             ) : (
-                              <Badge variant="outline">Not Voted</Badge>
+                              <Badge variant="outline" className="text-white">Not Voted</Badge>
                             )}
                           </TableCell>
                           <TableCell className="text-right">
@@ -231,7 +232,7 @@ export default function VotersPage() {
 
           <div className="flex items-center justify-end space-x-2 mt-4">
             <Button
-              variant="outline"
+              className="bg-[#61063B]"
               size="sm"
               onClick={() => setCurrentPage(currentPage - 1)}
               disabled={currentPage === 1}
@@ -242,7 +243,7 @@ export default function VotersPage() {
               Page {currentPage} of {totalPages(filteredVoters)}
             </span>
             <Button
-              variant="outline"
+              className="bg-[#61063B]"
               size="sm"
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={currentPage === totalPages(filteredVoters) || totalPages(filteredVoters) === 0}

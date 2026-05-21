@@ -65,7 +65,7 @@ export default function PositionsPage() {
   }
 
   const PositionCard = ({ position }) => (
-    <Card key={position.PositionID} className={`overflow-hidden`}>
+    <Card key={position.PositionID} className={`overflow-hidden text-[#61063B]`}>
       <div className={`h-3 ${(position.PositionType) === "ssc" || (position.PositionType) === "SSC" ? "bg-blue-500" : "bg-green-500"}`} />
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
@@ -78,15 +78,15 @@ export default function PositionsPage() {
               )}
               {position.Position}
             </CardTitle>
-            <CardDescription className="mt-1">
+            <CardDescription className="mt-1 text-[#61063B]">
               {(position.PositionType) === "ssc" || (position.PositionType) === "SSC" ? "Supreme Student Council" : "College Position"}
             </CardDescription>
           </div>
           <div className="flex flex-col gap-2">
-            <Badge variant="secondary" className="ml-2">
+            <Badge variant="secondary" className="ml-2 text-[#61063B]">
               Max: {position.MaximumSelection}
             </Badge>
-            <Badge variant="secondary" className="ml-2">
+            <Badge variant="secondary" className="ml-2 text-[#61063B]">
               Order: {position.Decree}
             </Badge>
           </div>
@@ -101,7 +101,7 @@ export default function PositionsPage() {
             >
               {(position.PositionType || "unknown").toUpperCase()}
             </Badge>
-            <span className="text-xs text-gray-500">ID: {position.PositionID}</span>
+            <span className="text-xs">ID: {position.PositionID}</span>
           </div>
 
           <div className="flex gap-2">
@@ -152,37 +152,37 @@ export default function PositionsPage() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-[#61063B]">
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold mb-2">Manage Positions</h1>
-          <p className="text-muted-foreground">Create, edit, and manage election positions for SSC and colleges.</p>
+          <p>Create, edit, and manage election positions for SSC and colleges.</p>
         </div>
-        <Button onClick={() => handleAddPosition()}>
+        <Button className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]" onClick={() => handleAddPosition()}>
           <Plus className="mr-2 h-4 w-4" /> Add Position
         </Button>
       </div>
 
       <Tabs defaultValue="ssc" className="w-full">
-        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-          <TabsTrigger value="ssc" className="flex items-center gap-2">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-[#61063B]">
+          <TabsTrigger value="ssc" className="flex items-center gap-2 text-[#CA8A04]">
             <Crown className="h-4 w-4" />
             SSC Positions
           </TabsTrigger>
-          <TabsTrigger value="college" className="flex items-center gap-2">
+          <TabsTrigger value="college" className="flex items-center gap-2 text-[#CA8A04]">
             <Users className="h-4 w-4" />
             College Positions
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="ssc" className="mt-6">
-          <Card>
+          <Card className="bg-[#61063B] text-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Crown className="h-5 w-5 text-blue-500" />
                 Supreme Student Council Positions
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-white">
                 Manage positions for university-wide SSC elections. These positions are available to all students.
               </CardDescription>
             </CardHeader>
@@ -216,7 +216,7 @@ export default function PositionsPage() {
         </TabsContent>
 
         <TabsContent value="college" className="mt-6">
-          <Card>
+          <Card className="bg-[#61063B]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-green-500" />
@@ -258,25 +258,25 @@ export default function PositionsPage() {
       </Tabs>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
+        <Card className="bg-[#61063B]">
           <CardContent className="p-6 text-center">
             <Crown className="h-8 w-8 mx-auto text-blue-500 mb-2" />
             <div className="text-2xl font-bold text-blue-600">{sscPositions.length}</div>
-            <div className="text-sm text-gray-600">SSC Positions</div>
+            <div className="text-sm text-white">SSC Positions</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-[#61063B]">
           <CardContent className="p-6 text-center">
             <Users className="h-8 w-8 mx-auto text-green-500 mb-2" />
             <div className="text-2xl font-bold text-green-600">{collegePositions.length}</div>
-            <div className="text-sm text-gray-600">College Positions</div>
+            <div className="text-sm text-white">College Positions</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-[#61063B]">
           <CardContent className="p-6 text-center">
             <Plus className="h-8 w-8 mx-auto text-purple-500 mb-2" />
             <div className="text-2xl font-bold text-purple-600">{sscPositions.length + collegePositions.length}</div>
-            <div className="text-sm text-gray-600">Total Active</div>
+            <div className="text-sm text-white">Total Active</div>
           </CardContent>
         </Card>
       </div>

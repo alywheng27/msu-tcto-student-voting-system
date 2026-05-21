@@ -65,53 +65,53 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-3xl font-bold mb-2 text-[#61063B]">Admin Dashboard</h1>
+        <p className="text-[#61063B]">
           Welcome to the MSU-TCTO Voting System admin dashboard. Monitor election progress and manage the system.
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
+        <Card className="bg-[#61063B]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+            <CardTitle className="text-sm font-medium text-white">Total Students</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-white">
               {stats.totalStudents}
             </div>
-            <p className="text-xs text-muted-foreground">Enrolled students across all colleges</p>
+            <p className="text-xs text-white">Enrolled students across all colleges</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-[#61063B]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Total Voters</CardTitle>
+            <CardTitle className="text-sm font-medium text-white">Total Voters</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalVoters}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-white">{stats.totalVoters}</div>
+            <p className="text-xs text-white">
               {((stats.totalVoters / stats.totalStudents) * 100).toFixed(1)}% of total students
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-[#61063B]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Non-Voters</CardTitle>
+            <CardTitle className="text-sm font-medium text-white">Non-Voters</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.totalStudents - stats.totalVoters}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-white">{stats.totalStudents - stats.totalVoters}</div>
+            <p className="text-xs text-white">
               {(((stats.totalStudents - stats.totalVoters) / stats.totalStudents) * 100).toFixed(1)}% of total students
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-[#61063B]">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Leading Party</CardTitle>
+            <CardTitle className="text-sm font-medium text-white">Leading Party</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{sscPartyResults[0]?.party || "N/A"}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-2xl font-bold text-white">{sscPartyResults[0]?.party || "N/A"}</div>
+            <p className="text-xs text-white">
               {sscPartyResults[0]?.votes || 0} total votes across all positions
             </p>
           </CardContent>
@@ -119,17 +119,17 @@ export default async function AdminDashboardPage() {
       </div>
 
       <Tabs defaultValue="turnout" className="w-full">
-        <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
-          <TabsTrigger value="turnout">Voter Turnout</TabsTrigger>
-          <TabsTrigger value="colleges">College Stats</TabsTrigger>
-          <TabsTrigger value="parties">Party Results</TabsTrigger>
+        <TabsList className="grid w-full max-w-md mx-auto grid-cols-3 bg-[#61063B]">
+          <TabsTrigger value="turnout" className="text-[#CA8A04]">Voter Turnout</TabsTrigger>
+          <TabsTrigger value="colleges" className="text-[#CA8A04]">College Stats</TabsTrigger>
+          <TabsTrigger value="parties" className="text-[#CA8A04]">Party Results</TabsTrigger>
         </TabsList>
 
         <TabsContent value="turnout" className="mt-6">
-          <Card>
+            <Card className="bg-[#61063B] text-white">
             <CardHeader>
               <CardTitle>Overall Voter Turnout</CardTitle>
-              <CardDescription>Current voting status across the entire student body</CardDescription>
+              <CardDescription className="text-white">Current voting status across the entire student body</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="min-h-[300px] w-full">
@@ -140,10 +140,10 @@ export default async function AdminDashboardPage() {
         </TabsContent>
 
         <TabsContent value="colleges" className="mt-6">
-          <Card>
+          <Card className="bg-[#61063B] text-white">
             <CardHeader>
               <CardTitle>Voting Statistics by College</CardTitle>
-              <CardDescription>Comparison of voter turnout across different colleges</CardDescription>
+              <CardDescription className="text-white">Comparison of voter turnout across different colleges</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="min-h-[300px] w-full">
@@ -154,10 +154,10 @@ export default async function AdminDashboardPage() {
         </TabsContent>
 
         <TabsContent value="parties" className="mt-6">
-          <Card>
+          <Card className="bg-[#61063B] text-white">
             <CardHeader>
               <CardTitle>SSC Party Results</CardTitle>
-              <CardDescription>Total votes received by each party across all SSC positions</CardDescription>
+              <CardDescription className="text-white">Total votes received by each party across all SSC positions</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mid-h-[300px] w-full">
