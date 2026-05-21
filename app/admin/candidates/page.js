@@ -288,11 +288,11 @@ export default function CandidatesPage() {
         </TabsContent>
 
         <TabsContent value="college" className="mt-6">
-          <Card>
+          <Card className="bg-[#61063B] text-white">
             <CardHeader className="flex justify-between items-center">
               <div>
                 <CardTitle>College Candidates</CardTitle>
-                <CardDescription>Manage candidates for college-specific positions</CardDescription>
+                <CardDescription className="text-white">Manage candidates for college-specific positions</CardDescription>
               </div>
               <div className="flex items-center gap-4">
                 <div className="relative">
@@ -304,7 +304,7 @@ export default function CandidatesPage() {
                       setSearchQuery(e.target.value)
                       setCurrentPage(1) 
                     }}
-                    className="w-[300px] px-4 py-2 rounded-md border border-input bg-background"
+                    className="w-[300px] px-4 py-2 rounded-md border border-input bg-background text-[#61063B]"
                   />
                   {searchQuery && (
                     <button
@@ -321,12 +321,12 @@ export default function CandidatesPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Photo</TableHead>
-                    <TableHead>Position</TableHead>
-                    <TableHead>College</TableHead>
-                    <TableHead>Party</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="text-white">Name</TableHead>
+                    <TableHead className="text-white">Photo</TableHead>
+                    <TableHead className="text-white">Position</TableHead>
+                    <TableHead className="text-white">College</TableHead>
+                    <TableHead className="text-white">Party</TableHead>
+                    <TableHead className="text-right text-white">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className={fetchError ? "min-h-[300px] h-[300px]" : ""}>
@@ -361,7 +361,8 @@ export default function CandidatesPage() {
                           </TableCell>
                           <TableCell>{candidate.Position}</TableCell>
                           <TableCell>
-                            <Badge variant="outline" style={{ borderColor: candidate.CollegeOfficeColor || "#888" }}>
+                            {/* <Badge variant="outline" style={{ borderColor: candidate.CollegeOfficeColor || "#888" }}> */}
+                            <Badge variant="outline" className="text-white">
                               {candidate.CollegeOfficeCode}
                             </Badge>
                           </TableCell>
@@ -391,7 +392,7 @@ export default function CandidatesPage() {
               </Table>
               <div className="flex items-center justify-end space-x-2 mt-4">
                 <Button
-                  variant="outline"
+                  className="bg-[#61063B] text-white hover:bg-white hover:text-[#61063B]"
                   size="sm"
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
@@ -402,7 +403,7 @@ export default function CandidatesPage() {
                   Page {currentPage} of {totalPages(filterCandidates(collegeCandidates))}
                 </span>
                 <Button
-                  variant="outline"
+                  className="bg-[#61063B] text-white hover:bg-white hover:text-[#61063B]"
                   size="sm"
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages(filterCandidates(collegeCandidates))}

@@ -103,16 +103,17 @@ export default async function Home() {
                   key={collegeStat.name}
                   className="group hover:shadow-xl transition-all duration-300 border-0 shadow-lg hover:-translate-y-1 bg-white overflow-hidden"
                 >
-                  <div
+                  {/* <div
                     className="h-3 bg-gradient-to-r"
                     style={{
                       backgroundImage: `linear-gradient(135deg, ${college?.CollegeOfficeColor || "#888"}, ${college?.CollegeOfficeColor || "#888"}dd)`,
                     }}
-                  ></div>
+                  ></div> */}
+                  <div className="h-3 bg-gradient-to-r bg-[linear-gradient(135deg,rgb(97,6,59),rgba(97,6,76,59.867))]"></div>
 
                   <CardHeader className="pb-4">
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0">
+                      {/* <div className="flex-shrink-0">
                         <div
                           className="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg"
                           style={{ backgroundColor: `${college?.CollegeOfficeColor || "#888"}15` }}
@@ -125,11 +126,12 @@ export default async function Home() {
                             height={40}
                           />
                         </div>
-                      </div>
+                      </div> */}
                       <div className="flex-1 min-w-0">
                         <CardTitle
                           className="text-lg font-bold leading-tight mb-1"
-                          style={{ color: college?.CollegeOfficeColor || "#888" }}
+                          // style={{ color: college?.CollegeOfficeColor || "#888" }}
+                          style={{ color: "#61063B" }}
                         >
                           {college?.CollegeOfficeCode}
                         </CardTitle>
@@ -138,8 +140,8 @@ export default async function Home() {
                             variant="secondary"
                             className="text-xs font-medium break-words whitespace-normal text-center"
                             style={{
-                              backgroundColor: `${college?.CollegeOfficeColor || "#888"}20`,
-                              color: college?.CollegeOfficeColor || "#888",
+                              backgroundColor: `#61063B`,
+                              color: "white",
                               maxWidth: "200px",
                               wordWrap: "break-word",
                             }}
@@ -189,7 +191,7 @@ export default async function Home() {
                           value={turnoutPercentage}
                           className="h-3 bg-gray-200"
                           style={{
-                            "--progress-foreground": college?.CollegeOfficeColor || "#888",
+                            "color": "#61063B",
                           }}
                         />
                         <div className="flex justify-between text-xs text-[#61063B]">
@@ -208,8 +210,8 @@ export default async function Home() {
               <div className="h-3 bg-gradient-to-r bg-[linear-gradient(135deg,rgb(97,6,59),rgba(97,6,76,59.867))]"></div>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="w-4 h-4 text-purple-600" />
+                  <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="w-4 h-4 text-[#61063B]" />
                   </div>
                   Election Results
                 </CardTitle>
@@ -222,7 +224,7 @@ export default async function Home() {
               </CardContent>
               <CardFooter>
                 <Link href="/login" className="w-full">
-                  <Button variant="outline" className="w-full border-purple-200 text-purple-700 hover:bg-purple-50">
+                  <Button variant="outline" className="w-full bg-[#61063B] text-white hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]">
                     Login to View
                   </Button>
                 </Link>
@@ -231,12 +233,12 @@ export default async function Home() {
           </div>
         </section>
 
-        <section className="grid md:grid-cols-2 gap-6 mb-16">
+        <section className="grid md:grid-cols-2 gap-6 mb-16 px-16">
           <Card className="hover:shadow-lg transition-shadow duration-300">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Vote className="w-4 h-4 text-blue-600" />
+                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                  <Vote className="w-4 h-4 text-[#61063B]" />
                 </div>
                 Supreme Student Council
               </CardTitle>
@@ -249,7 +251,7 @@ export default async function Home() {
             </CardContent>
             <CardFooter>
               <Link href="/login" className="w-full">
-                <Button className="w-full bg-[#1E90FF] hover:bg-blue-600">Login to Vote</Button>
+                <Button className="w-full bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]">Login to Vote</Button>
               </Link>
             </CardFooter>
           </Card>
@@ -257,8 +259,8 @@ export default async function Home() {
           <Card className="hover:shadow-lg transition-shadow duration-300">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Users className="w-4 h-4 text-green-600" />
+                <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                  <Users className="w-4 h-4 text-[#61063B]" />
                 </div>
                 College Officers
               </CardTitle>
@@ -272,7 +274,7 @@ export default async function Home() {
             </CardContent>
             <CardFooter>
               <Link href="/login" className="w-full">
-                <Button className="w-full bg-green-600 hover:bg-green-700">Login to Vote</Button>
+                <Button className="w-full bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-[#61063B]">Login to Vote</Button>
               </Link>
             </CardFooter>
           </Card>

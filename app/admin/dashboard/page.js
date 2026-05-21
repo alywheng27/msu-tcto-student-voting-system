@@ -58,7 +58,7 @@ export default async function AdminDashboardPage() {
   const partyConfig = {
     votes: {
       label: "Votes",
-      color: "var(--chart-3)",
+      color: "var(--chart-1)",
     }
   }
 
@@ -126,10 +126,10 @@ export default async function AdminDashboardPage() {
         </TabsList>
 
         <TabsContent value="turnout" className="mt-6">
-            <Card className="bg-[#61063B] text-white">
+            <Card className="text-[#61063B]">
             <CardHeader>
               <CardTitle>Overall Voter Turnout</CardTitle>
-              <CardDescription className="text-white">Current voting status across the entire student body</CardDescription>
+              <CardDescription className="text-[#61063B]">Current voting status across the entire student body</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="min-h-[300px] w-full">
@@ -140,10 +140,10 @@ export default async function AdminDashboardPage() {
         </TabsContent>
 
         <TabsContent value="colleges" className="mt-6">
-          <Card className="bg-[#61063B] text-white">
+          <Card className="text-[#61063B]">
             <CardHeader>
               <CardTitle>Voting Statistics by College</CardTitle>
-              <CardDescription className="text-white">Comparison of voter turnout across different colleges</CardDescription>
+              <CardDescription className="text-[#61063B]">Comparison of voter turnout across different colleges</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="min-h-[300px] w-full">
@@ -154,10 +154,10 @@ export default async function AdminDashboardPage() {
         </TabsContent>
 
         <TabsContent value="parties" className="mt-6">
-          <Card className="bg-[#61063B] text-white">
+          <Card className="text-[#61063B]">
             <CardHeader>
               <CardTitle>SSC Party Results</CardTitle>
-              <CardDescription className="text-white">Total votes received by each party across all SSC positions</CardDescription>
+              <CardDescription className="text-[#61063B]">Total votes received by each party across all SSC positions</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="mid-h-[300px] w-full">

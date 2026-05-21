@@ -150,9 +150,13 @@ export default async function ResultsPage() {
                       key={college.CollegeOfficeID}
                       value={college.CollegeOfficeID}
                       className="flex-shrink-0 text-xs px-3 py-2"
+                      // style={{
+                      //   borderColor: college.CollegeOfficeColor,
+                      //   color: college.CollegeOfficeColor,
+                      // }}
                       style={{
-                        borderColor: college.CollegeOfficeColor,
-                        color: college.CollegeOfficeColor,
+                        borderColor: "#CA8A04",
+                        color: "#CA8A04",
                       }}
                     >
                       {college.CollegeOfficeCode}
@@ -169,14 +173,15 @@ export default async function ResultsPage() {
                     <TabsContent key={college.CollegeOfficeID} value={college.CollegeOfficeID} className="mt-6 space-y-6">
                       <div className="text-center mb-6">
                         <div className="flex items-center justify-center gap-3 mb-2">
-                          <Image
+                          {/* <Image
                             src={college.CollegeOfficeLogo || "/parties/no-logo.png"}
                             alt={`${college.CollegeOffice} logo`}
                             className="w-12 h-12 object-contain"
                             width={250}
                             height={250}
-                          />
-                          <h3 className="text-2xl font-bold" style={{ color: college.CollegeOfficeColor }}>
+                          /> */}
+                          {/* <h3 className="text-2xl font-bold" style={{ color: college.CollegeOfficeColor }}> */}
+                          <h3 className="text-2xl font-bold" style={{ color: "#CA8A04" }}>
                             {college.CollegeOffice}
                           </h3>
                         </div>
@@ -184,7 +189,8 @@ export default async function ResultsPage() {
 
                       <Card className="bg-[#7A0A4F] text-white">
                         <CardHeader>
-                          <CardTitle style={{ color: college.CollegeOfficeColor }}>{college.CollegeOfficeCode} Position Results</CardTitle>
+                          {/* <CardTitle style={{ color: college.CollegeOfficeColor }}>{college.CollegeOfficeCode} Position Results</CardTitle> */}
+                          <CardTitle style={{ color: "white" }}>{college.CollegeOfficeCode} Position Results</CardTitle>
                           <CardDescription className="text-white">Detailed results for each {college.CollegeOfficeCode} position</CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -194,8 +200,8 @@ export default async function ResultsPage() {
                                 value="overview"
                                 className="flex-shrink-0 text-xs px-3 py-2"
                                 style={{
-                                  borderColor: college.CollegeOfficeColor,
-                                  color: college.CollegeOfficeColor,
+                                  borderColor: "#CA8A04",
+                                  color: "#CA8A04",
                                 }}
                               >
                                 Selection
@@ -206,8 +212,8 @@ export default async function ResultsPage() {
                                   value={positionResult.positionId}
                                   className="flex-shrink-0 text-xs px-3 py-2"
                                   style={{
-                                    borderColor: college.CollegeOfficeColor,
-                                    color: college.CollegeOfficeColor,
+                                    borderColor: "#CA8A04",
+                                    color: "#CA8A04",
                                   }}
                                 >
                                   {positionResult.position}

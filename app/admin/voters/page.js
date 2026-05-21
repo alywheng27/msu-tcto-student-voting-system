@@ -180,7 +180,8 @@ export default function VotersPage() {
                           <TableCell className="font-medium">{voter.FirstName} {voter.Surname}</TableCell>
                           <TableCell>{voter.Username}</TableCell>
                           <TableCell>
-                              <Badge variant="outline" style={{ borderColor: voter.CollegeOfficeColor || '#ccc', color: 'white' }}>
+                              {/* <Badge variant="outline" style={{ borderColor: voter.CollegeOfficeColor || '#ccc', color: 'white' }}> */}
+                              <Badge variant="outline" style={{ color: 'white' }}>
                                 {voter.CollegeOfficeCode}
                               </Badge>
                           </TableCell>
@@ -232,7 +233,7 @@ export default function VotersPage() {
 
           <div className="flex items-center justify-end space-x-2 mt-4">
             <Button
-              className="bg-[#61063B]"
+              className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-white"
               size="sm"
               onClick={() => setCurrentPage(currentPage - 1)}
               disabled={currentPage === 1}
@@ -243,7 +244,7 @@ export default function VotersPage() {
               Page {currentPage} of {totalPages(filteredVoters)}
             </span>
             <Button
-              className="bg-[#61063B]"
+              className="bg-[#61063B] hover:bg-white hover:text-[#61063B] border hover:border-white"
               size="sm"
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={currentPage === totalPages(filteredVoters) || totalPages(filteredVoters) === 0}

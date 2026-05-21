@@ -216,13 +216,13 @@ export default function PositionsPage() {
         </TabsContent>
 
         <TabsContent value="college" className="mt-6">
-          <Card className="bg-[#61063B]">
+          <Card className="bg-[#61063B] text-white">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-green-500" />
                 College Positions
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-white">
                 Manage positions for college-specific elections. These positions are available to students within each
                 college.
               </CardDescription>

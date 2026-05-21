@@ -74,9 +74,9 @@ export async function PublicStats() {
       </div>
 
       <Tabs defaultValue="bar" className="w-full">
-        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-          <TabsTrigger value="bar" className="text-[#61063B]">College Statistics</TabsTrigger>
-          <TabsTrigger value="pie" className="text-[#61063B]">Overall Turnout</TabsTrigger>
+        <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 bg-[#7A0A4F]">
+          <TabsTrigger value="bar" className="text-[#CA8A04]">College Statistics</TabsTrigger>
+          <TabsTrigger value="pie" className="text-[#CA8A04]">Overall Turnout</TabsTrigger>
         </TabsList>
         <TabsContent value="bar" className="mt-6">
           <Suspense fallback={loading()}>
